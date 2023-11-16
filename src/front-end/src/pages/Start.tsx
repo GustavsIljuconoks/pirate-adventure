@@ -6,7 +6,7 @@ import '../styles/Start.css'
 export default function Main(): ReactElement {
 	return (
 		<Layout>
-			<div className="flex flex-col gap-12">
+			<div className="flex flex-col gap-12 mt-auto">
 				<a
 					href="https://unsplash.com"
 					target="_blank"
@@ -32,7 +32,7 @@ export default function Main(): ReactElement {
 				</a>
 
 				<a
-					href="https://unsplash.com"
+					href="/leaderboard"
 					target="_blank"
 					rel="noreferrer noopener"
 					className="menu-item">
