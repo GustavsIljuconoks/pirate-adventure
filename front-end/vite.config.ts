@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => ({
 							'robots.txt',
 							'apple-touch-icon.png',
 							'icons/*.svg',
-							'fonts/*.woff2',
+							'fonts/*.woff2'
 						],
 						manifest: {
 							theme_color: '#BD34FE',
@@ -44,16 +44,16 @@ export default defineConfig(({ mode }) => ({
 									src: '/android-chrome-192x192.png',
 									sizes: '192x192',
 									type: 'image/png',
-									purpose: 'any maskable',
+									purpose: 'any maskable'
 								},
 								{
 									src: '/android-chrome-512x512.png',
 									sizes: '512x512',
-									type: 'image/png',
-								},
-							],
-						},
-					}),
-			  ]),
-	],
+									type: 'image/png'
+								}
+							]
+						}
+					})
+			  ])
+	]
 }))
