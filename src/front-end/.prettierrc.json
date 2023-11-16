@@ -5,9 +5,9 @@
     "proseWrap": "always",
     "tabWidth": 4,
     "requireConfig": false,
-    "useTabs": false,
+    "useTabs": true,
     "trailingComma": "none",
     "bracketSpacing": true,
-    "jsxBracketSameLine": false,
+    "jsxBracketSameLine": true,
     "semi": false
 }

@@ -1,0 +1,8 @@
+.site-wrapper {
+	background-color: #67acec;
+	padding: 2rem 4rem;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	place-content: end;
+}
