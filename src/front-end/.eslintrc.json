@@ -116,21 +116,12 @@
 			}
 		],
 		"react/function-component-definition": [
-			"error",
+			2,
 			{
-				"namedComponents": "function-declaration"
+				"namedComponents": ["function-declaration", "arrow-function"]
 			}
 		],
 		"react/no-unstable-nested-components": "error",
-		"react/jsx-handler-names": [
-			"error",
-			{
-				"eventHandlerPrefix": "on",
-				"eventHandlerPropPrefix": "on",
-				"checkLocalVariables": true,
-				"checkInlineFunction": true
-			}
-		],
 		"react/jsx-key": "error",
 		"react/jsx-no-bind": [
 			"error",

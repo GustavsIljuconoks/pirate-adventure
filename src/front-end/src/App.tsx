@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 const Main = lazy(async () => import('pages/Start'))
 const Leaderboard = lazy(async () => import('pages/Leaderboard'))
+const Settings = lazy(async () => import('pages/LobbySettings'))
 
 export default function App(): ReactElement {
 	return (
@@ -13,6 +14,7 @@ export default function App(): ReactElement {
 				<Routes>
 					<Route path="/" element={<Main />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
+					<Route path="/settings" element={<Settings />} />
 				</Routes>
 			</Suspense>
 		</BrowserRouter>

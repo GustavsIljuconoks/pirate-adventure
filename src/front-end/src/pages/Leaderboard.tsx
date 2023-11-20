@@ -1,5 +1,5 @@
-import Layout from 'components/Layout/Layout'
-import Slot from 'components/Leaderboard/Slot'
+import Layout from 'components/layout/Layout'
+import Slot from 'components/leaderboard/Slot'
 import players from 'mocks/players.json'
 import type { ReactElement } from 'react'
 
@@ -8,7 +8,7 @@ export default function Leaderboard(): ReactElement {
 		<Layout>
 			<div className="my-auto">
 				<div className="leaderbord mb-10">
-					<div className="flex flex-row justify-between text-white mb-8 font-bold text-5xl">
+					<div className="flex flex-row justify-between mb-8 font-bold text-5xl">
 						<p>Player</p>
 						<p>Wins</p>
 					</div>
@@ -24,7 +24,10 @@ export default function Leaderboard(): ReactElement {
 					</div>
 				</div>
 
-				<a href="/" className="text-white font-medium text-xl">
+				<a
+					href="/"
+					className="font-medium text-xl hover:text-deep-blue"
+				>
 					Go back to main menu
 				</a>
 			</div>
