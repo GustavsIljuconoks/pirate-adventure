@@ -3,7 +3,6 @@ import Layout from 'components/layout/Layout'
 import { useState, type ReactElement } from 'react'
 
 export default function Settings(): ReactElement {
-
 	const [mode, setMode] = useState('')
 	const [time, setTime] = useState('')
 	const [abilities, setAbilities] = useState('')
@@ -21,7 +20,8 @@ export default function Settings(): ReactElement {
 				<div className="text-2xl mb-20">
 					<form
 						className="boxed grid gap-y-16 md:w-9/12 text-gray"
-						onSubmit={onSubmitForm}>
+						onSubmit={onSubmitForm}
+					>
 						<div className="flex flex-col lg:flex-row lg:justify-between">
 							<h1 className="font-bold mb-4">Game mode:</h1>
 							<div className="flex flex-row justify-between gap-4 lg:gap-20">
@@ -111,13 +111,15 @@ export default function Settings(): ReactElement {
 						<div className="flex justify-between">
 							<a
 								href="/"
-								className="font-medium text-xl hover:text-deep-blue">
+								className="font-medium text-xl hover:text-deep-blue"
+							>
 								Go back to main menu
 							</a>
 
 							<button
 								type="submit"
-								className="font-medium text-xl hover:text-deep-blue">
+								className="font-medium text-xl hover:text-deep-blue"
+							>
 								Create Lobby
 							</button>
 						</div>
