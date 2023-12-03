@@ -1,0 +1,15 @@
+:root {
+	--cell-size: 20px;
+}
+
+.square {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--cell-size);
+	height: var(--cell-size);
+	border: solid 2px #fff;
+	border-radius: 5px;
+	position: relative;
+	text-align: center;
+}

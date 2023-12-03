@@ -1,0 +1,28 @@
+.lobby-code {
+	margin-bottom: 10rem;
+}
+
+.ships {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+.instructions {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	text-align: center;
+	background: #5a95d5;
+	padding: 1rem;
+	border-radius: 0.5rem;
+}
+
+.instruction {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 1rem;
+}

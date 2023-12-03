@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import 'styles/RadioButton.css'
+import 'styles/inputs/RadioButton.css'
 
 interface RadioButtonProperties {
 	label: string

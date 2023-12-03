@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import 'styles/TextField.css'
+import 'styles/inputs/TextField.css'
 
 interface TextFieldProperties {
 	placeholder: string
