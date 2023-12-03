@@ -31,10 +31,6 @@ Install `pnpm` package manager
 iwr https://get.pnpm.io/install.ps1 -useb | iex
 ```
 
-```
-npx degit wtchnm/Vitamin#main my-app
-```
-
 Then, install the dependencies:
 
 ```
