@@ -1,31 +1,57 @@
-/* eslint-disable import/no-extraneous-dependencies */
-import type { FC } from 'react'
 import { useDraggable } from '@dnd-kit/core'
 import { CSS } from '@dnd-kit/utilities'
+import classNames from 'classnames'
+import type { FC } from 'react'
+import React from 'react'
 
 import styleShip from 'styles/field/Ship.module.css'
 
 interface IShipDraggable {
-    children: string
+	id: string
+	label: string
+	dragOverlay?: boolean
+	dragging?: boolean
+	style?: React.CSSProperties
 }
 
-const ShipDraggable: FC<IShipDraggable> = ({children}) => {
-	const { attributes, listeners, setNodeRef, transform } = useDraggable({
-		id: children
-	})
-	const style: { transform: string | undefined } = {transform: CSS.Translate.toString(transform)}
+const ShipDraggable: FC<IShipDraggable> = ({
+	id,
+	label,
+	dragOverlay,
+	dragging,
+	style
+}) => {
+	const { attributes, listeners, setNodeRef, transform, isDragging } =
+		useDraggable({
+			id: id,
+			data: { title: label }
+		})
+
+	const transformStyle: { transform: string | undefined } = {
+		transform: CSS.Translate.toString(transform)
+	}
 
 	return (
 		<div
-			className={styleShip.ship}
+			className={classNames(
+				styleShip.ship,
+				dragging && styleShip.dragging,
+				dragOverlay && styleShip.dragOverlay
+			)}
+			style={
+				{
+					transformStyle,
+					...style,
+					'--translate-x': `${transform?.x ?? 0}px`,
+					'--translate-y': `${transform?.y ?? 0}px`
+				} as React.CSSProperties
+			}
 			ref={setNodeRef}
-			style={style}
 			{...listeners}
-			{...attributes}
-        >
-			{children}
+			{...attributes}>
+			{label}
 		</div>
 	)
 }
 
-export default ShipDraggable;
+export default ShipDraggable

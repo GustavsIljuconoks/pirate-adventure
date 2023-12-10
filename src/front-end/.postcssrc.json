@@ -1,6 +1,7 @@
 {
 	"plugins": {
 		"tailwindcss": {},
-		"autoprefixer": {}
+		"autoprefixer": {},
+		"tailwindcss/nesting": "postcss-nesting"
 	}
 }

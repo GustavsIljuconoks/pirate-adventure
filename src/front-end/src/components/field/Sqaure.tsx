@@ -1,21 +1,33 @@
-import { useState, type ReactElement } from 'react'
-import type { SqaureProperties } from 'types/Square'
-import 'styles/field/Square.css'
+import { useDroppable } from '@dnd-kit/core'
+import classNames from 'classnames'
+import { type ReactElement } from 'react'
+import style from 'styles/field/Square.module.css'
+import type { ISqaureDroppable } from 'types/Square'
 
 export default function Sqaure({
+	id,
 	row,
 	column,
-	initialValue,
-}: SqaureProperties): ReactElement {
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [value, setValue] = useState(initialValue)
+	children,
+	dragging
+}: ISqaureDroppable): ReactElement {
+	const { isOver, setNodeRef } = useDroppable({
+		id
+	})
 
-	const list = [
-		'square',
-		`row-${row}`,
-		`col-${column}`
-		// isHighlighted && 'highlight'
-		// isActive && 'is-active'
-	]
-	return <div className={list.join(' ').trim()} />
+	return (
+		<div
+			ref={setNodeRef}
+			className={classNames(
+				style.square,
+				`row-${row}`,
+				`column-${column}`,
+				dragging && style.dragging,
+				isOver && style.over,
+				id
+			)}
+			aria-label="Droppable square">
+			{children}
+		</div>
+	)
 }
