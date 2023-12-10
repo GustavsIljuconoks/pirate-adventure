@@ -1,16 +1,14 @@
 import type { ReactElement } from 'react'
 
-import Layout from 'components/layout/Layout'
 import LobbyAvatar from 'components/LobbyAvatar'
-import CopyToClipboard from 'components/input/CopyToClipboard'
 import SettingsMenu from 'components/SettingsMenu'
-import GameBoard from 'components/field/Board'
+import CopyToClipboard from 'components/input/CopyToClipboard'
+import Layout from 'components/layout/Layout'
 
+import GameSetup from 'components/GameSetup'
 import style from 'styles/lobby/Lobby.module.css'
 
-
 export default function Lobby(): ReactElement {
-
 	return (
 		<Layout>
 			<div className="mx-auto">
@@ -19,16 +17,13 @@ export default function Lobby(): ReactElement {
 					<SettingsMenu />
 				</div>
 
-
 				<div className="setup mb-16">
 					<h1 className="text-3xl font-bold text-center mb-10">
 						Your Fleet
 					</h1>
 
 					<div className="flex flex-row mb-8 gap-4">
-
-						<GameBoard />
-
+						<GameSetup />
 						<div className={style.instructions}>
 							<div className={style.instruction}>
 								<p>Drag to move</p>

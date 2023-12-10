@@ -1,6 +1,6 @@
-import type { SqaureProperties } from 'types/Square'
+import { ISqaureDroppable } from 'types/Square'
 
-const createGrid = (): SqaureProperties[] => {
+const createGrid = (): ISqaureDroppable[] => {
 	const rowNames = 'ABCDEFGHIJ'
 	return [...rowNames].flatMap((row, rowIndex) =>
 		Array.from({ length: 10 })

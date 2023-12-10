@@ -8,7 +8,7 @@
 	"parser": "@typescript-eslint/parser",
 	"plugins": ["react-prefer-function-component"],
 	"extends": [
-		"eslint:all",
+		"eslint:recommended",
 		"plugin:@typescript-eslint/all",
 		"plugin:import/recommended",
 		"plugin:import/typescript",
@@ -66,10 +66,7 @@
 		],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		"@typescript-eslint/init-declarations": "off",
-		"@typescript-eslint/no-confusing-void-expression": [
-			"error",
-			{ "ignoreArrowShorthand": true }
-		],
+		"@typescript-eslint/no-confusing-void-expression": ["error", { "ignoreArrowShorthand": true }],
 		"@typescript-eslint/non-nullable-type-assertion-style": "off",
 		"@typescript-eslint/strict-boolean-expressions": "off",
 		"@typescript-eslint/no-implicit-any-catch": "off",
@@ -124,6 +121,7 @@
 		"react/no-unstable-nested-components": "error",
 		"react/jsx-key": "error",
 		"react/jsx-props-no-spreading": "off",
+		"react/hook-use-state": [{ "allowDestructuredState": true }],
 		"react/jsx-no-bind": [
 			"error",
 			{
