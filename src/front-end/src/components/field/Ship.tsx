@@ -1,4 +1,4 @@
-import { useDraggable } from '@dnd-kit/core'
+import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import classNames from 'classnames'
 import type { FC } from 'react'
@@ -8,7 +8,7 @@ import styleShip from 'styles/field/Ship.module.css'
 
 interface IShipDraggable {
 	id: string
-	label: string
+	label?: string
 	dragOverlay?: boolean
 	dragging?: boolean
 	style?: React.CSSProperties
@@ -21,11 +21,10 @@ const ShipDraggable: FC<IShipDraggable> = ({
 	dragging,
 	style
 }) => {
-	const { attributes, listeners, setNodeRef, transform, isDragging } =
-		useDraggable({
-			id: id,
-			data: { title: label }
-		})
+	const { attributes, listeners, setNodeRef, transform } = useSortable({
+		id: id,
+		data: { title: label }
+	})
 
 	const transformStyle: { transform: string | undefined } = {
 		transform: CSS.Translate.toString(transform)
