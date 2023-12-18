@@ -1,10 +1,10 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 namespace BattleshipPirateAdventure.Core.Models;
 
 public class Location
 {
-    private Regex _rowCheck = new Regex("[A-J]", RegexOptions.Compiled);
+    private Regex _columnCheck = new Regex("[A-J]", RegexOptions.Compiled);
 
     public Location(string cellId)
     {
@@ -13,26 +13,32 @@ public class Location
             throw new ArgumentException("Invalid cell ID");
         }
 
-        // validate row
-        var row = cellId.ToCharArray()[0].ToString();
-        if (!_rowCheck.IsMatch(row))
-        {
-            throw new ArgumentException("Invalid cell ID");
-        }
-
         // validate column
-        var column = int.Parse(new string(cellId.ToCharArray()[1..]));
-        if (column < 1 || column > 10)
+        var column = cellId.ToCharArray()[0].ToString();
+        if (!_columnCheck.IsMatch(column))
+        {
+            throw new ArgumentException("Invalid cell ID");
+        }
+        var charIndex = Array.IndexOf(Columns, column);
+
+        // validate row
+        var row = int.Parse(new string(cellId.ToCharArray()[1..]));
+        if (row < 1 || row > 10)
         {
             throw new ArgumentException("Invalid cell ID");
         }
 
-        Row = row;
-        Column = column - 1;
+        Row = row -1;
+        Column = charIndex;
         CellId = cellId;
     }
 
-    public string Row { get; }
-    public int Column { get; }
+    public int  Row { get; }
+    public int Column { get; set; }
     internal string CellId { get; }
+    public static string[] Columns { get; } = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+
+    // TODO: Create logic to add occupancy to cells
+    // based on ship orientation
+
 }

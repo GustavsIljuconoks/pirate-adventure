@@ -4,13 +4,25 @@ namespace BattleshipPirateAdventure.Core;
 
 public class GameField
 {
-    private Dictionary<string, Cell[]> _cells = new();
+    private Dictionary<int, Cell[]> _cells = new();
 
     public GameField()
     {
-        foreach (var row in new[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" })
+        foreach (var row in Enumerable.Range(0, 10))
         {
-            _cells.Add(row, Enumerable.Range(0, 10).Select(i => new Cell()).ToArray());
+            _cells.Add(row, Location.Columns.Select(i => new Cell()).ToArray());
+        }
+    }
+
+    public void Init(List<Ship> ships)
+    {
+        foreach (var ship in ships)
+        {
+            // TODO: Add ship orientation validation
+            var location = ship.HeadLocation;
+            var headCell = GetCell(location);
+
+            headCell.SetState(CellState.Occupied);
         }
     }
 

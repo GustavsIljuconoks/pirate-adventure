@@ -13,17 +13,6 @@ public class GamePlayer
 
     public void InitField(List<Ship> ships)
     {
-        foreach (var ship in ships)
-        {
-            var location = ship.HeadLocation;
-            var headCell = Field.GetCell(location);
-
-            headCell.SetState(CellState.Occupied);
-
-            //if (ship.Orientation == Orientation.Horizontal)
-            //{
-
-            //}
-        }
+        Field.Init(ships);
     }
 }
