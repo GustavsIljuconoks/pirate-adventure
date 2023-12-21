@@ -1,3 +1,4 @@
+using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.Core.Models;
 
 namespace BattleshipPirateAdventure.UnitTests;
@@ -10,10 +11,11 @@ public class LocationTests
     [InlineData("C10", 9, 2)]
     public void TestLocationParsing(string cellId, int expectedRow, int expectedColumn)
     {
-        var sut = new Location(cellId);
+        var sut = new GameField(10, 10);
+        var location = sut.GetLocation(cellId);
 
-        Assert.Equal(expectedRow, sut.Row);
-        Assert.Equal(expectedColumn, sut.Column);
+        Assert.Equal(expectedRow, location.Row);
+        Assert.Equal(expectedColumn, location.Column);
     }
 
     [Theory]
@@ -24,7 +26,8 @@ public class LocationTests
     [InlineData("AAA", typeof(FormatException))]
     public void TestInvalidLocationParsing(string location, Type exceptionType)
     {
-        var action = () => new Location(location);
+        var sut = new GameField(10, 10);
+        var action = () => sut.GetLocation(location);
 
         Assert.Throws(exceptionType, action);
     }
