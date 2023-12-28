@@ -32,30 +32,32 @@ public class GameField
         {
             var location = ship.HeadLocation;
             var headCell = GetCell(location.CellId);
+            headCell.SetState(CellState.Occupied);
 
             if (ship.Size > 1)
             {
                 if (ship.Orientation == Orientation.Vertical)
                 {
-                    for (int i = 0; i < ship.Size; i++)
-                    { 
+                    for (int i = 0; i < ship.Size - 1; i++)
+                    {
                         var nextCell = GetLocationDown(location);
                         var shipCell = GetCell(nextCell.CellId);
                         shipCell.SetState(CellState.Occupied);
+                        location = nextCell;
                     }
                 }
 
                 if (ship.Orientation == Orientation.Horizontal)
                 {
-                    for (int i = 0; i < ship.Size; i++)
+                    for (int i = 0; i < ship.Size - 1; i++)
                     {
                         var nextCell = GetLocationRight(location);
                         var shipCell = GetCell(nextCell.CellId);
                         shipCell.SetState(CellState.Occupied);
+                        location = nextCell;
                     }
                 }
             }
-            //headCell.SetState(CellState.Occupied);
         }
     }
 
@@ -97,15 +99,16 @@ public class GameField
 
     public Location? GetLocationRight(Location baseCell)
     {
-
-        //if (CellId == "A10") return null;
-
         var nextColumn = baseCell.Column + 1;
         var nextRow = baseCell.Row;
 
-        var columnTest = Columns[nextColumn];
+        if (nextColumn >= ColumnSize)
+        {
+            throw new ArgumentException("Invalid cell ID");
+        }
 
-        var nextCell = Concat(columnTest, nextRow + 1);
+        var newColumn = Columns[nextColumn];
+        var nextCell = Concat(newColumn, nextRow + 1);
         return new Location(nextCell, nextColumn, nextRow);
     }
 
@@ -113,10 +116,15 @@ public class GameField
     {
         var nextRow = baseCell.Row + 1;
 
-        var columnTest = Columns[baseCell.Column];
-        var rowTest = Rows[nextRow];
+        if (nextRow >= RowSize)
+        {
+            throw new ArgumentException("Invalid cell ID");
+        }
 
-        var nextCell = Concat(columnTest, rowTest);
+        var newColumn = Columns[baseCell.Column];
+        var newRow = Rows[nextRow];
+
+        var nextCell = Concat(newColumn, newRow);
         return new Location(nextCell, baseCell.Column, nextRow);
     }
 }
