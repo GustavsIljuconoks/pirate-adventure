@@ -1,6 +1,6 @@
 .game-board {
-	display: flex;
-	flex-flow: row wrap;
-	width: calc(var(--cell-size) * 10);
-	margin-bottom: 2rem;
+	position: relative;
+	display: grid;
+	aspect-ratio: 1 / 1;
+	grid-template-columns: repeat(10, minmax(0, 56px));
 }

@@ -17,6 +17,8 @@
 	background: #5a95d5;
 	padding: 1rem;
 	border-radius: 0.5rem;
+	max-height: 560px;
+	margin-top: 2rem;
 }
 
 .instruction {

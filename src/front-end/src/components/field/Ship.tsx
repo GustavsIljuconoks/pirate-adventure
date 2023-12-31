@@ -5,16 +5,9 @@ import type { FC } from 'react'
 import React from 'react'
 
 import styleShip from 'styles/field/Ship.module.css'
+import { Ship } from 'types/Ship'
 
-interface IShipDraggable {
-	id: string
-	label?: string
-	dragOverlay?: boolean
-	dragging?: boolean
-	style?: React.CSSProperties
-}
-
-const ShipDraggable: FC<IShipDraggable> = ({
+const ShipDraggable: FC<Ship> = ({
 	id,
 	label,
 	dragOverlay,

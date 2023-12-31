@@ -1,8 +1,15 @@
-import { useDroppable } from '@dnd-kit/core'
+import { UniqueIdentifier, useDroppable } from '@dnd-kit/core'
 import classNames from 'classnames'
 import { type ReactElement } from 'react'
 import style from 'styles/field/Square.module.css'
-import type { ISqaureDroppable } from 'types/Square'
+
+type Props = {
+	id: UniqueIdentifier
+	column: number
+	row: number
+	children?: React.ReactNode
+	dragging?: boolean
+}
 
 export default function Sqaure({
 	id,
@@ -10,7 +17,7 @@ export default function Sqaure({
 	column,
 	children,
 	dragging
-}: ISqaureDroppable): ReactElement {
+}: Props): ReactElement {
 	const { isOver, setNodeRef } = useDroppable({
 		id
 	})

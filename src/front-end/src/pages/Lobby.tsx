@@ -5,7 +5,7 @@ import SettingsMenu from 'components/SettingsMenu'
 import CopyToClipboard from 'components/input/CopyToClipboard'
 import Layout from 'components/layout/Layout'
 
-import GameSetup from 'components/GameSetup'
+import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
 export default function Lobby(): ReactElement {
@@ -23,7 +23,7 @@ export default function Lobby(): ReactElement {
 					</h1>
 
 					<div className="flex flex-row mb-8 gap-4">
-						<GameSetup />
+						<GameBoard />
 						<div className={style.instructions}>
 							<div className={style.instruction}>
 								<p>Drag to move</p>
