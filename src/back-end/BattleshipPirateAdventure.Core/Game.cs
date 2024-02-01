@@ -2,22 +2,40 @@ namespace BattleshipPirateAdventure.Core;
 
 public class Game
 {
-    private Guid _id;
+    public Game() { }
 
     public Game(Guid id, int columnSize, int rowSize)
     {
-        _id = id;
-        Player1 = new GamePlayer(columnSize, rowSize);
-        Player2 = new GamePlayer(columnSize, rowSize);
+        Id = id;
+        ColumnSize = columnSize;
+        RowSize = rowSize;
     }
 
-    public Guid Id => _id;
+    public Guid Id { get; set; }
 
-    public GamePlayer Player1 { get; }
+    public int ColumnSize { get; set;  }
 
-    public GamePlayer Player2 { get; }
+    public int RowSize { get; set; }
 
-    public void Start()
+    public GamePlayer? Player1 { get; set; }
+
+    public GamePlayer? Player2 { get; set; }
+
+    public GameState State { get; set; } = GameState.Lobby;
+
+    public void Start() { }
+
+    public void SetPlayer1(string player)
     {
+        Player1 = new GamePlayer(ColumnSize, RowSize) { Id = player };
     }
+
+    public void SetPlayer2(string player)
+    {
+        Player2 = new GamePlayer(ColumnSize, RowSize) { Id = player };
+    }
+
+    public bool HasPlayer1Joined => Player1 != null;
+
+    public bool HasPlayer2Joined => Player2 != null;
 }

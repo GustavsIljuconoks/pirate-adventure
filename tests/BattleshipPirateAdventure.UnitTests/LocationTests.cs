@@ -19,6 +19,18 @@ public class LocationTests
     }
 
     [Theory]
+    [InlineData(0, 0, "A1")]
+    [InlineData(1, 1, "B2")]
+    [InlineData(9, 2, "C10")]
+    public void GetLocation_ByRowAndColumn(int row, int column, string expectedCellId)
+    {
+        var sut = new GameField(10, 10);
+        var location = sut.GetLocation(row, column);
+
+        Assert.Equal(expectedCellId, location.CellId);
+    }
+
+    [Theory]
     [InlineData("X", typeof(ArgumentException))]
     [InlineData("A11", typeof(ArgumentException))]
     [InlineData("X9", typeof(ArgumentException))]

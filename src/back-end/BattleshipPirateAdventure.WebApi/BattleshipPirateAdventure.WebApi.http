@@ -1,24 +1,43 @@
-@BattleshipPirateAdventure.WebApi_HostAddress = http://localhost:5033
+@server = http://localhost:5033
+@game-id = 949b32e7-2321-430c-a4e4-17f236c2eb0a
 
 ###
 
-POST {{BattleshipPirateAdventure.WebApi_HostAddress}}/game/Player1InitField
+POST {{server}}/game/create
 Accept: application/json
 Content-Type: application/json
 
 {
-  "id": "99",
+  "player1": "valdis"
+}
+
+###
+
+POST {{server}}/game/{{game-id}}/join
+Accept: application/json
+Content-Type: application/json
+
+{
+  "player2": "gustavs"
+}
+
+###
+
+POST {{server}}/game/{{game-id}}/init-field
+Accept: application/json
+Content-Type: application/json
+
+{
+  "player1": "valdis",
   "ships": [
     {
-      "name": "skipper",
-      "size": 1,
+      "name": "First ship",
+      "size": 3,
       "headLocation": {
-        "row": 1,
-        "column": 1
+        "row": 2,
+        "column": 3
       },
       "orientation": 1
     }
   ]
 }
-
-###
