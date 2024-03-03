@@ -27,12 +27,12 @@ public class Game
 
     public void SetPlayer1(string player)
     {
-        Player1 = new GamePlayer(ColumnSize, RowSize) { Id = player };
+        Player1 = new GamePlayer(ColumnSize, RowSize, PlayerType.Player1, this) { Id = player };
     }
 
     public void SetPlayer2(string player)
     {
-        Player2 = new GamePlayer(ColumnSize, RowSize) { Id = player };
+        Player2 = new GamePlayer(ColumnSize, RowSize, PlayerType.Player2, this) { Id = player };
     }
 
     public bool HasPlayer1Joined => Player1 != null;

@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BattleshipPirateAdventure.Core;
 
@@ -21,10 +20,21 @@ public class GameEngine
     {
         var gameJson = await File.ReadAllTextAsync(GetGameFileName(gameId));
 
-        return JsonSerializer.Deserialize<Game>(gameJson) ?? throw new IOException("Failed to deserialize game");
+        var game = JsonSerializer.Deserialize<Game>(gameJson) ?? throw new IOException("Failed to deserialize game");
+
+        game.Player1?.PostLoad(game);
+        game.Player2?.PostLoad(game);
+
+        return game;
     }
 
-    private static string GetGameFileName(Game game) => GetGameFileName(game.Id);
+    private static string GetGameFileName(Game game)
+    {
+        return GetGameFileName(game.Id);
+    }
 
-    private static string GetGameFileName(Guid gameId) => $"{gameId}.json";
+    private static string GetGameFileName(Guid gameId)
+    {
+        return $"{gameId}.json";
+    }
 }
