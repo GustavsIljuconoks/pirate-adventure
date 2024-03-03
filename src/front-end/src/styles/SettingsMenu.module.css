@@ -1,0 +1,39 @@
+.settings {
+	position: fixed;
+	top: 5%;
+	right: 5%;
+	text-align: center;
+	width: max-content;
+	border-radius: 9999px;
+	background-color: #1863a8;
+
+}
+
+.dropdown {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.dropdown {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border-radius: 9999px;
+	background-color: #1863a8;
+}
+
+.open {
+	display: block;
+	transition: 300ms ease;
+}
+
+.closed {
+	display: none;
+	transition: display 0.3s ease;
+}
+
+.menu-item {
+	padding: 1rem;
+	align-items: center;
+}
