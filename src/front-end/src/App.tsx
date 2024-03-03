@@ -19,7 +19,7 @@ export default function App(): ReactElement {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/code" element={<LobbyCode />} />
-          <Route path="/lobby" element={<Lobby />} />
+          <Route path="/lobby/:guid" element={<Lobby />} />
           <Route path="/game" element={<Game />} />
         </Routes>
       </Suspense>
