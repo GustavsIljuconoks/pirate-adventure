@@ -1,0 +1,11 @@
+.avatar {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	font-size: larger;
+	font-weight: bold;
+}
+
+.ready {
+	color: #1863a8;
+}

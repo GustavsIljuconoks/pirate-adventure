@@ -1,0 +1,8 @@
+.menu-item {
+	font-size: 80px;
+	font-weight: bolder;
+}
+
+.menu-item:hover {
+	color: #1863a8;
+}

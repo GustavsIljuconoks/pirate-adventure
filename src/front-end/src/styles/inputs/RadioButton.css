@@ -1,0 +1,12 @@
+.input-radio {
+	display: none;
+}
+
+/* input[type="radio"] + label { */
+.label-radio {
+	cursor: pointer;
+}
+
+input[type='radio']:checked + label {
+	color: #1863a8; /* Accent color */
+}
