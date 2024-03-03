@@ -1,21 +1,9 @@
 .square {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border: solid 2px #fff;
-	border-radius: 5px;
-	position: relative;
-	text-align: center;
-
-	&.over {
-		box-shadow:
-			inset #1863a8 0 0 0 3px,
-			rgba(201, 211, 219, 0.5) 20px 14px 24px;
-
-		&.dropped {
-			box-shadow:
-				inset rgba(201, 211, 219, 0.7) 0 0 0 3px,
-				rgba(201, 211, 219, 0.5) 20px 14px 24px;
-		}
-	}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: solid 2px #fff;
+  border-radius: 5px;
+  position: relative;
+  text-align: center;
 }

@@ -1,6 +1,6 @@
-export type Cell = {
-	shipId?: number
-	isHit: boolean
+export type CellType = {
+  shipId?: number
+  isHit: boolean
 }
 
-export type Field = Cell[]
+export type FieldType = CellType[]
