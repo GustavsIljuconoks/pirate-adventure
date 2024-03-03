@@ -1,44 +1,41 @@
-/* eslint-disable react/jsx-no-duplicate-props */
+import axios from 'axios'
 import Layout from 'components/layout/Layout'
 import type { ReactElement } from 'react'
 import '../styles/Start.css'
 
 export default function Main(): ReactElement {
-	return (
-		<Layout>
-			<div className="flex flex-col gap-12 mt-auto">
-				<a
-					href="https://unsplash.com"
-					rel="noreferrer noopener"
-					className="menu-item"
-				>
-					New game
-				</a>
+  const createNewGame = () => {
+    axios
+      .post('https://localhost:7035/game/create', {
+        player1: 'gustavs'
+      })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
-				<a
-					href="https://unsplash.com"
-					rel="noreferrer noopener"
-					className="menu-item"
-				>
-					Join
-				</a>
+  return (
+    <Layout>
+      <div className="flex flex-col gap-12 mt-auto">
+        <button type="submit" className="menu-item" onClick={createNewGame}>
+          New game
+        </button>
 
-				<a
-					href="https://unsplash.com"
-					rel="noreferrer noopener"
-					className="menu-item"
-				>
-					Tutorial
-				</a>
+        <button type="submit" className="menu-item">
+          Join
+        </button>
 
-				<a
-					href="/leaderboard"
-					rel="noreferrer noopener"
-					className="menu-item"
-				>
-					Leaderboard
-				</a>
-			</div>
-		</Layout>
-	)
+        <button type="submit" className="menu-item">
+          Tutorial
+        </button>
+
+        <button type="submit" className="menu-item">
+          Leaderboard
+        </button>
+      </div>
+    </Layout>
+  )
 }

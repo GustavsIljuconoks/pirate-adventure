@@ -1,4 +1,4 @@
-@server = http://localhost:5033
+@server = http://localhost:7035
 @game-id = 949b32e7-2321-430c-a4e4-17f236c2eb0a
 
 ###
