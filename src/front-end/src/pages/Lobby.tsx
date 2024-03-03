@@ -8,12 +8,17 @@ import Layout from 'components/layout/Layout'
 import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
+import { useSelector } from 'react-redux'
+import { RootState } from 'store'
+
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
 
   const handlePlayerReady = () => {
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
   }
+
+  const currentGame = useSelector((state: RootState) => state.game.currentGame)
 
   return (
     <Layout>
@@ -59,7 +64,7 @@ export default function Lobby(): ReactElement {
 
         <div className="flex justify-between">
           <LobbyAvatar
-            username="kerri"
+            username={currentGame?.player1}
             isReady={playerReady}
             avatarIcon="https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/celebrity-captain-jack-sparrow-pirate-carribean-512.png"
           />
