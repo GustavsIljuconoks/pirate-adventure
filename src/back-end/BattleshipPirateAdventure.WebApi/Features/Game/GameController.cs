@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
 
+
+public class RootResponseDto : Resource{}
+
 [ApiController]
 [Route("game")]
 public class GameController(ILogger<GameController> logger) : ControllerBase
@@ -23,14 +26,9 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
 
         await engine.SaveGameAsync(game);
 
-        logger.LogInformation($"Game `{game.Id}` created");
+        logger.LogInformation($"Game `{game.Id}` created, Player 1: `{request.Player1}`");
 
-        var result = new CreateGameResponseDto
-        {
-            Id = game.Id.ToString(),
-            Size = new FieldSizeDto(10, 10),
-            State = game.State
-        };
+        var result = new CreateGameResponseDto { Id = game.Id.ToString(), Size = new FieldSizeDto(10, 10), State = game.State };
 
         result.AddPostLink(this, nameof(Player1Controller.Player1InitField), new { gameId = game.Id });
 
@@ -50,12 +48,20 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
 
         await engine.SaveGameAsync(game);
 
-        logger.LogInformation($"Player2 joined game `{game.Id}`");
+        logger.LogInformation($"Player 2 `{request.Player2}` joined the game `{game.Id}`");
 
         var result = new JoinGameResponseDto(gameId);
-
-        result.AddPostLink(this, nameof(Player2Controller.Player2InitField), new { gameId = gameId });
+        result.AddPostLink(this, nameof(Player2Controller.Player2InitField), new { gameId = game.Id });
 
         return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("mygames", Name = nameof(MyGames))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult> MyGames(string playerName)
+    {
+        throw new NotImplementedException();
     }
 }

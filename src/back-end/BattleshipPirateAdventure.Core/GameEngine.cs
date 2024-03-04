@@ -22,9 +22,6 @@ public class GameEngine
 
         var game = JsonSerializer.Deserialize<Game>(gameJson) ?? throw new IOException("Failed to deserialize game");
 
-        game.Player1?.PostLoad(game);
-        game.Player2?.PostLoad(game);
-
         return game;
     }
 

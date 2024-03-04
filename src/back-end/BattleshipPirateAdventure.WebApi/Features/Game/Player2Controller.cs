@@ -20,7 +20,7 @@ public class Player2Controller(ILogger<Player2Controller> logger) : ControllerBa
         if (game.HasPlayer2Joined)
         {
             game.Player2!.InitField(request.Ships.MapFromDto(game.Player2.Field));
-            game.Player2!.SetReady();
+            game.SetReady(PlayerType.Player2);
         }
 
         await engine.SaveGameAsync(game);
