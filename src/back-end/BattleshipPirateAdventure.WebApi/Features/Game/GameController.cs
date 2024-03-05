@@ -1,6 +1,8 @@
 using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.Core.Models;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
+using BattleshipPirateAdventure.WebApi.Features.Shared;
+using BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 

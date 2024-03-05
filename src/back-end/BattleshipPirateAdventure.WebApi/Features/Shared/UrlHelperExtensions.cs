@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
+namespace BattleshipPirateAdventure.WebApi.Features.Shared;
 
 public static class UrlHelperExtensions
 {

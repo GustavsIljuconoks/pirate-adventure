@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
+namespace BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 
 public abstract class Resource
 {
@@ -8,7 +8,7 @@ public abstract class Resource
 
     [JsonPropertyName("_links")]
     [JsonPropertyOrder(100)]
-    public IEnumerable<Link> Links { get { return _links; } }
+    public IEnumerable<Link> Links => _links;
 
     public void AddLink(Link link)
     {

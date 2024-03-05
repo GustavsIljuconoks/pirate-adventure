@@ -1,7 +1,8 @@
-using BattleshipPirateAdventure.WebApi.Features.Game.Models;
+using BattleshipPirateAdventure.WebApi.Features.Game;
+using BattleshipPirateAdventure.WebApi.Features.Shared;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BattleshipPirateAdventure.WebApi.Features.Game;
+namespace BattleshipPirateAdventure.WebApi.Features.Root;
 
 [ApiController]
 [Route("")]

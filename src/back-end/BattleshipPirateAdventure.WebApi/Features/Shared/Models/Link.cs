@@ -1,4 +1,4 @@
-namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
+namespace BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 
 public class Link(string rel, string href, HttpMethod method)
 {

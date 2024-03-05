@@ -1,4 +1,5 @@
 using BattleshipPirateAdventure.Core;
+using BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
 
