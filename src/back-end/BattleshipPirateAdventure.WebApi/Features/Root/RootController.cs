@@ -1,4 +1,5 @@
 using BattleshipPirateAdventure.WebApi.Features.Game;
+using BattleshipPirateAdventure.WebApi.Features.Root.Models;
 using BattleshipPirateAdventure.WebApi.Features.Shared;
 using Microsoft.AspNetCore.Mvc;
 

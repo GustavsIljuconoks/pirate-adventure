@@ -21,6 +21,8 @@ public class Player1Controller(ILogger<Player1Controller> logger) : ControllerBa
         {
             game.Player1!.InitField(request.Ships.MapFromDto(game.Player1.Field));
             game.SetReady(PlayerType.Player1);
+
+            logger.LogInformation($"Player 1 ready for game `{gameId}`");
         }
 
         await engine.SaveGameAsync(game);

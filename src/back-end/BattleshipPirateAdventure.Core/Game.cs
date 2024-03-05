@@ -36,16 +36,29 @@ public class Game
 
     public void SetPlayer2(string player)
     {
+        if (HasPlayer2Joined)
+        {
+            throw new InvalidOperationException("Player 2 has already joined");
+        }
+
         Player2 = new GamePlayer(ColumnSize, RowSize, PlayerType.Player2) { Id = player };
     }
 
     public void SetReady(PlayerType playerType)
     {
-        State = playerType switch
+        if (playerType == PlayerType.Player1 && HasPlayer1Joined)
         {
-            PlayerType.Player1 => GameState.Player1Ready,
-            PlayerType.Player2 => GameState.Player2Ready,
-            _ => State
-        };
+            Player1!.SetReady();
+        }
+
+        if (playerType == PlayerType.Player2 && HasPlayer2Joined)
+        {
+            Player2!.SetReady();
+        }
+
+        if (HasPlayer1Joined && Player1!.State == PlayerState.Ready && HasPlayer2Joined && Player2!.State == PlayerState.Ready)
+        {
+            State = GameState.Started;
+        }
     }
 }

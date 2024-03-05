@@ -2,14 +2,10 @@ using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.Core.Models;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Shared;
-using BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
-
-
-public class RootResponseDto : Resource{}
 
 [ApiController]
 [Route("game")]
@@ -33,6 +29,7 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
         var result = new CreateGameResponseDto { Id = game.Id.ToString(), Size = new FieldSizeDto(10, 10), State = game.State };
 
         result.AddPostLink(this, nameof(Player1Controller.Player1InitField), new { gameId = game.Id });
+        result.AddPostLink(this, nameof(JoinGame), new { gameId = game.Id });
 
         return Ok(result);
     }
