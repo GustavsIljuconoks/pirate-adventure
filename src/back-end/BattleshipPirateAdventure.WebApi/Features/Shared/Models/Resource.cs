@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
+using TypeGen.Core.TypeAnnotations;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Shared.Models;
 
+[ExportTsInterface]
 public abstract class Resource
 {
     private readonly List<Link> _links = new();

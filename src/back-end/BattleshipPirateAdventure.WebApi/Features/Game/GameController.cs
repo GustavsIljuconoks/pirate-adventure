@@ -66,11 +66,11 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
     [Route("getGame", Name = nameof(GetGame))]
     [Consumes("application/json")]
     [Produces("application/json")]
-    public async Task<ActionResult<Core.Game>> GetGame(Guid gameId)
+    public async Task<ActionResult<GameDto>> GetGame(Guid gameId)
     {
         var engine = new GameEngine();
         var game = await engine.LoadGameAsync(gameId);
 
-        return game;
+        return game.MapFromDomain();
     }
 }
