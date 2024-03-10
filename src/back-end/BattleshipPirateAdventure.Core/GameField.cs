@@ -103,7 +103,6 @@ public class GameField
         return Array.IndexOf(Columns, columnName);
     }
 
-
     public Cell GetCell(string cellId)
     {
         var location = GetLocation(cellId);
@@ -141,5 +140,28 @@ public class GameField
         var nextCell = Concat(newColumn, newRow);
 
         return new Location(nextCell, baseCell.Column, nextRow);
+    }
+
+    public ShotResult Shoot(Location shotLocation)
+    {
+        var target = GetCell(shotLocation.CellId);
+
+        if (target.State == CellState.Occupied)
+        {
+            var score = new ShotResult(shotLocation, null, Scoring.Hit);
+            target.State = CellState.Hit;
+
+            return score;
+        }
+
+        if (target.State == CellState.Free || target.State == CellState.None)
+        {
+            var score = new ShotResult(shotLocation, null, Scoring.Missed);
+            target.State = CellState.Missed;
+
+            return score;
+        }
+
+        throw new ArgumentOutOfRangeException(nameof(shotLocation), "Invalid cell id");
     }
 }

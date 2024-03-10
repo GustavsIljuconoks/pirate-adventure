@@ -1,3 +1,6 @@
+using System.Net.Http.Headers;
+using BattleshipPirateAdventure.Core.Models;
+
 namespace BattleshipPirateAdventure.Core;
 
 public class Game
@@ -27,7 +30,48 @@ public class Game
 
     public bool HasPlayer2Joined => Player2 != null;
 
-    public void Start() { }
+    public PlayerType NextMove { get; set; }
+
+    public void Start()
+    {
+        // can start only if both players are ready
+        if (!HasPlayer1Joined
+            || !HasPlayer2Joined
+            || Player1?.State != PlayerState.Ready
+            || Player2?.State != PlayerState.Ready)
+        {
+            throw new InvalidOperationException($"Invalid game state. Cannot start. Game Id: {Id}");
+        }
+
+        State = GameState.Started;
+        NextMove = PlayerType.Player1;
+    }
+
+    public ShotResult Player1Move(Location shotLocation)
+    {
+        if (NextMove != PlayerType.Player1)
+        {
+            throw new InvalidOperationException("Next move is set for Player 2");
+        }
+
+        var result = Player2!.Field.Shoot(shotLocation);
+        NextMove = PlayerType.Player2;
+
+        return result;
+    }
+
+    public ShotResult Player2Move(Location shotLocation)
+    {
+        if (NextMove != PlayerType.Player2)
+        {
+            throw new InvalidOperationException("Next move is set for Player 1");
+        }
+
+        var result = Player1!.Field.Shoot(shotLocation);
+        NextMove = PlayerType.Player2;
+
+        return result;
+    }
 
     public void SetPlayer1(string player)
     {
@@ -58,7 +102,7 @@ public class Game
 
         if (HasPlayer1Joined && Player1!.State == PlayerState.Ready && HasPlayer2Joined && Player2!.State == PlayerState.Ready)
         {
-            State = GameState.Started;
+            Start();
         }
     }
 }

@@ -17,6 +17,8 @@ public class GameDto
     public GamePlayerDto? Player2 { get; set; }
 
     public GameState State { get; set; }
+
+    public PlayerType NextMove { get; set; }
 }
 
 public static class GameExtensions
@@ -30,25 +32,8 @@ public static class GameExtensions
             RowSize = game.RowSize,
             Player1 = game.Player1?.MapFromDomain(),
             Player2 = game.Player2?.MapFromDomain(),
-            State = game.State
+            State = game.State,
+            NextMove = game.NextMove
         };
-    }
-}
-
-[ExportTsInterface]
-public class GamePlayerDto
-{
-    public string? Id { get; set; }
-
-    public PlayerType PlayerType { get; set; }
-
-    public PlayerState State { get; set; } = PlayerState.NotReady;
-}
-
-public static class GamePlayerExtensions
-{
-    public static GamePlayerDto MapFromDomain(this GamePlayer player)
-    {
-        return new GamePlayerDto { Id = player.Id, PlayerType = player.PlayerType, State = player.State };
     }
 }

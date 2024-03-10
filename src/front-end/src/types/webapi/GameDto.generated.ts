@@ -5,6 +5,7 @@
 
 import { GamePlayerDto } from './GamePlayerDto.generated';
 import { GameState } from './GameState.generated';
+import { PlayerType } from './PlayerType.generated';
 
 export interface GameDto {
     id: string;
@@ -13,4 +14,5 @@ export interface GameDto {
     player1: GamePlayerDto;
     player2: GamePlayerDto;
     state: GameState;
+    nextMove: PlayerType;
 }
