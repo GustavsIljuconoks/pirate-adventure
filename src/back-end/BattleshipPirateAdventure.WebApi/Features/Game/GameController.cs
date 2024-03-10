@@ -1,8 +1,6 @@
 using BattleshipPirateAdventure.Core;
-using BattleshipPirateAdventure.Core.Models;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Shared;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
@@ -62,5 +60,17 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
     public async Task<ActionResult> MyGames(string playerName)
     {
         throw new NotImplementedException();
+    }
+
+    [HttpGet]
+    [Route("getGame", Name = nameof(GetGame))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<Core.Game>> GetGame(Guid gameId)
+    {
+        var engine = new GameEngine();
+        var game = await engine.LoadGameAsync(gameId);
+
+        return game;
     }
 }
