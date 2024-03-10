@@ -8,23 +8,27 @@ import Layout from 'components/layout/Layout'
 import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
+import { APP_URL } from 'constants'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
+  const apiData = useSelector((state: RootState) => state.apiData.data)
+  const joinGameLink = APP_URL + 'join/' + apiData.id
 
   const handlePlayerReady = () => {
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
   }
 
-  const currentGame = useSelector((state: RootState) => state.game.currentGame)
+  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
+  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
 
   return (
     <Layout>
       <div className="mx-auto">
         <div className={style['lobby-code']}>
-          <CopyToClipboard />
+          <CopyToClipboard joinLink={joinGameLink} />
           <SettingsMenu />
         </div>
 
@@ -64,12 +68,12 @@ export default function Lobby(): ReactElement {
 
         <div className="flex justify-between">
           <LobbyAvatar
-            username={currentGame?.player1}
+            username={gamePlayer1?.player1}
             isReady={playerReady}
             avatarIcon="https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/celebrity-captain-jack-sparrow-pirate-carribean-512.png"
           />
           <LobbyAvatar
-            username="zabis"
+            username={gamePlayer2?.player2}
             isReady={playerReady}
             avatarIcon="https://img.freepik.com/premium-vector/head-pirate-with-hat-eye-patch-flat-vector-illustration_124715-1485.jpg"
           />

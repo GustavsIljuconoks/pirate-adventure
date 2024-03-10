@@ -9,6 +9,7 @@ const Settings = lazy(async () => import('pages/LobbySettings'))
 const LobbyCode = lazy(async () => import('pages/LobbyCode'))
 const Lobby = lazy(async () => import('pages/Lobby'))
 const Game = lazy(async () => import('pages/Game'))
+const JoinGame = lazy(async () => import('pages/JoinGame'))
 
 export default function App(): ReactElement {
   return (
@@ -21,6 +22,7 @@ export default function App(): ReactElement {
           <Route path="/code" element={<LobbyCode />} />
           <Route path="/lobby/:guid" element={<Lobby />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/join/:guid" element={<JoinGame />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

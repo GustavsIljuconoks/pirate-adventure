@@ -1,23 +1,45 @@
 import axios from 'axios'
 import Layout from 'components/layout/Layout'
-import type { ReactElement } from 'react'
-import { useDispatch } from 'react-redux'
+import { SERVER_URL } from 'constants'
+import { ReactElement, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setCurrentGame } from 'reducers/gameSlice'
+import { setApiData } from 'reducers/apiDataSlice'
+import { setPlayer1 } from 'reducers/gameSlice'
+import { RootState } from 'store'
+import { findLinkByRel } from 'utils/findLinkByRel'
 import '../styles/Start.css'
 
 export default function Main(): ReactElement {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  const getRoot = (): void => {
+    axios.get(SERVER_URL).then((response) => {
+      const responseItems = response.data
+      dispatch(setApiData(responseItems))
+    })
+  }
+
+  useEffect(() => {
+    getRoot()
+  }, [])
+
+  const apiData = useSelector((state: RootState) => state.apiData.data)
+
   const createNewGame = (): void => {
+    const createGameLink = findLinkByRel(apiData, 'createGame')
+
     axios
-      .post<{ id: string }>('https://localhost:7035/game/create', {
+      .post(SERVER_URL + createGameLink, {
         player1: 'gustavs'
       })
       .then((response) => {
+        const responseItems = response.data
+        dispatch(setApiData(responseItems))
+
         const gameId = response.data.id
-        dispatch(setCurrentGame({ player1: 'gustavs', id: gameId }))
+        dispatch(setPlayer1({ player1: 'gustavs', id: gameId }))
         navigate(`/lobby/${gameId}`)
       })
       .catch((error) => {
