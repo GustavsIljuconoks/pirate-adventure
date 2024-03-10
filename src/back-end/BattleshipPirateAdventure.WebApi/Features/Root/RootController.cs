@@ -19,6 +19,7 @@ public class RootController(ILogger<RootController> logger) : ControllerBase
 
         result.AddLink(this, nameof(GameController.MyGames));
         result.AddPostLink(this, nameof(GameController.CreateGame));
+        result.AddPostLink(this, nameof(GameController.JoinGame), new { gameId = Guid.Empty });
 
         return Ok(result);
     }
