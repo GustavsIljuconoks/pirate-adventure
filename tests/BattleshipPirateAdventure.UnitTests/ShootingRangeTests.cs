@@ -35,6 +35,23 @@ public class ShootingRangeTests
         // go player 1
         var result = game.Player1Move(game.Player2!.Field.GetLocation("A1"));
 
-        result = game.Player2Move(game.Player1!.Field.GetLocation("B7"));
+        // go player 2
+        result = game.Player2Move(game.Player1!.Field.GetLocation("B1"));
+
+        // go player 1 - 1st hit
+        result = game.Player1Move(game.Player2!.Field.GetLocation("D1"));
+        Assert.Equal(Scoring.Hit, result.Scoring);
+
+        // go player 2
+        result = game.Player2Move(game.Player1!.Field.GetLocation("B2"));
+
+        // go player 1 - 2nd hit
+        result = game.Player1Move(game.Player2!.Field.GetLocation("E1"));
+        Assert.Equal(Scoring.Hit, result.Scoring);
+
+        // TODO: verify that ship "Docker" has downed
+
+        // go player 2
+        result = game.Player2Move(game.Player1!.Field.GetLocation("B3"));
     }
 }

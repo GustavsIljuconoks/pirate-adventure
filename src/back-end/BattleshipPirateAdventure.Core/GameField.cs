@@ -162,6 +162,11 @@ public class GameField
             return score;
         }
 
+        if (target.State == CellState.Hit || target.State == CellState.Missed)
+        {
+            throw new ArgumentOutOfRangeException(nameof(shotLocation), "This cell has already been targeted");
+        }
+
         throw new ArgumentOutOfRangeException(nameof(shotLocation), "Invalid cell id");
     }
 }

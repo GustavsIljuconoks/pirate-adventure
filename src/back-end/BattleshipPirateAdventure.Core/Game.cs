@@ -68,7 +68,7 @@ public class Game
         }
 
         var result = Player1!.Field.Shoot(shotLocation);
-        NextMove = PlayerType.Player2;
+        NextMove = PlayerType.Player1;
 
         return result;
     }
