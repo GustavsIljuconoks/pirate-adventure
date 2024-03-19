@@ -8,30 +8,51 @@ import Layout from 'components/layout/Layout'
 import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
-import { APP_URL } from 'constants'
+import axios from 'axios'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
+import { findLinkByRel } from 'utils/findLinkByRel'
+import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const joinGameLink = APP_URL + 'join/' + apiData.id
-  const player1InitializeField = APP_URL + 'join/' + apiData.id
-
-  const ships = useSelector((state: RootState) => state.shipSave.ships)
-
-  const initializeField = () => {
-    // axios
-    //   .post(SERVER_URL + player1InitializeField, { shipsPlayer1 })
-    //   .then(() => {})
-
-    console.log(ships)
-
-    setPlayerReady((prevPlayerReady) => !prevPlayerReady)
-  }
+  const player1InitializeField = findLinkByRel(apiData, 'player1InitField')
+  const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
 
   const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
   const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
+
+  const shipsPlayer1 = useSelector(
+    (state: RootState) => state.shipSave.player1Ships
+  )
+  const shipsPlayer2 = useSelector(
+    (state: RootState) => state.shipSave.player2Ships
+  )
+
+  const initializeField = () => {
+    if (gamePlayer1) {
+      axios
+        .post(SERVER_URL + player1InitializeField, {
+          ships: shipsPlayer1
+        })
+        .then((response) => {
+          console.log(response.data)
+        })
+    }
+
+    if (gamePlayer2) {
+      axios
+        .post(SERVER_URL + player2InitializeField, {
+          ships: shipsPlayer2
+        })
+        .then((response) => {
+          console.log(response.data)
+        })
+    }
+    setPlayerReady((prevPlayerReady) => !prevPlayerReady)
+  }
 
   return (
     <Layout>

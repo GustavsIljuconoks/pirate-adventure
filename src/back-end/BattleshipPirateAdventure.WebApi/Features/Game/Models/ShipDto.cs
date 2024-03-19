@@ -10,7 +10,7 @@ public class ShipDto
     public int Id { get; set; }
     public required string Name { get; set; }
     public int Size { get; set; }
-    public required string HeadLocation { get; set; }
+    public required LocationDto HeadLocation { get; set; }
     public Orientation Orientation { get; set; }
 }
 
@@ -23,7 +23,7 @@ public static class ShipExtensions
             Name = ship.Name,
             Size = ship.Size,
             Orientation = ship.Orientation,
-            HeadLocation = ship.HeadLocation.CellId
+            HeadLocation = ship.HeadLocation.MapFromDomain()
         };
     }
 }
@@ -35,7 +35,7 @@ public static class ListOfShipDtoExtensions
         return ships
             .Select(x => new Ship(x.Name,
                                   x.Size,
-                                  field.GetLocation(x.HeadLocation),
+                                  field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column), 
                                   x.Orientation))
             .ToList();
     }

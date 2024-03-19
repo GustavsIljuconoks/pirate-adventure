@@ -2,25 +2,43 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ShipDto } from '../types/webapi'
 
 interface ShipStorage {
-  ships: ShipDto[]
+  player1Ships: ShipDto[]
+  player2Ships: ShipDto[]
 }
 
 const initialState: ShipStorage = {
-  ships: []
+  player1Ships: [],
+  player2Ships: []
 }
 
 export const shipSlice = createSlice({
   name: 'shipSave',
   initialState,
   reducers: {
-    setShips: (state, action: PayloadAction<ShipDto>) => {
-      state.ships.push(action.payload)
+    setShipsPlayer1: (state, action: PayloadAction<ShipDto>) => {
+      state.player1Ships.push(action.payload)
     },
-    deleteShipById: (state, action: PayloadAction<number>) => {
-      state.ships = state.ships.filter((ship) => ship.id !== action.payload)
+    setShipsPlayer2: (state, action: PayloadAction<ShipDto>) => {
+      state.player2Ships.push(action.payload)
+    },
+
+    deletePlayer1Ship: (state, action: PayloadAction<number>) => {
+      state.player1Ships = state.player1Ships.filter(
+        (ship) => ship.id !== action.payload
+      )
+    },
+    deletePlayer2Ship: (state, action: PayloadAction<number>) => {
+      state.player2Ships = state.player2Ships.filter(
+        (ship) => ship.id !== action.payload
+      )
     }
   }
 })
 
-export const { setShips, deleteShipById } = shipSlice.actions
+export const {
+  setShipsPlayer1,
+  setShipsPlayer2,
+  deletePlayer1Ship,
+  deletePlayer2Ship
+} = shipSlice.actions
 export default shipSlice.reducer

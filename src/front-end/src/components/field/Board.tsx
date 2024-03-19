@@ -8,8 +8,14 @@ import {
 } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 import { ReactElement, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { deleteShipById, setShips } from 'reducers/shipSaveSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  deletePlayer1Ship,
+  deletePlayer2Ship,
+  setShipsPlayer1,
+  setShipsPlayer2
+} from 'reducers/shipSaveSlice'
+import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
 import { Columns } from 'types/Square'
 import { createField } from 'utils/creators/createGrid'
@@ -34,7 +40,10 @@ export default function GameBoard(): ReactElement {
   const [axis, setAxis] = useState<'x' | 'y'>('x')
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
   const [shipBeingRemovedId, setShipBeingRemovedId] = useState<number>()
+
   const dispatch = useDispatch()
+  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
+  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
 
   const handleDragEnd = () => {
     if (hoveredCell?.id === undefined || !draggedShipId) return
@@ -68,19 +77,25 @@ export default function GameBoard(): ReactElement {
           })
       )
 
+      const shipObject = {
+        id: shipId,
+        name: shipName,
+        size: shipLength,
+        headLocation: {
+          row: hoveredCell.row,
+          column: Columns[hoveredCell.column as keyof typeof Columns]
+        },
+        orientation: 1
+      }
+
       setPlayerField(fieldClone)
-      dispatch(
-        setShips({
-          id: shipId,
-          name: shipName,
-          size: shipLength,
-          headLocation: {
-            row: hoveredCell.row,
-            column: Columns[hoveredCell.column]
-          },
-          orientation: 1
-        })
-      )
+      if (gamePlayer1) {
+        dispatch(setShipsPlayer1(shipObject))
+      }
+
+      if (gamePlayer2) {
+        dispatch(setShipsPlayer2(shipObject))
+      }
     }
 
     resetDnDState()
@@ -130,7 +145,13 @@ export default function GameBoard(): ReactElement {
     resetShipPosition(id)
     resetCell(id)
 
-    dispatch(deleteShipById(id))
+    if (gamePlayer1) {
+      dispatch(deletePlayer1Ship(id))
+    }
+
+    if (gamePlayer2) {
+      dispatch(deletePlayer2Ship(id))
+    }
   }
 
   return (

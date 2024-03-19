@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Layout from 'components/layout/Layout'
-import { SERVER_URL } from 'constants'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +7,7 @@ import { setApiData } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
 import { RootState } from 'store'
 import { findLinkByRel } from 'utils/findLinkByRel'
+import { SERVER_URL } from '../constants'
 import '../styles/Start.css'
 
 export default function Main(): ReactElement {

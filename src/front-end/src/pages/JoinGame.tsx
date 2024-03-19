@@ -16,7 +16,6 @@ export default function JoinGame(): ReactElement {
     const fetchData = async () => {
       try {
         const response = await axios.get(SERVER_URL)
-        dispatch(setApiData(response.data))
         setLoading(false)
 
         const joinGameLinkTemplate = response.data._links.find(
@@ -31,8 +30,10 @@ export default function JoinGame(): ReactElement {
             gameId
           )
 
-          axios.post(SERVER_URL + joinLink, { player2: 'valdis' })
-            .then(() => {
+          axios
+            .post(SERVER_URL + joinLink, { player2: 'valdis' })
+            .then((response) => {
+              dispatch(setApiData(response.data))
               dispatch(setPlayer2({ player2: 'valdis', id: gameId }))
               navigate(`/lobby/${gameId}`)
             })
