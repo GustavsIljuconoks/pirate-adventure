@@ -16,8 +16,17 @@ export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const joinGameLink = APP_URL + 'join/' + apiData.id
+  const player1InitializeField = APP_URL + 'join/' + apiData.id
 
-  const handlePlayerReady = () => {
+  const ships = useSelector((state: RootState) => state.shipSave.ships)
+
+  const initializeField = () => {
+    // axios
+    //   .post(SERVER_URL + player1InitializeField, { shipsPlayer1 })
+    //   .then(() => {})
+
+    console.log(ships)
+
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
   }
 
@@ -59,7 +68,7 @@ export default function Lobby(): ReactElement {
             <button
               type="button"
               className="bg-deep-blue w-9/12 p-4 rounded-lg font-medium align-middle"
-              onClick={handlePlayerReady}
+              onClick={initializeField}
             >
               Ready to fight
             </button>

@@ -1,13 +1,13 @@
 import { useDroppable } from '@dnd-kit/core'
 import style from 'styles/field/Square.module.css'
 import { Ships } from 'types/Ship'
-import { CellType, FieldType } from 'types/Square'
+import { CellType } from 'types/Square'
 import { isPositionValid } from 'utils/validators/isPositionValid'
 
 type Props = {
   field: CellType
   cellId: number
-  data: FieldType
+  data: CellType
   draggedShipId?: number
   hoveredCellId?: number
   axis: string
@@ -17,12 +17,19 @@ type Props = {
 const DroppableSquare = ({
   field,
   cellId,
+  data,
   draggedShipId,
   hoveredCellId,
   axis,
   ships
 }: Props) => {
-  const { setNodeRef } = useDroppable({ id: cellId })
+  const { setNodeRef } = useDroppable({
+    id: cellId,
+    data: {
+      column: data.column,
+      row: data.row
+    }
+  })
 
   const getCellStatus = () => {
     // speficially checks for undefined because id can be 0

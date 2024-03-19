@@ -6,6 +6,7 @@ namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
 [ExportTsInterface]
 public class ShipDto
 {
+    public int Id { get; set; }
     public required string Name { get; set; }
     public int Size { get; set; }
     public required LocationDto HeadLocation { get; set; }
