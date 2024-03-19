@@ -3,13 +3,12 @@
  * Any changes made to this file can be lost when this file is regenerated.
  */
 
-import { LocationDto } from './LocationDto.generated';
 import { Orientation } from './Orientation.generated';
 
 export interface ShipDto {
     id: number;
     name: string;
     size: number;
-    headLocation: LocationDto;
+    headLocation: string;
     orientation: Orientation;
 }
