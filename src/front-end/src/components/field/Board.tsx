@@ -9,12 +9,7 @@ import {
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  deletePlayer1Ship,
-  deletePlayer2Ship,
-  setShipsPlayer1,
-  setShipsPlayer2
-} from 'reducers/shipSaveSlice'
+import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
 import { Columns } from 'types/Square'
@@ -90,11 +85,11 @@ export default function GameBoard(): ReactElement {
 
       setPlayerField(fieldClone)
       if (gamePlayer1) {
-        dispatch(setShipsPlayer1(shipObject))
+        dispatch(setShipsForPlayer({ playerId: 1, ship: shipObject }))
       }
 
       if (gamePlayer2) {
-        dispatch(setShipsPlayer2(shipObject))
+        dispatch(setShipsForPlayer({ playerId: 2, ship: shipObject }))
       }
     }
 
@@ -146,11 +141,11 @@ export default function GameBoard(): ReactElement {
     resetCell(id)
 
     if (gamePlayer1) {
-      dispatch(deletePlayer1Ship(id))
+      dispatch(deleteShipsForPlayer({ playerId: 1, shipId: id }))
     }
 
     if (gamePlayer2) {
-      dispatch(deletePlayer2Ship(id))
+      dispatch(deleteShipsForPlayer({ playerId: 2, shipId: id }))
     }
   }
 

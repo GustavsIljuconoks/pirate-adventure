@@ -15,30 +15,35 @@ export const shipSlice = createSlice({
   name: 'shipSave',
   initialState,
   reducers: {
-    setShipsPlayer1: (state, action: PayloadAction<ShipDto>) => {
-      state.player1Ships.push(action.payload)
-    },
-    setShipsPlayer2: (state, action: PayloadAction<ShipDto>) => {
-      state.player2Ships.push(action.payload)
+    setShipsForPlayer: (
+      state,
+      action: PayloadAction<{ playerId: number; ship: ShipDto }>
+    ) => {
+      const { playerId } = action.payload
+      if (playerId === 1) {
+        state.player1Ships.push(action.payload.ship)
+      } else if (playerId === 2) {
+        state.player2Ships.push(action.payload.ship)
+      }
     },
 
-    deletePlayer1Ship: (state, action: PayloadAction<number>) => {
-      state.player1Ships = state.player1Ships.filter(
-        (ship) => ship.id !== action.payload
-      )
-    },
-    deletePlayer2Ship: (state, action: PayloadAction<number>) => {
-      state.player2Ships = state.player2Ships.filter(
-        (ship) => ship.id !== action.payload
-      )
+    deleteShipsForPlayer: (
+      state,
+      action: PayloadAction<{ playerId: number; shipId: number }>
+    ) => {
+      const { playerId, shipId } = action.payload
+      if (playerId === 1) {
+        state.player1Ships = state.player1Ships.filter(
+          (ship) => ship.id !== shipId
+        )
+      } else if (playerId === 2) {
+        state.player2Ships = state.player2Ships.filter(
+          (ship) => ship.id !== shipId
+        )
+      }
     }
   }
 })
 
-export const {
-  setShipsPlayer1,
-  setShipsPlayer2,
-  deletePlayer1Ship,
-  deletePlayer2Ship
-} = shipSlice.actions
+export const { setShipsForPlayer, deleteShipsForPlayer } = shipSlice.actions
 export default shipSlice.reducer
