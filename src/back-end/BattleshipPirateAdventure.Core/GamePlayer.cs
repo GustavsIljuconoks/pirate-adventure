@@ -37,3 +37,11 @@ public class GamePlayer
         State = PlayerState.Ready;
     }
 }
+
+public static class ListOfShipsExtensions
+{
+    public static Ship GetById(this List<Ship> ships, int id)
+    {
+        return ships.Single(s => s.Id == id);
+    }
+}

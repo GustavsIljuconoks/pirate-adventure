@@ -20,6 +20,7 @@ public static class ShipExtensions
     {
         return new ShipDto
         {
+            Id = ship.Id,
             Name = ship.Name,
             Size = ship.Size,
             Orientation = ship.Orientation,
@@ -33,9 +34,10 @@ public static class ListOfShipDtoExtensions
     public static List<Ship> MapFromDto(this List<ShipDto> ships, GameField field)
     {
         return ships
-            .Select(x => new Ship(x.Name,
+            .Select(x => new Ship(x.Id,
+                                  x.Name,
                                   x.Size,
-                                  field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column), 
+                                  field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column),
                                   x.Orientation))
             .ToList();
     }

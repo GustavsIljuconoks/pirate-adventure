@@ -55,6 +55,13 @@ public class Game
         }
 
         var result = Player2!.Field.Shoot(shotLocation);
+
+        if (result.Scoring == Scoring.Hit)
+        {
+            var hitShip = Player2.Ships.GetById(result.TargetShipId!.Value);
+            hitShip.Hit();
+        }
+
         NextMove = PlayerType.Player2;
 
         return result;
