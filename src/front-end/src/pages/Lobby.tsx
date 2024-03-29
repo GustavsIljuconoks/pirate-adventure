@@ -8,10 +8,49 @@ import Layout from 'components/layout/Layout'
 import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
+import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { RootState } from 'store'
+import { findLinkByRel } from 'utils/findLinkByRel'
+import { APP_URL, SERVER_URL } from '../constants'
+
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
+  const apiData = useSelector((state: RootState) => state.apiData.data)
+  const joinGameLink = APP_URL + 'join/' + apiData.id
+  const player1InitializeField = findLinkByRel(apiData, 'player1InitField')
+  const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
 
-  const handlePlayerReady = () => {
+  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
+  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
+
+  const shipsPlayer1 = useSelector(
+    (state: RootState) => state.shipSave.player1Ships
+  )
+  const shipsPlayer2 = useSelector(
+    (state: RootState) => state.shipSave.player2Ships
+  )
+
+  const initializeField = () => {
+    if (gamePlayer1) {
+      axios
+        .post(SERVER_URL + player1InitializeField, {
+          ships: shipsPlayer1
+        })
+        .then((response) => {
+          console.log(response.data)
+        })
+    }
+
+    if (gamePlayer2) {
+      axios
+        .post(SERVER_URL + player2InitializeField, {
+          ships: shipsPlayer2
+        })
+        .then((response) => {
+          console.log(response.data)
+        })
+    }
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
   }
 
@@ -19,7 +58,7 @@ export default function Lobby(): ReactElement {
     <Layout>
       <div className="mx-auto">
         <div className={style['lobby-code']}>
-          <CopyToClipboard />
+          <CopyToClipboard joinLink={joinGameLink} />
           <SettingsMenu />
         </div>
 
@@ -50,7 +89,7 @@ export default function Lobby(): ReactElement {
             <button
               type="button"
               className="bg-deep-blue w-9/12 p-4 rounded-lg font-medium align-middle"
-              onClick={handlePlayerReady}
+              onClick={initializeField}
             >
               Ready to fight
             </button>
@@ -59,12 +98,12 @@ export default function Lobby(): ReactElement {
 
         <div className="flex justify-between">
           <LobbyAvatar
-            username="kerri"
+            username={gamePlayer1?.player1}
             isReady={playerReady}
             avatarIcon="https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/celebrity-captain-jack-sparrow-pirate-carribean-512.png"
           />
           <LobbyAvatar
-            username="zabis"
+            username={gamePlayer2?.player2}
             isReady={playerReady}
             avatarIcon="https://img.freepik.com/premium-vector/head-pirate-with-hat-eye-patch-flat-vector-illustration_124715-1485.jpg"
           />

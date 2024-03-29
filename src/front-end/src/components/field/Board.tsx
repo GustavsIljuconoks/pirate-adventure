@@ -1,14 +1,18 @@
 import {
-	DndContext,
-	DragOverEvent,
-	MouseSensor,
-	TouchSensor,
-	useSensor,
-	useSensors
+  DndContext,
+  DragOverEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors
 } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
 import { ReactElement, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
+import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
+import { Columns } from 'types/Square'
 import { createField } from 'utils/creators/createGrid'
 import { createShipPositions, createShips } from 'utils/creators/createShips'
 import { isPositionValid } from 'utils/validators/isPositionValid'
@@ -17,141 +21,181 @@ import DroppableSquare from './DroppableSquare'
 import FieldShip from './FieldShip'
 import FieldWrapper from './FieldWrapper'
 
+interface CellData {
+  id: number
+  column: string
+  row: number
+}
+
 export default function GameBoard(): ReactElement {
-	const [field, setPlayerField] = useState(createField())
-	const [hoveredCellId, setHoveredCellId] = useState<number>()
-	const [draggedShipId, setDraggedShipId] = useState<number>()
-	const [playerShips, setPlayerShips] = useState(createShips())
-	const [axis, setAxis] = useState<'x' | 'y'>('x')
-	const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
-	const [shipBeingRemovedId, setShipBeingRemovedId] = useState<number>()
+  const [field, setPlayerField] = useState(createField())
+  const [hoveredCell, setHoveredCell] = useState<CellData | undefined>()
+  const [draggedShipId, setDraggedShipId] = useState<number>()
+  const [playerShips, setPlayerShips] = useState(createShips())
+  const [axis, setAxis] = useState<'x' | 'y'>('x')
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
+  const [shipBeingRemovedId, setShipBeingRemovedId] = useState<number>()
 
-	const handleDragEnd = () => {
-		if (hoveredCellId === undefined || !draggedShipId) return
+  const dispatch = useDispatch()
+  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
+  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
 
-		const shipLength = playerShips[draggedShipId].length
+  const handleDragEnd = () => {
+    if (hoveredCell?.id === undefined || !draggedShipId) return
 
-		if (isPositionValid(field, hoveredCellId, shipLength, axis)) {
-			//get dropped ships positions
-			const positions = createShipPositions(
-				hoveredCellId,
-				shipLength,
-				axis
-			)
+    const shipLength = playerShips[draggedShipId].length
+    const shipName = playerShips[draggedShipId].name
+    const shipId = playerShips[draggedShipId].id
 
-			// set dropped ships new positions
-			setPlayerShips((ships) => ({
-				...ships,
-				[draggedShipId]: {
-					...ships[draggedShipId],
-					positions,
-					axis
-				}
-			}))
+    if (isPositionValid(field, hoveredCell.id, shipLength, axis)) {
+      //get dropped ships positions
+      const positions = createShipPositions(hoveredCell.id, shipLength, axis)
 
-			// set ids in cells
-			const fieldClone = JSON.parse(JSON.stringify(field))
+      // set dropped ships new positions
+      setPlayerShips((ships) => ({
+        ...ships,
+        [draggedShipId]: {
+          ...ships[draggedShipId],
+          positions,
+          axis
+        }
+      }))
 
-			positions.forEach(
-				(id) =>
-					(fieldClone[id] = {
-						...fieldClone[id],
-						shipId: draggedShipId
-					})
-			)
+      // set ids in cells
+      const fieldClone = JSON.parse(JSON.stringify(field))
 
-			setPlayerField(fieldClone)
-		}
+      positions.forEach(
+        (id) =>
+          (fieldClone[id] = {
+            ...fieldClone[id],
+            shipId: draggedShipId
+          })
+      )
 
-		resetDnDState()
-	}
+      const shipObject = {
+        id: shipId,
+        name: shipName,
+        size: shipLength,
+        headLocation: {
+          row: hoveredCell.row,
+          column: Columns[hoveredCell.column as keyof typeof Columns]
+        },
+        orientation: 1
+      }
 
-	const handleDragOver = (event: DragOverEvent) => {
-		setHoveredCellId(event.collisions?.at(0)?.id as number)
-		setDraggedShipId(event.active.id as number)
-	}
+      setPlayerField(fieldClone)
+      if (gamePlayer1) {
+        dispatch(setShipsForPlayer({ playerId: 1, ship: shipObject }))
+      }
 
-	const resetDnDState = () => {
-		setHoveredCellId(undefined)
-		setDraggedShipId(undefined)
-	}
+      if (gamePlayer2) {
+        dispatch(setShipsForPlayer({ playerId: 2, ship: shipObject }))
+      }
+    }
 
-	const resetShipPosition = (id: number) => {
-		setPlayerShips((ships) => ({
-			...ships,
-			[id]: {
-				...ships[id],
-				positions: []
-			}
-		}))
-	}
+    resetDnDState()
+  }
 
-	const resetCell = (id: number) => {
-		setPlayerField(
-			field.map((cell) => {
-				return cell.shipId === id
-					? {
-							...cell,
-							shipId: undefined
-					  }
-					: cell
-			})
-		)
-	}
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event
 
-	const resetShipPlacement = (id: number) => {
-		resetShipPosition(id)
-		resetCell(id)
-	}
+    const indexInfo = over?.data.current
+    setHoveredCell({
+      id: event.collisions?.at(0)?.id as number,
+      column: indexInfo?.column,
+      row: indexInfo?.row
+    })
+    setDraggedShipId(event.active.id as number)
+  }
 
-	return (
-		<div className="flex flex-col">
-			<DndContext
-				onDragEnd={handleDragEnd}
-				onDragOver={handleDragOver}
-				onDragCancel={resetDnDState}
-				modifiers={[restrictToWindowEdges]}
-				sensors={sensors}>
-				<FieldWrapper>
-					<div className={style['game-board']}>
-						{field.map((data, id) => (
-							<DroppableSquare
-								field={field}
-								data={data}
-								key={id}
-								cellId={id}
-								hoveredCellId={hoveredCellId}
-								draggedShipId={draggedShipId}
-								axis={axis}
-								ships={playerShips}
-							/>
-						))}
-						{Object.entries(playerShips).map(([id, ship]) => (
-							<FieldShip
-								key={id}
-								ship={ship}
-								removeButtonHovered={
-									Number(id) === shipBeingRemovedId
-								}
-								belongsTo="player"
-							/>
-						))}
-					</div>
-				</FieldWrapper>
+  const resetDnDState = () => {
+    setHoveredCell(undefined)
+    setDraggedShipId(undefined)
+  }
 
-				<div className="flex flex-wrap justify-center gap-1 lg:grid lg:grid-cols-2">
-					{Object.entries(playerShips).map(([id, ship]) => (
-						<DraggableShip
-							key={id}
-							id={Number(id)}
-							ships={playerShips}
-							ship={ship}
-							resetShipPlacement={resetShipPlacement}
-							setShipBeingRemovedId={setShipBeingRemovedId}
-						/>
-					))}
-				</div>
-			</DndContext>
-		</div>
-	)
+  const resetShipPosition = (id: number) => {
+    setPlayerShips((ships) => ({
+      ...ships,
+      [id]: {
+        ...ships[id],
+        positions: []
+      }
+    }))
+  }
+
+  const resetCell = (id: number) => {
+    setPlayerField(
+      field.map((cell) => {
+        return cell.shipId === id
+          ? {
+              ...cell,
+              shipId: undefined
+            }
+          : cell
+      })
+    )
+  }
+
+  const resetShipPlacement = (id: number) => {
+    resetShipPosition(id)
+    resetCell(id)
+
+    if (gamePlayer1) {
+      dispatch(deleteShipsForPlayer({ playerId: 1, shipId: id }))
+    }
+
+    if (gamePlayer2) {
+      dispatch(deleteShipsForPlayer({ playerId: 2, shipId: id }))
+    }
+  }
+
+  return (
+    <div className="flex flex-col">
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragCancel={resetDnDState}
+        modifiers={[restrictToWindowEdges]}
+        sensors={sensors}
+      >
+        <FieldWrapper>
+          <div className={style['game-board']}>
+            {field.map((data, id) => (
+              <DroppableSquare
+                field={field}
+                data={data}
+                key={id}
+                cellId={id}
+                hoveredCellId={hoveredCell?.id}
+                draggedShipId={draggedShipId}
+                axis={axis}
+                ships={playerShips}
+              />
+            ))}
+            {Object.entries(playerShips).map(([id, ship]) => (
+              <FieldShip
+                key={id}
+                ship={ship}
+                removeButtonHovered={Number(id) === shipBeingRemovedId}
+                belongsTo="player"
+              />
+            ))}
+          </div>
+        </FieldWrapper>
+
+        <div className="flex flex-wrap justify-center gap-1 lg:grid lg:grid-cols-2">
+          {Object.entries(playerShips).map(([id, ship]) => (
+            <DraggableShip
+              key={id}
+              id={Number(id)}
+              ships={playerShips}
+              ship={ship}
+              resetShipPlacement={resetShipPlacement}
+              setShipBeingRemovedId={setShipBeingRemovedId}
+            />
+          ))}
+        </div>
+      </DndContext>
+    </div>
+  )
 }

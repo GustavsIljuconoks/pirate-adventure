@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipPirateAdventure.UnitTests", "tests\BattleshipPirateAdventure.UnitTests\BattleshipPirateAdventure.UnitTests.csproj", "{B34C15F4-5EED-4CE0-860F-6A2E79418B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipPirateAdventure.Core", "src\back-end\BattleshipPirateAdventure.Core\BattleshipPirateAdventure.Core.csproj", "{FB22E559-1E1B-4601-BA32-9B50B8062871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BattleshipPirateAdventure.Core", "src\back-end\BattleshipPirateAdventure.Core\BattleshipPirateAdventure.Core.csproj", "{FB22E559-1E1B-4601-BA32-9B50B8062871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattleshipPirateAdventure.WebApi", "src\back-end\BattleshipPirateAdventure.WebApi\BattleshipPirateAdventure.WebApi.csproj", "{4A95068B-FAC1-404C-8516-587ECD214BBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FB22E559-1E1B-4601-BA32-9B50B8062871}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB22E559-1E1B-4601-BA32-9B50B8062871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB22E559-1E1B-4601-BA32-9B50B8062871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A95068B-FAC1-404C-8516-587ECD214BBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A95068B-FAC1-404C-8516-587ECD214BBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A95068B-FAC1-404C-8516-587ECD214BBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A95068B-FAC1-404C-8516-587ECD214BBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

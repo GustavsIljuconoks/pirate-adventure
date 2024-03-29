@@ -1,0 +1,62 @@
+@server = http://localhost:7035
+@game-id = e3db77f4-eb30-4295-bfbc-755c26840467
+
+###
+
+POST {{server}}/game/create
+Accept: application/json
+Content-Type: application/json
+
+{
+  "player1": "valdis"
+}
+
+###
+
+POST {{server}}/game/{{game-id}}/join
+Accept: application/json
+Content-Type: application/json
+
+{
+  "player2": "gustavs"
+}
+
+###
+
+POST {{server}}/game/{{game-id}}/player1/init-field
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ships": [
+    {
+      "name": "First ship",
+      "size": 3,
+      "headLocation": {
+        "row": 2,
+        "column": 3
+      },
+      "orientation": 1
+    }
+  ]
+}
+
+###
+
+POST {{server}}/game/{{game-id}}/player2/init-field
+Accept: application/json
+Content-Type: application/json
+
+{
+  "ships": [
+    {
+      "name": "My ship",
+      "size": 2,
+      "headLocation": {
+        "row": 5,
+        "column": 5
+      },
+      "orientation": 1
+    }
+  ]
+}

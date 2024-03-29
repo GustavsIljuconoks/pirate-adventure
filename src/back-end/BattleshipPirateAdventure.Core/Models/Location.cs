@@ -1,10 +1,19 @@
 namespace BattleshipPirateAdventure.Core.Models;
 
-public class Location(string cellId, int column, int row) : IEquatable<Location>
+public class Location : IEquatable<Location>
 {
-    public int Row { get; } = row;
-    public int Column { get; set; } = column;
-    internal string CellId { get; } = cellId;
+    public Location() { }
+
+    public Location(string cellId, int column, int row)
+    {
+        Row = row;
+        Column = column;
+        CellId = cellId;
+    }
+
+    public int Row { get; set; }
+    public int Column { get; set; }
+    public string CellId { get; }
 
     public bool Equals(Location? other)
     {
