@@ -12,6 +12,7 @@ public class ShipDto
     public int Size { get; set; }
     public required LocationDto HeadLocation { get; set; }
     public Orientation Orientation { get; set; }
+    public int? HitCount { get; set; }
 }
 
 public static class ShipExtensions
@@ -24,7 +25,8 @@ public static class ShipExtensions
             Name = ship.Name,
             Size = ship.Size,
             Orientation = ship.Orientation,
-            HeadLocation = ship.HeadLocation.MapFromDomain()
+            HeadLocation = ship.HeadLocation.MapFromDomain(),
+            HitCount = ship.HitCount
         };
     }
 }
@@ -38,7 +40,8 @@ public static class ListOfShipDtoExtensions
                                   x.Name,
                                   x.Size,
                                   field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column),
-                                  x.Orientation))
+                                  x.Orientation,
+                                  x.HitCount))
             .ToList();
     }
 }

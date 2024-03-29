@@ -1,13 +1,33 @@
 namespace BattleshipPirateAdventure.Core.Models;
 
-public class Ship(int id, string name, int size, Location headLocation, Orientation orientation)
+public class Ship
 {
-    public int Id { get; } = id;
-    public string Name { get; } = name;
-    public int Size { get; } = size;
-    public Location HeadLocation { get; } = headLocation;
-    public Orientation Orientation { get; } = orientation;
-    public bool[] SailStates { get; set; } = new bool[size];
+    public Ship(int id, string name, int size, Location headLocation, Orientation orientation, int? hitCount = 0)
+    {
+        Id = id;
+        Name = name;
+        Size = size;
+        HeadLocation = headLocation;
+        Orientation = orientation;
+        HitCount = hitCount;
+        SailStates = new bool[size];
+
+        if (hitCount is > 0)
+        {
+            for (var i = 0; i < hitCount; i++)
+            {
+                Hit();
+            }
+        }
+    }
+
+    public int Id { get; }
+    public string Name { get; }
+    public int Size { get; }
+    public Location HeadLocation { get; }
+    public Orientation Orientation { get; }
+    public int? HitCount { get; }
+    private bool[] SailStates { get; }
 
     public bool IsDowned()
     {

@@ -15,7 +15,7 @@ public class ShootingRangeTests
         var player1 = game.Player1!;
         player1.InitField([
             new(1, "Skipper", 1, player1.Field.GetLocation("A1"), Orientation.Horizontal),
-            //new Ship("Docker", 3, player1.Field.GetLocation("B2"), Orientation.Vertical),
+            new(2, "Docker", 3, player1.Field.GetLocation("B2"), Orientation.Vertical),
             //new Ship("Mother", 5, player1.Field.GetLocation("F7"), Orientation.Horizontal)
         ]);
         player1.SetReady();
@@ -35,22 +35,25 @@ public class ShootingRangeTests
         var targetShip = player2.Ships.GetById(1);
 
         // go player 1
-        var result = game.Player1Move(game.Player2!.Field.GetLocation("A1"));
+        var result = game.Player1Shoot(game.Player2!.Field.GetLocation("A1"));
 
         // go player 2
-        result = game.Player2Move(game.Player1!.Field.GetLocation("B1"));
+        result = game.Player2Shoot(game.Player1!.Field.GetLocation("B1"));
 
         // go player 1 - 1st hit
-        result = game.Player1Move(game.Player2!.Field.GetLocation("D1"));
+        result = game.Player1Shoot(game.Player2!.Field.GetLocation("D1"));
         Assert.Equal(Scoring.Hit, result.Scoring);
 
         Assert.True(targetShip.IsHit());
 
         // go player 2
-        result = game.Player2Move(game.Player1!.Field.GetLocation("B2"));
+        var result2 = game.Player2Shoot(game.Player1!.Field.GetLocation("B2"));
+        Assert.Equal(Scoring.Hit, result2.Scoring);
+        var ship = game.Player1.Ships.GetById(2);
+        Assert.True(ship.IsHit());
 
         // go player 1 - 2nd hit
-        result = game.Player1Move(game.Player2!.Field.GetLocation("E1"));
+        result = game.Player1Shoot(game.Player2!.Field.GetLocation("E1"));
         Assert.Equal(Scoring.Hit, result.Scoring);
 
         Assert.True(targetShip.IsDowned());
@@ -85,7 +88,7 @@ public class ShootingRangeTests
         // go player 2 - SHOULD THROW
         Assert.Throws<InvalidOperationException>(() =>
         {
-            game.Player2Move(game.Player1!.Field.GetLocation("A1"));
+            game.Player2Shoot(game.Player1!.Field.GetLocation("A1"));
         });
     }
 
@@ -115,12 +118,12 @@ public class ShootingRangeTests
 
         game.Start();
 
-        game.Player1Move(game.Player1!.Field.GetLocation("A1"));
+        game.Player1Shoot(game.Player1!.Field.GetLocation("A1"));
 
         // go player 2 - SHOULD THROW
         Assert.Throws<InvalidOperationException>(() =>
         {
-            game.Player1Move(game.Player1!.Field.GetLocation("A2"));
+            game.Player1Shoot(game.Player1!.Field.GetLocation("A2"));
         });
     }
 

@@ -47,7 +47,7 @@ public class Game
         NextMove = PlayerType.Player1;
     }
 
-    public ShotResult Player1Move(Location shotLocation)
+    public ShotResult Player1Shoot(Location shotLocation)
     {
         if (NextMove != PlayerType.Player1)
         {
@@ -67,7 +67,7 @@ public class Game
         return result;
     }
 
-    public ShotResult Player2Move(Location shotLocation)
+    public ShotResult Player2Shoot(Location shotLocation)
     {
         if (NextMove != PlayerType.Player2)
         {
@@ -75,6 +75,13 @@ public class Game
         }
 
         var result = Player1!.Field.Shoot(shotLocation);
+
+        if (result.Scoring == Scoring.Hit)
+        {
+            var hitShip = Player1.Ships.GetById(result.TargetShipId!.Value);
+            hitShip.Hit();
+        }
+
         NextMove = PlayerType.Player1;
 
         return result;

@@ -29,4 +29,20 @@ public class Player1Controller(ILogger<Player1Controller> logger) : ControllerBa
 
         return Ok();
     }
+
+    [HttpPost]
+    [Route("shoot", Name = nameof(Player1Shoot))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<ShotResultDto>> Player1Shoot(LocationDto targetCell, Guid gameId)
+    {
+        var engine = new GameEngine();
+        var game = await engine.LoadGameAsync(gameId);
+
+        var result = game.Player1Shoot(game.Player2!.Field.GetLocation(targetCell.Row, targetCell.Column));
+
+        await engine.SaveGameAsync(game);
+
+        return Ok(result.MapFromDomain());
+    }
 }
