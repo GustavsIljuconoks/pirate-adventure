@@ -21,7 +21,7 @@ export default function App(): ReactElement {
           <Route path="/settings" element={<Settings />} />
           <Route path="/code" element={<LobbyCode />} />
           <Route path="/lobby/:guid" element={<Lobby />} />
-          <Route path="/game" element={<Game />} />
+          <Route path="/game/:guid" element={<Game />} />
           <Route path="/join/:guid" element={<JoinGame />} />
         </Routes>
       </Suspense>
