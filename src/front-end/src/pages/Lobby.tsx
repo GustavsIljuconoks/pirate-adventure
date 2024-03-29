@@ -9,6 +9,7 @@ import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
 import axios from 'axios'
+import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { RootState } from 'store'
@@ -18,6 +19,7 @@ import { APP_URL, GAME_STATUS, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
+  const [isButtonDisabled, setButtonDisabled] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const gameId = apiData.id
   const joinGameLink = APP_URL + 'join/' + gameId
@@ -118,8 +120,19 @@ export default function Lobby(): ReactElement {
           <div className="flex justify-center">
             <button
               type="button"
-              className="bg-deep-blue w-9/12 p-4 rounded-lg font-medium align-middle"
+              className={classNames(
+                'w-9/12 p-4 rounded-lg font-medium align-middle',
+                {
+                  [style.disabled]:
+                    shipsPlayer1.length || shipsPlayer2.length != 5,
+                  [style.enabled]:
+                    shipsPlayer1.length || shipsPlayer2.length == 5
+                }
+              )}
               onClick={initializeField}
+              disabled={
+                shipsPlayer1.length || shipsPlayer2.length == 5 ? false : true
+              }
             >
               {!playerReady ? 'Ready to fight' : 'loading...'}
             </button>
