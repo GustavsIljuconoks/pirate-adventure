@@ -6,5 +6,5 @@
 import { Link } from './Link.generated';
 
 export interface Resource {
-    links: Link[];
+    _links: Link[];
 }

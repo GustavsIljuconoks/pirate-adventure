@@ -9,6 +9,7 @@ public abstract class Resource
     private readonly List<Link> _links = new();
 
     [JsonPropertyName("_links")]
+    [TsMemberName("_links")]
     [JsonPropertyOrder(100)]
     public IEnumerable<Link> Links => _links;
 
