@@ -12,6 +12,7 @@ public class ShipDto
     public int Size { get; set; }
     public required LocationDto HeadLocation { get; set; }
     public Orientation Orientation { get; set; }
+    public int? HitCount { get; set; }
 }
 
 public static class ShipExtensions
@@ -20,10 +21,12 @@ public static class ShipExtensions
     {
         return new ShipDto
         {
+            Id = ship.Id,
             Name = ship.Name,
             Size = ship.Size,
             Orientation = ship.Orientation,
-            HeadLocation = ship.HeadLocation.MapFromDomain()
+            HeadLocation = ship.HeadLocation.MapFromDomain(),
+            HitCount = ship.HitCount
         };
     }
 }
@@ -33,10 +36,12 @@ public static class ListOfShipDtoExtensions
     public static List<Ship> MapFromDto(this List<ShipDto> ships, GameField field)
     {
         return ships
-            .Select(x => new Ship(x.Name,
+            .Select(x => new Ship(x.Id,
+                                  x.Name,
                                   x.Size,
-                                  field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column), 
-                                  x.Orientation))
+                                  field.GetLocation(x.HeadLocation.Row, x.HeadLocation.Column),
+                                  x.Orientation,
+                                  x.HitCount))
             .ToList();
     }
 }

@@ -12,4 +12,5 @@ export interface ShipDto {
     size: number;
     headLocation: LocationDto;
     orientation: Orientation;
+    hitCount: number;
 }

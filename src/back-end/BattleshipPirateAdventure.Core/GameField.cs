@@ -14,7 +14,7 @@ public class GameField
     {
         foreach (var row in Enumerable.Range(0, rowSize))
         {
-            Cells.Add(row, Columns.Select(i => new Cell()).ToArray());
+            Cells.Add(row, Columns.Select(_ => new Cell()).ToArray());
         }
 
         ColumnSize = columnSize;
@@ -38,7 +38,7 @@ public class GameField
         {
             var location = ship.HeadLocation;
             var headCell = GetCell(location.CellId);
-            headCell.SetState(CellState.Occupied);
+            headCell.SetState(CellState.Occupied, ship.Id);
 
             if (ship.Size > 1)
             {
@@ -48,7 +48,7 @@ public class GameField
                     {
                         var nextCell = GetLocationDown(location);
                         var shipCell = GetCell(nextCell.CellId);
-                        shipCell.SetState(CellState.Occupied);
+                        shipCell.SetState(CellState.Occupied, ship.Id);
                         location = nextCell;
                     }
                 }
@@ -59,7 +59,7 @@ public class GameField
                     {
                         var nextCell = GetLocationRight(location);
                         var shipCell = GetCell(nextCell.CellId);
-                        shipCell.SetState(CellState.Occupied);
+                        shipCell.SetState(CellState.Occupied, ship.Id);
                         location = nextCell;
                     }
                 }
@@ -148,7 +148,7 @@ public class GameField
 
         if (target.State == CellState.Occupied)
         {
-            var score = new ShotResult(shotLocation, null, Scoring.Hit);
+            var score = new ShotResult(shotLocation, target.ShipId, Scoring.Hit);
             target.State = CellState.Hit;
 
             return score;
