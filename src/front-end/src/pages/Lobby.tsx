@@ -15,7 +15,8 @@ import { useNavigate } from 'react-router-dom'
 import { RootState } from 'store'
 import { GameState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
-import { APP_URL, GAME_STATUS, SERVER_URL } from '../constants'
+import { replaceGameId } from 'utils/replaceGameId'
+import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
@@ -37,8 +38,11 @@ export default function Lobby(): ReactElement {
     (state: RootState) => state.shipSave.player2Ships
   )
 
+  const gameState = useSelector((state: RootState) => state.apiData.link)
+
   const initializeField = () => {
     let interval
+    const gameStateLink = replaceGameId(gameState, gameId)
     if (gamePlayer1) {
       axios
         .post(SERVER_URL + player1InitializeField, {
@@ -46,17 +50,11 @@ export default function Lobby(): ReactElement {
         })
         .then(() => {
           interval = setInterval(() => {
-            axios
-              .get(SERVER_URL + GAME_STATUS, {
-                params: {
-                  gameId: gameId
-                }
-              })
-              .then((response) => {
-                if (response.data.state == GameState.Started) {
-                  navigate(`/game/${gameId}`)
-                }
-              })
+            axios.get(SERVER_URL + gameStateLink, {}).then((response) => {
+              if (response.data.state == GameState.Started) {
+                navigate(`/game/${gameId}`)
+              }
+            })
           }, 1000)
         })
     }
@@ -68,17 +66,11 @@ export default function Lobby(): ReactElement {
         })
         .then(() => {
           interval = setInterval(() => {
-            axios
-              .get(SERVER_URL + GAME_STATUS, {
-                params: {
-                  gameId: gameId
-                }
-              })
-              .then((response) => {
-                if (response.data.state == GameState.Started) {
-                  navigate(`/game/${gameId}`)
-                }
-              })
+            axios.get(SERVER_URL + gameStateLink).then((response) => {
+              if (response.data.state == GameState.Started) {
+                navigate(`/game/${gameId}`)
+              }
+            })
           }, 1000)
         })
     }
