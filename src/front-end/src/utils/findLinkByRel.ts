@@ -1,13 +1,13 @@
-import { IApiResponse } from 'types/Api'
+import { CreateGameResponseDto } from 'types/webapi'
 
 export const findLinkByRel = (
-  apiResponse: IApiResponse[],
+  apiResponse: CreateGameResponseDto[],
   relValue: string
-): string | undefined => {
+): string => {
   const linksArray = Object.values(apiResponse._links)
   const foundLink = linksArray.find((link) => link.rel === relValue)
   if (foundLink) {
     return foundLink.href
   }
-  return undefined
+  return ''
 }

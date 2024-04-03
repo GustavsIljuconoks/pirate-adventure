@@ -4,8 +4,10 @@ import { SERVER_URL } from 'constants'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setApiData } from 'reducers/apiDataSlice'
+import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer2 } from 'reducers/gameSlice'
+import { findLinkByRel } from 'utils/findLinkByRel'
+import { replaceGameId } from 'utils/replaceGameId'
 
 export default function JoinGame(): ReactElement {
   const navigate = useNavigate()
@@ -16,25 +18,20 @@ export default function JoinGame(): ReactElement {
     const fetchData = async () => {
       try {
         const response = await axios.get(SERVER_URL)
-        setLoading(false)
-
-        const joinGameLinkTemplate = response.data._links.find(
-          (link) => link.rel === 'joinGame'
-        )?.href
+        const gameStatusLink = findLinkByRel(response.data, 'getGame')
+        const joinGameLinkTemplate = findLinkByRel(response.data, 'joinGame')
 
         if (joinGameLinkTemplate) {
           const url = window.location.href
           const gameId = url.split('/join/')[1]
-          const joinLink = joinGameLinkTemplate.replace(
-            '00000000-0000-0000-0000-000000000000',
-            gameId
-          )
+          const joinLink = replaceGameId(joinGameLinkTemplate, gameId)
 
           axios
             .post(SERVER_URL + joinLink, { player2: 'valdis' })
             .then((response) => {
               dispatch(setApiData(response.data))
               dispatch(setPlayer2({ player2: 'valdis', id: gameId }))
+              dispatch(setGameState(gameStatusLink))
               navigate(`/lobby/${gameId}`)
             })
         }
@@ -50,5 +47,5 @@ export default function JoinGame(): ReactElement {
     return <LoadingOrError />
   }
 
-  return <div>Game Joined!</div>
+  return <div>Your are not eligible to join!</div>
 }

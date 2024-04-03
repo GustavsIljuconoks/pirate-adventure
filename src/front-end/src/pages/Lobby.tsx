@@ -9,17 +9,24 @@ import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'
 
 import axios from 'axios'
+import classNames from 'classnames'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { RootState } from 'store'
+import { GameState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
+import { replaceGameId } from 'utils/replaceGameId'
 import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
+  const [isButtonDisabled, setButtonDisabled] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
-  const joinGameLink = APP_URL + 'join/' + apiData.id
+  const gameId = apiData.id
+  const joinGameLink = APP_URL + 'join/' + gameId
   const player1InitializeField = findLinkByRel(apiData, 'player1InitField')
   const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
+  const navigate = useNavigate()
 
   const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
   const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
@@ -31,14 +38,24 @@ export default function Lobby(): ReactElement {
     (state: RootState) => state.shipSave.player2Ships
   )
 
+  const gameState = useSelector((state: RootState) => state.apiData.link)
+
   const initializeField = () => {
+    let interval
+    const gameStateLink = replaceGameId(gameState, gameId)
     if (gamePlayer1) {
       axios
         .post(SERVER_URL + player1InitializeField, {
           ships: shipsPlayer1
         })
-        .then((response) => {
-          console.log(response.data)
+        .then(() => {
+          interval = setInterval(() => {
+            axios.get(SERVER_URL + gameStateLink, {}).then((response) => {
+              if (response.data.state == GameState.Started) {
+                navigate(`/game/${gameId}`)
+              }
+            })
+          }, 1000)
         })
     }
 
@@ -47,11 +64,18 @@ export default function Lobby(): ReactElement {
         .post(SERVER_URL + player2InitializeField, {
           ships: shipsPlayer2
         })
-        .then((response) => {
-          console.log(response.data)
+        .then(() => {
+          interval = setInterval(() => {
+            axios.get(SERVER_URL + gameStateLink).then((response) => {
+              if (response.data.state == GameState.Started) {
+                navigate(`/game/${gameId}`)
+              }
+            })
+          }, 1000)
         })
     }
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
+    clearInterval(interval)
   }
 
   return (
@@ -88,10 +112,21 @@ export default function Lobby(): ReactElement {
           <div className="flex justify-center">
             <button
               type="button"
-              className="bg-deep-blue w-9/12 p-4 rounded-lg font-medium align-middle"
+              className={classNames(
+                'w-9/12 p-4 rounded-lg font-medium align-middle',
+                {
+                  [style.disabled]:
+                    shipsPlayer1.length || shipsPlayer2.length != 5,
+                  [style.enabled]:
+                    shipsPlayer1.length || shipsPlayer2.length == 5
+                }
+              )}
               onClick={initializeField}
+              disabled={
+                shipsPlayer1.length || shipsPlayer2.length == 5 ? false : true
+              }
             >
-              Ready to fight
+              {!playerReady ? 'Ready to fight' : 'loading...'}
             </button>
           </div>
         </div>

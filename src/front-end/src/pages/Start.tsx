@@ -3,7 +3,7 @@ import Layout from 'components/layout/Layout'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setApiData } from 'reducers/apiDataSlice'
+import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
 import { RootState } from 'store'
 import { findLinkByRel } from 'utils/findLinkByRel'
@@ -26,6 +26,8 @@ export default function Main(): ReactElement {
   }, [])
 
   const apiData = useSelector((state: RootState) => state.apiData.data)
+  const gameStatusLink = findLinkByRel(apiData, 'getGame')
+  dispatch(setGameState(gameStatusLink))
 
   const createNewGame = (): void => {
     const createGameLink = findLinkByRel(apiData, 'createGame')

@@ -6,5 +6,5 @@
 import { Resource } from './Resource.generated';
 
 export interface JoinGameResponseDto extends Resource {
-    gameId: string;
+    id: string;
 }

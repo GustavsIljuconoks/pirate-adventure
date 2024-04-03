@@ -1,23 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IApiResponse } from 'types/Api'
+import { CreateGameResponseDto } from 'types/webapi'
 
 interface ApiDataState {
-  data: IApiResponse[]
+  data: CreateGameResponseDto[]
+  link: string
 }
 
 const initialState: ApiDataState = {
-  data: []
+  data: [],
+  link: ''
 }
 
 export const apiDataSlice = createSlice({
   name: 'apiData',
   initialState,
   reducers: {
-    setApiData: (state, action: PayloadAction<IApiResponse[]>) => {
+    setApiData: (state, action: PayloadAction<CreateGameResponseDto[]>) => {
       state.data = action.payload
+    },
+    setGameState: (state, action: PayloadAction<string>) => {
+      state.link = action.payload
     }
   }
 })
 
-export const { setApiData } = apiDataSlice.actions
+export const { setApiData, setGameState } = apiDataSlice.actions
 export default apiDataSlice.reducer

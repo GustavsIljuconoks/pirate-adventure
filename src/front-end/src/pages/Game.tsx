@@ -1,6 +1,8 @@
 import Field from 'components/field/Field'
 import Layout from 'components/layout/Layout'
 import { ReactElement, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from 'store'
 import { FieldType } from 'types/Square'
 import { createField } from 'utils/creators/createGrid'
 import { createShips } from 'utils/creators/createShips'
@@ -12,6 +14,9 @@ export default function Game(): ReactElement {
   const [playerShips, setPlayerShips] = useState(createShips())
   const [computerShips, setComputerShips] = useState(createShips())
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+
+  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
+  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
 
   const attackPlayer = (playerToAttack: string, position: number) => {
     // hit cell
@@ -40,13 +45,13 @@ export default function Game(): ReactElement {
     <Layout>
       <div className="flex flex-row justify-between">
         <div className="profile font-bold">
-          <h1 className="text-3xl">Kerri</h1>
-          <div className="time">02:34</div>
+          <h1 className="text-3xl">{gamePlayer1?.player1}</h1>
+          <div className="time">time</div>
         </div>
 
         <div className="profile font-bold">
-          <h1 className="text-3xl">zabis</h1>
-          <div className="time">01:40</div>
+          <h1 className="text-3xl">{gamePlayer2?.player2}</h1>
+          <div className="time">time</div>
         </div>
       </div>
 
