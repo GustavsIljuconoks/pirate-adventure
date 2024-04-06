@@ -15,10 +15,16 @@ export default function Main(): ReactElement {
   const dispatch = useDispatch()
 
   const getRoot = (): void => {
-    axios.get(SERVER_URL).then((response) => {
-      const responseItems = response.data
-      dispatch(setApiData(responseItems))
-    })
+    axios
+      .get(SERVER_URL)
+      .then((response) => {
+        const gameStatusLink = findLinkByRel(response.data, 'getGame')
+        dispatch(setApiData(response.data))
+        dispatch(setGameState(gameStatusLink))
+      })
+      .catch((error) => {
+        console.error('Failed to fetch data:', error)
+      })
   }
 
   useEffect(() => {
@@ -26,8 +32,6 @@ export default function Main(): ReactElement {
   }, [])
 
   const apiData = useSelector((state: RootState) => state.apiData.data)
-  const gameStatusLink = findLinkByRel(apiData, 'getGame')
-  dispatch(setGameState(gameStatusLink))
 
   const createNewGame = (): void => {
     const createGameLink = findLinkByRel(apiData, 'createGame')

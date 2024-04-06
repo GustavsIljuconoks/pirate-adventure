@@ -1,11 +1,14 @@
 import Field from 'components/field/Field'
 import Layout from 'components/layout/Layout'
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
 import { FieldType } from 'types/Square'
+import { GameDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShips } from 'utils/creators/createShips'
+import { getGameStatus } from 'utils/gameStatusRequest'
+import { useWhoAmI } from 'utils/whoAmI'
 
 export default function Game(): ReactElement {
   const [playerField, setPlayerField] = useState(createField())
@@ -14,9 +17,26 @@ export default function Game(): ReactElement {
   const [playerShips, setPlayerShips] = useState(createShips())
   const [computerShips, setComputerShips] = useState(createShips())
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+  const [gameStatusData, setGameStatusData] = useState<GameDto>()
+  const [showInfo, setShowInfo] = useState(false)
+  const [players, setPlayers] = useState({ me: '', enemy: '' })
+  const { whoAmI } = useWhoAmI()
 
   const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
   const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
+  const gameStateLink = useSelector((state: RootState) => state.apiData.link)
+
+  useEffect(() => {
+    getGameStatus(gameStateLink)
+      .then((data) => {
+        setGameStatusData(data)
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
+
+    whoAmI(setPlayers)
+  }, [])
 
   const attackPlayer = (playerToAttack: string, position: number) => {
     // hit cell
@@ -41,16 +61,28 @@ export default function Game(): ReactElement {
     }
   }
 
+  const debugGameState = () => {
+    getGameStatus(gameStateLink)
+      .then((data) => {
+        setGameStatusData(data)
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
+
+    setShowInfo(!showInfo)
+  }
+
   return (
     <Layout>
       <div className="flex flex-row justify-between">
         <div className="profile font-bold">
-          <h1 className="text-3xl">{gamePlayer1?.player1}</h1>
+          <h1 className="text-3xl">{players.me}</h1>
           <div className="time">time</div>
         </div>
 
         <div className="profile font-bold">
-          <h1 className="text-3xl">{gamePlayer2?.player2}</h1>
+          <h1 className="text-3xl">{players.enemy}</h1>
           <div className="time">time</div>
         </div>
       </div>
@@ -84,6 +116,28 @@ export default function Game(): ReactElement {
             />
           </div>
         </div>
+      </div>
+
+      <div className="game-state">
+        <button
+          className="mt-5 border-gray-700 rounded"
+          onClick={debugGameState}
+        >
+          Show game state
+        </button>
+
+        {showInfo &&
+          gameStatusData.map((game, index) => (
+            <div key={index}>
+              <p>ID: {game.id}</p>
+              <p>Column Size: {game.columnSize}</p>
+              <p>Row Size: {game.rowSize}</p>
+              <p>Player 1: {game.player1.id}</p>
+              <p>Player 2: {game.player2.id}</p>
+              <p>State: {game.state.value}</p>
+              <p>Next Move: {game.nextMove}</p>
+            </div>
+          ))}
       </div>
     </Layout>
   )
