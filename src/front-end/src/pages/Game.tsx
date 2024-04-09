@@ -4,7 +4,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
 import { FieldType } from 'types/Square'
-import { GameDto, ShipDto } from 'types/webapi'
+import { GameDto, GameFieldDto, ShipDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShips } from 'utils/creators/createShips'
 import { getGameStatus } from 'utils/gameStatusRequest'
@@ -16,6 +16,9 @@ export default function Game(): ReactElement {
 
   const [playerShips1, setPlayerShips1] = useState<ShipDto[]>()
   const [playerShips2, setPlayerShips2] = useState<ShipDto[]>()
+
+  const [playerField1, setPlayerField1] = useState<GameFieldDto>()
+  const [playerField2, setPlayerField2] = useState<GameFieldDto>()
 
   const [computerShips, setComputerShips] = useState(createShips())
   const [playerShips, setPlayerShips] = useState(createShips())
@@ -34,6 +37,8 @@ export default function Game(): ReactElement {
         setGameStatusData(data)
         setPlayerShips1(data.player1.ships)
         setPlayerShips2(data.player2.ships)
+        setPlayerField1(data.player1.field)
+        setPlayerField2(data.player2.field)
       })
       .catch((error) => {
         console.error('An error occurred:', error)
@@ -97,10 +102,19 @@ export default function Game(): ReactElement {
             Friendly waters
           </h2>
           <div className="flex flex-col">
+            {}
             <Field
               player="person"
-              field={playerField}
-              ships={playerShips1}
+              field={
+                players.me === gameStatusData?.player1.id
+                  ? playerField1
+                  : playerField2
+              }
+              ships={
+                players.me === gameStatusData?.player1.id
+                  ? playerShips1
+                  : playerShips2
+              }
               attackPlayer={attackPlayer}
               movesBlocked={true}
             />
@@ -113,8 +127,16 @@ export default function Game(): ReactElement {
           <div className="flex flex-col">
             <Field
               player="computer"
-              field={computerField}
-              ships={computerShips}
+              field={
+                players.enemy === gameStatusData?.player1.id
+                  ? playerField1
+                  : playerField2
+              }
+              ships={
+                players.enemy === gameStatusData?.player1.id
+                  ? playerShips1
+                  : playerShips2
+              }
               attackPlayer={attackPlayer}
               movesBlocked={!isPlayerTurn}
             />

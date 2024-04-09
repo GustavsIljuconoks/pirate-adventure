@@ -17,7 +17,7 @@ export const useWhoAmI = () => {
     enemy: ''
   }
 
-  const whoAmI = (updatePlayers: (players: any) => void) => {
+  const whoAmI = (updatePlayers: (players: GamePlayerState) => void) => {
     getGameStatus(gameStateLink)
       .then((data) => {
         if (gamePlayer1?.player1 == data.player1.id) {

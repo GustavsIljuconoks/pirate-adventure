@@ -1,18 +1,19 @@
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import style from 'styles/field/Square.module.css'
-import { CellType } from 'types/Square'
+import { CellDto, CellState } from 'types/webapi'
 
 type Props = {
   cellId: number
-  data: CellType
+  data: CellDto
   attackPlayer: (player: string, position: number) => void
   movesBlocked: boolean
 }
 
 const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
-  const allowClick = data.isHit || movesBlocked
-  const cellColor = data.shipId ? 'bg-red-500' : 'bg-white'
+  const allowClick = data.state === CellState.Hit || movesBlocked
+  const cellColor =
+    data.state === CellState.Occupied ? 'bg-red-500' : 'bg-white'
 
   const handleClick = () => {
     if (allowClick) return
@@ -28,7 +29,7 @@ const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
       )}
       onClick={handleClick}
     >
-      {data.isHit && (
+      {data.state === CellState.Hit && (
         <>
           <p>hit</p>
           <motion.div

@@ -3,25 +3,39 @@
 @tailwind utilities;
 
 @layer base {
-	@font-face {
-		font-family: Inter;
-		font-style: normal;
-		font-weight: 400;
-		font-display: swap;
-		src: url('/fonts/Inter-Regular.woff2') format('woff2');
-	}
-	@font-face {
-		font-family: Inter;
-		font-style: normal;
-		font-weight: 500;
-		font-display: swap;
-		src: url('/fonts/Inter-Medium.woff2') format('woff2');
-	}
-	@font-face {
-		font-family: Inter;
-		font-style: normal;
-		font-weight: 700;
-		font-display: swap;
-		src: url('/fonts/Inter-Bold.woff2') format('woff2');
-	}
+  @font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('/fonts/Inter-Medium.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('/fonts/Inter-Bold.woff2') format('woff2');
+  }
+}
+
+.ship-friendly {
+  filter: invert(69%) sepia(6%) saturate(3899%) hue-rotate(180deg)
+    brightness(96%) contrast(83%);
+}
+
+.ship-enemy {
+  filter: invert(26%) sepia(54%) saturate(2305%) hue-rotate(341deg)
+    brightness(95%) contrast(111%);
+}
+
+.ship-danger {
+  filter: brightness(0.5) sepia(1) hue-rotate(320deg) saturate(1000%);
 }

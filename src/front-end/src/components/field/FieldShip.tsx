@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import style from 'styles/field/Ship.module.css'
@@ -37,7 +38,7 @@ const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
   if (ship.headLocation.column !== -1 && ship.headLocation.row !== -1) {
     return (
       <div
-        className="absolute flex origin-top-left animate-pulse select-none items-center justify-center"
+        className="absolute flex origin-top-left select-none items-center justify-center"
         style={{
           width,
           height,
@@ -51,7 +52,7 @@ const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
         >
-          <div className="flex flex-row">
+          <div className={classNames(`flex flex-row`, statusClass)}>
             {Array.from({ length: shipLength }).map((_, index) => (
               <div className={style['ship-field']} key={index}>
                 {index + 1}

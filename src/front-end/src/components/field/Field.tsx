@@ -1,12 +1,11 @@
-import { FieldType } from 'types/Square'
-import { ShipDto } from 'types/webapi'
+import { GameFieldDto, ShipDto } from 'types/webapi'
 import Cell from './Cell'
 import FieldShip from './FieldShip'
 import FieldWrapper from './FieldWrapper'
 
 type Props = {
   player?: string
-  field: FieldType
+  field: GameFieldDto
   ships: ShipDto[]
   attackPlayer: (player: string, position: number) => void
   movesBlocked: boolean
@@ -19,18 +18,27 @@ const Field = ({ player, field, ships, attackPlayer, movesBlocked }: Props) => {
   return (
     <FieldWrapper>
       <div className="relative grid aspect-square grid-cols-[repeat(10,minmax(0,56px))]">
-        {field.map((data, id) => (
-          <Cell
-            key={id}
-            cellId={id}
-            data={data}
-            attackPlayer={safeAttackPlayer}
-            movesBlocked={movesBlocked}
-          />
-        ))}
+        {field &&
+          Object.values(field.cells).map((row, rowIndex) => (
+            <div key={rowIndex} className="column">
+              {row.map((cell, cellIndex) => (
+                <Cell
+                  key={cellIndex}
+                  cellId={cellIndex}
+                  data={cell}
+                  attackPlayer={safeAttackPlayer}
+                  movesBlocked={movesBlocked}
+                />
+              ))}
+            </div>
+          ))}
+
         {ships &&
           Object.values(ships).map((ship, id) => {
-            if (player === 'person' || player === 'computer')
+            if (
+              player === 'person' ||
+              (player === 'computer' && ship.hitCount == 0)
+            )
               return (
                 <FieldShip
                   key={id}
