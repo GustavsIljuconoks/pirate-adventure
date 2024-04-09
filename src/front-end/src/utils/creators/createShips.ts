@@ -5,37 +5,58 @@ export const createShips = (): Ships => {
     1: {
       id: 1,
       name: 'Skipper',
-      positions: [],
-      length: 1,
-      isDestroyed: false
+      size: 1,
+      headLocation: {
+        row: -1,
+        column: -1
+      },
+      orientation: 0,
+      hitCount: 0
     },
     2: {
       id: 2,
       name: 'Brother',
-      positions: [],
-      length: 2,
-      isDestroyed: false
+      size: 2,
+      headLocation: {
+        row: -1,
+        column: -1
+      },
+      orientation: 0,
+      hitCount: 0
     },
+
     3: {
       id: 3,
       name: 'Hurricane',
-      positions: [],
-      length: 3,
-      isDestroyed: false
+      size: 3,
+      headLocation: {
+        row: -1,
+        column: -1
+      },
+      orientation: 0,
+      hitCount: 0
     },
     4: {
       id: 4,
       name: 'Vice',
-      positions: [],
-      length: 4,
-      isDestroyed: false
+      size: 4,
+      headLocation: {
+        row: -1,
+        column: -1
+      },
+      orientation: 0,
+      hitCount: 0
     },
     5: {
       id: 5,
       name: 'Mother',
-      positions: [],
-      length: 5,
-      isDestroyed: false
+      size: 5,
+      headLocation: {
+        row: -1,
+        column: -1
+      },
+      orientation: 0,
+      hitCount: 0
     }
   }
 }

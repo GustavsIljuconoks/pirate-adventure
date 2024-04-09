@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
-import { Columns } from 'types/Square'
 import { createField } from 'utils/creators/createGrid'
 import { createShipPositions, createShips } from 'utils/creators/createShips'
 import { isPositionValid } from 'utils/validators/isPositionValid'
@@ -23,7 +22,7 @@ import FieldWrapper from './FieldWrapper'
 
 interface CellData {
   id: number
-  column: string
+  column: number
   row: number
 }
 
@@ -43,7 +42,7 @@ export default function GameBoard(): ReactElement {
   const handleDragEnd = () => {
     if (hoveredCell?.id === undefined || !draggedShipId) return
 
-    const shipLength = playerShips[draggedShipId].length
+    const shipLength = playerShips[draggedShipId].size
     const shipName = playerShips[draggedShipId].name
     const shipId = playerShips[draggedShipId].id
 
@@ -56,8 +55,11 @@ export default function GameBoard(): ReactElement {
         ...ships,
         [draggedShipId]: {
           ...ships[draggedShipId],
-          positions,
-          axis
+          axis,
+          headLocation: {
+            row: hoveredCell.row,
+            column: hoveredCell.column
+          }
         }
       }))
 
@@ -78,7 +80,7 @@ export default function GameBoard(): ReactElement {
         size: shipLength,
         headLocation: {
           row: hoveredCell.row,
-          column: Columns[hoveredCell.column as keyof typeof Columns]
+          column: hoveredCell.column
         },
         orientation: 1
       }
@@ -118,7 +120,10 @@ export default function GameBoard(): ReactElement {
       ...ships,
       [id]: {
         ...ships[id],
-        positions: []
+        headLocation: {
+          row: -1,
+          column: -1
+        }
       }
     }))
   }
@@ -126,7 +131,7 @@ export default function GameBoard(): ReactElement {
   const resetCell = (id: number) => {
     setPlayerField(
       field.map((cell) => {
-        return cell.shipId === id
+        return (cell as any).shipId === id
           ? {
               ...cell,
               shipId: undefined
@@ -183,7 +188,7 @@ export default function GameBoard(): ReactElement {
           </div>
         </FieldWrapper>
 
-        <div className="flex flex-wrap justify-center gap-1 lg:grid lg:grid-cols-2">
+        <div className="flex flex-wrap justify-center gap-1 md:grid md:grid-cols-2">
           {Object.entries(playerShips).map(([id, ship]) => (
             <DraggableShip
               key={id}

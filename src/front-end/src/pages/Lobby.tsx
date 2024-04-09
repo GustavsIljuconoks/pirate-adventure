@@ -120,9 +120,9 @@ export default function Lobby(): ReactElement {
                 'w-9/12 p-4 rounded-lg font-medium align-middle',
                 {
                   [style.disabled]:
-                    shipsPlayer1.length || shipsPlayer2.length != 5,
+                    shipsPlayer1.length !== 5 || shipsPlayer2.length !== 5,
                   [style.enabled]:
-                    shipsPlayer1.length || shipsPlayer2.length == 5
+                    shipsPlayer1.length === 5 || shipsPlayer2.length === 5
                 }
               )}
               onClick={initializeField}

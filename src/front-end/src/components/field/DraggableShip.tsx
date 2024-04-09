@@ -2,12 +2,13 @@ import { useDraggable } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import style from 'styles/field/Ship.module.css'
-import { Ship, Ships } from 'types/Ship'
+import { Ships } from 'types/Ship'
+import { ShipDto } from 'types/webapi'
 
 type Props = {
   id: number
   ships: Ships
-  ship: Ship
+  ship: ShipDto
   resetShipPlacement: (id: number) => void
   setShipBeingRemovedId: React.Dispatch<
     React.SetStateAction<number | undefined>
@@ -31,9 +32,9 @@ const DraggableShip = ({
       }
     : undefined
 
-  const [shipLength, setShipLength] = useState<number>(ship.length)
+  const [shipLength, setShipLength] = useState<number>(ship.size)
 
-  if (ships[id].positions.length !== 0)
+  if (ship.headLocation.column !== -1 && ship.headLocation.row !== -1)
     return (
       <motion.button
         key="trash"
@@ -63,7 +64,7 @@ const DraggableShip = ({
         </svg>
 
         <p className="text-xs capitalize sm:text-base">
-          {ship.name} ({ship.length})
+          {ship.name} ({ship.size})
         </p>
       </motion.button>
     )
@@ -78,7 +79,7 @@ const DraggableShip = ({
         {...attributes}
       >
         <p className="text-xs capitalize sm:text-base">
-          {ship.name} ({ship.length})
+          {ship.name} ({ship.size})
         </p>
 
         <div className="flex flex-row">

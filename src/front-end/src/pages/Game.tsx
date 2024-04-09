@@ -4,7 +4,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
 import { FieldType } from 'types/Square'
-import { GameDto } from 'types/webapi'
+import { GameDto, ShipDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShips } from 'utils/creators/createShips'
 import { getGameStatus } from 'utils/gameStatusRequest'
@@ -12,24 +12,28 @@ import { useWhoAmI } from 'utils/whoAmI'
 
 export default function Game(): ReactElement {
   const [playerField, setPlayerField] = useState(createField())
-  const [computerField, setComputerField] = useState<FieldType>(createField())
+  const [computerField, setComputerField] = useState(createField())
 
-  const [playerShips, setPlayerShips] = useState(createShips())
+  const [playerShips1, setPlayerShips1] = useState<ShipDto[]>()
+  const [playerShips2, setPlayerShips2] = useState<ShipDto[]>()
+
   const [computerShips, setComputerShips] = useState(createShips())
+  const [playerShips, setPlayerShips] = useState(createShips())
+
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
   const [gameStatusData, setGameStatusData] = useState<GameDto>()
   const [showInfo, setShowInfo] = useState(false)
   const [players, setPlayers] = useState({ me: '', enemy: '' })
   const { whoAmI } = useWhoAmI()
 
-  const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
-  const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
   const gameStateLink = useSelector((state: RootState) => state.apiData.link)
 
   useEffect(() => {
     getGameStatus(gameStateLink)
       .then((data) => {
         setGameStatusData(data)
+        setPlayerShips1(data.player1.ships)
+        setPlayerShips2(data.player2.ships)
       })
       .catch((error) => {
         console.error('An error occurred:', error)
@@ -96,7 +100,7 @@ export default function Game(): ReactElement {
             <Field
               player="person"
               field={playerField}
-              ships={playerShips}
+              ships={playerShips1}
               attackPlayer={attackPlayer}
               movesBlocked={true}
             />

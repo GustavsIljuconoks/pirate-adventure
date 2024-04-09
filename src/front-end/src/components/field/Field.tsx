@@ -1,5 +1,5 @@
-import { Ships } from 'types/Ship'
 import { FieldType } from 'types/Square'
+import { ShipDto } from 'types/webapi'
 import Cell from './Cell'
 import FieldShip from './FieldShip'
 import FieldWrapper from './FieldWrapper'
@@ -7,7 +7,7 @@ import FieldWrapper from './FieldWrapper'
 type Props = {
   player?: string
   field: FieldType
-  ships: Ships
+  ships: ShipDto[]
   attackPlayer: (player: string, position: number) => void
   movesBlocked: boolean
 }
@@ -28,19 +28,17 @@ const Field = ({ player, field, ships, attackPlayer, movesBlocked }: Props) => {
             movesBlocked={movesBlocked}
           />
         ))}
-        {Object.entries(ships).map(([id, ship]) => {
-          if (
-            player === 'person' ||
-            (player === 'computer' && ship.isDestroyed)
-          )
-            return (
-              <FieldShip
-                key={id}
-                ship={ship}
-                belongsTo={player === 'person' ? 'player' : 'enemy'}
-              />
-            )
-        })}
+        {ships &&
+          Object.values(ships).map((ship, id) => {
+            if (player === 'person' || player === 'computer')
+              return (
+                <FieldShip
+                  key={id}
+                  ship={ship}
+                  belongsTo={player === 'person' ? 'player' : 'enemy'}
+                />
+              )
+          })}
       </div>
     </FieldWrapper>
   )
