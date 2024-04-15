@@ -32,7 +32,7 @@
 }
 
 .ship-enemy {
-  filter: invert(26%) sepia(54%) saturate(2305%) hue-rotate(341deg)
+  filter: invert(76%) sepia(54%) saturate(2305%) hue-rotate(341deg)
     brightness(95%) contrast(111%);
 }
 

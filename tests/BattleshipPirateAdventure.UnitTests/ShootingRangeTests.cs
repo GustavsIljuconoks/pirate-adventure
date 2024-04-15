@@ -55,6 +55,7 @@ public class ShootingRangeTests
         // go player 1 - 2nd hit
         result = game.Player1Shoot(game.Player2!.Field.GetLocation("E1"));
         Assert.Equal(Scoring.Hit, result.Scoring);
+        Assert.Equal(targetShip.HitCount, 2);
 
         Assert.True(targetShip.IsDowned());
     }

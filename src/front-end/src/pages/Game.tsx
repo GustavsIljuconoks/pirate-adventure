@@ -1,12 +1,19 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import Field from 'components/field/Field'
+import ShipList from 'components/field/ShipList'
 import Layout from 'components/layout/Layout'
 import LoadingOrError from 'components/LoadingOrError'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setGameStateData } from 'reducers/gameStatusSlice'
 import { RootState } from 'store'
-import { CellState, GameDto, GameFieldDto, ShipDto } from 'types/webapi'
+import {
+  CellState,
+  GameDto,
+  GameFieldDto,
+  Scoring,
+  ShipDto
+} from 'types/webapi'
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { getCell } from 'utils/getCell'
 import { useWhoAmI } from 'utils/whoAmI'
@@ -63,9 +70,7 @@ export default function Game(): ReactElement {
       )
     )
 
-    // TODO: check if cell is occupied
     const cell = getCell(fieldCopy, cellRow, cellColumn)
-
     if (cell) {
       axios
         .post(
@@ -75,8 +80,8 @@ export default function Game(): ReactElement {
             column: cellColumn
           }
         )
-        .then((data) => {
-          if (cell?.state === CellState.Occupied) {
+        .then((response: AxiosResponse) => {
+          if (response.data.scoring === Scoring.Hit) {
             cell.state = CellState.Hit
           } else {
             cell.state = CellState.Missed
@@ -130,48 +135,66 @@ export default function Game(): ReactElement {
       <div className="flex flex-row justify-around">
         <div className="flex flex-col gap-3 sm:gap-6">
           <h2 className="font-bold uppercase sm:text-2xl">Friendly waters</h2>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-8">
             {isLoading ? (
               <LoadingOrError />
             ) : (
-              <Field
-                player="person"
-                field={
-                  gamePlayers.me.name === gameStatusData?.player1.id
-                    ? playerField1
-                    : playerField2
-                }
-                ships={
-                  gamePlayers.me.name === gameStatusData?.player1.id
-                    ? playerShips1
-                    : playerShips2
-                }
-                attackPlayer={attackPlayer}
-                movesBlocked={true}
-              />
+              <>
+                <Field
+                  player="person"
+                  field={
+                    gamePlayers.me.name === gameStatusData?.player1.id
+                      ? playerField1
+                      : playerField2
+                  }
+                  ships={
+                    gamePlayers.me.name === gameStatusData?.player1.id
+                      ? playerShips1
+                      : playerShips2
+                  }
+                />
+
+                <ShipList
+                  ships={
+                    gamePlayers.me.name === gameStatusData?.player1.id
+                      ? playerShips1
+                      : playerShips2
+                  }
+                />
+              </>
             )}
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:gap-6">
           <h2 className="font-bold uppercase sm:text-2xl">Enemy waters</h2>
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-8">
             {isLoading ? (
               <LoadingOrError />
             ) : (
-              <Field
-                player="enemy"
-                field={
-                  gamePlayers.enemy.name === gameStatusData?.player1.id
-                    ? playerField1
-                    : playerField2
-                }
-                ships={
-                  gamePlayers.enemy.name === gameStatusData?.player1.id
-                    ? playerShips1
-                    : playerShips2
-                }
-                attackPlayer={attackPlayer}
-              />
+              <>
+                <Field
+                  player="enemy"
+                  field={
+                    gamePlayers.enemy.name === gameStatusData?.player1.id
+                      ? playerField1
+                      : playerField2
+                  }
+                  ships={
+                    gamePlayers.enemy.name === gameStatusData?.player1.id
+                      ? playerShips1
+                      : playerShips2
+                  }
+                  attackPlayer={attackPlayer}
+                />
+
+                <ShipList
+                  ships={
+                    gamePlayers.enemy.name === gameStatusData?.player1.id
+                      ? playerShips1
+                      : playerShips2
+                  }
+                />
+              </>
             )}
           </div>
         </div>

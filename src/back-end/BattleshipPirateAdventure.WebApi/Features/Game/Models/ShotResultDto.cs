@@ -1,7 +1,9 @@
 using BattleshipPirateAdventure.Core;
+using TypeGen.Core.TypeAnnotations;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game.Models;
 
+[ExportTsInterface]
 public class ShotResultDto
 {
     public required LocationDto ShotLocation { get; set; }
