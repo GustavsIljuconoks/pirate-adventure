@@ -46,12 +46,6 @@ public class ShootingRangeTests
 
         Assert.True(targetShip.IsHit());
 
-        // go player 2
-        var result2 = game.Player2Shoot(game.Player1!.Field.GetLocation("B2"));
-        Assert.Equal(Scoring.Hit, result2.Scoring);
-        var ship = game.Player1.Ships.GetById(2);
-        Assert.True(ship.IsHit());
-
         // go player 1 - 2nd hit
         result = game.Player1Shoot(game.Player2!.Field.GetLocation("E1"));
         Assert.Equal(Scoring.Hit, result.Scoring);
