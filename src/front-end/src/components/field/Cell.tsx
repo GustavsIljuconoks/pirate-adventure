@@ -1,24 +1,61 @@
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
+import { useSelector } from 'react-redux'
+import { RootState } from 'store'
 import style from 'styles/field/Square.module.css'
-import { CellDto, CellState } from 'types/webapi'
+import { CellType } from 'types/Square'
+import { CellState } from 'types/webapi'
 
 type Props = {
-  cellId: number
-  data: CellDto
-  attackPlayer: (player: string, position: number) => void
+  rowIndex: number
+  columnIndex: number
+  data: CellType
+  attackPlayer: (player: string, cellColumn: number, cellRow: number) => void
   movesBlocked: boolean
 }
 
-const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
-  const allowClick = data.state === CellState.Hit || movesBlocked
-  const cellColor =
-    data.state === CellState.Occupied ? 'bg-red-500' : 'bg-white'
+const Cell = ({
+  rowIndex,
+  columnIndex,
+  data,
+  attackPlayer,
+  movesBlocked
+}: Props) => {
+  // useEffect(() => {
+  //   console.log(
+  //     'Cell component re-rendered with props:',
+  //     'column ' + Columns[data.column],
+  //     'row ' + data.row,
+  //     data
+  //   )
+  // }, [])
+
+  const gamePlayers = useSelector(
+    (state: RootState) => state.updatePlayers.players
+  )
+
+  const gameStatusData = useSelector(
+    (state: RootState) => state.gameStatusData.data
+  )
+
+  const allowClick =
+    data.state === CellState.Hit ||
+    gameStatusData.nextMove !== gamePlayers.me.id
+  const cellColor = data.state === CellState.Hit ? 'bg-red-500' : 'bg-white'
 
   const handleClick = () => {
     if (allowClick) return
-    attackPlayer('computer', cellId)
+    attackPlayer(gamePlayers.enemy.name, columnIndex, rowIndex)
   }
+
+  // if (data.state === 4 || data.state === 3) {
+  //   console.log('column ' + Columns[data.column], 'row ' + data.row, data)
+  //   console.log(cellColor)
+  // }
+
+  // if (data.isHit) {
+  //   console.log('column ' + columnIndex, 'row ' + rowIndex, data)
+  // }
 
   return (
     <div
@@ -27,11 +64,12 @@ const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
         `relative flex aspect-square`,
         `${allowClick ? '' : 'hover:cursor-crosshair hover:shadow-cell-hover'}`
       )}
-      onClick={handleClick}
+      onClick={
+        gameStatusData.nextMove === gamePlayers.me.id ? handleClick : undefined
+      }
     >
-      {data.state === CellState.Hit && (
+      {(data.state === 4 || data.state === 3) && (
         <>
-          <p>hit</p>
           <motion.div
             className={`${cellColor} absolute h-1/4 w-1/4 rounded-full opacity-40`}
             initial={{ scale: 0 }}

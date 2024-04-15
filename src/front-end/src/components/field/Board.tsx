@@ -155,7 +155,7 @@ export default function GameBoard(): ReactElement {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-4">
       <DndContext
         onDragEnd={handleDragEnd}
         onDragOver={handleDragOver}

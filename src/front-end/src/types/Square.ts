@@ -1,8 +1,11 @@
+import { CellState } from './webapi'
+
 export type CellType = {
   shipId?: number
   isHit: boolean
-  column: string
-  row: number
+  column?: string
+  row?: number
+  state: CellState
 }
 
 export const Columns = {
@@ -18,6 +21,6 @@ export const Columns = {
   J: 9
 }
 
-export const Rows = Array.from({ length: 10 }, (_, i) => i + 1)
+export const Rows = Array.from({ length: 10 }, (_, i) => i)
 
 export type FieldType = CellType[]

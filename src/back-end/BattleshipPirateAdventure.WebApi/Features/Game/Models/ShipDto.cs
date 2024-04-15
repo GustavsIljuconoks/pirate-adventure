@@ -13,6 +13,7 @@ public class ShipDto
     public required LocationDto HeadLocation { get; set; }
     public Orientation Orientation { get; set; }
     public int? HitCount { get; set; }
+    public bool IsDestroyed { get; set; }
 }
 
 public static class ShipExtensions
@@ -26,7 +27,8 @@ public static class ShipExtensions
             Size = ship.Size,
             Orientation = ship.Orientation,
             HeadLocation = ship.HeadLocation.MapFromDomain(),
-            HitCount = ship.HitCount
+            HitCount = ship.HitCount,
+            IsDestroyed = ship.IsDowned()
         };
     }
 }

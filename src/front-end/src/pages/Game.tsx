@@ -1,13 +1,16 @@
+import axios from 'axios'
 import Field from 'components/field/Field'
 import Layout from 'components/layout/Layout'
+import { SERVER_URL } from 'constants'
 import { ReactElement, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { setGameStateData } from 'reducers/gameStatusSlice'
 import { RootState } from 'store'
-import { FieldType } from 'types/Square'
-import { GameDto, GameFieldDto, ShipDto } from 'types/webapi'
+import { CellState, GameDto, GameFieldDto, ShipDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShips } from 'utils/creators/createShips'
 import { getGameStatus } from 'utils/gameStatusRequest'
+import { getCell } from 'utils/getCell'
 import { useWhoAmI } from 'utils/whoAmI'
 
 export default function Game(): ReactElement {
@@ -25,93 +28,140 @@ export default function Game(): ReactElement {
 
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
   const [gameStatusData, setGameStatusData] = useState<GameDto>()
-  const [showInfo, setShowInfo] = useState(false)
   const [players, setPlayers] = useState({ me: '', enemy: '' })
   const { whoAmI } = useWhoAmI()
+  const dispatch = useDispatch()
 
   const gameStateLink = useSelector((state: RootState) => state.apiData.link)
+  const apiData = useSelector((state: RootState) => state.apiData.data)
+  const gamePlayers = useSelector(
+    (state: RootState) => state.updatePlayers.players
+  )
+  const gameData = useSelector((state: RootState) => state.gameStatusData.data)
 
   useEffect(() => {
-    getGameStatus(gameStateLink)
-      .then((data) => {
-        setGameStatusData(data)
-        setPlayerShips1(data.player1.ships)
-        setPlayerShips2(data.player2.ships)
-        setPlayerField1(data.player1.field)
-        setPlayerField2(data.player2.field)
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
+    const interval = setInterval(() => {
+      getGameStatus(gameStateLink)
+        .then((data) => {
+          setGameStatusData(data)
+          dispatch(setGameStateData(data))
+          setPlayerShips1(data.player1.ships)
+          setPlayerShips2(data.player2.ships)
+          setPlayerField1(data.player1.field)
+          setPlayerField2(data.player2.field)
+        })
+        .catch((error) => {
+          console.error('An error occurred:', error)
+        })
 
-    whoAmI(setPlayers)
+      whoAmI()
+    }, 5000)
+
+    return () => clearInterval(interval)
   }, [])
 
-  const attackPlayer = (playerToAttack: string, position: number) => {
-    // hit cell
-    const fieldCopy: FieldType = JSON.parse(
+  const attackPlayer = (
+    playerToAttack: string,
+    cellColumn: number,
+    cellRow: number
+  ) => {
+    console.log('column ' + cellRow)
+    console.log('row ' + cellColumn)
+    console.log(gameData.nextMove)
+    console.log(gamePlayers.me.id)
+
+    const fieldCopy: GameFieldDto = JSON.parse(
       JSON.stringify(
-        playerToAttack === 'computer' ? computerField : playerField
+        playerToAttack === gamePlayers.enemy.name
+          ? gamePlayers.enemy.field
+          : gamePlayers.me.field
       )
     )
-    const cell = fieldCopy[position]
-    if (cell === undefined) {
-      setIsPlayerTurn((value) => !value)
-      return
+
+    // TODO: check if cell is occupied
+    const cell = getCell(fieldCopy, cellRow, cellColumn)
+    console.log(fieldCopy)
+
+    console.log(cellColumn)
+    console.log(cellRow)
+
+    if (cell) {
+      axios
+        .post(
+          SERVER_URL + `/game/${apiData.id}/player${gameData.nextMove}/shoot`,
+          {
+            row: cellColumn,
+            column: cellRow
+          }
+        )
+        .then((data) => {
+          if (cell?.state === CellState.Occupied) {
+            cell.state = CellState.Hit
+            console.log('hitted')
+          } else {
+            cell.state = CellState.Missed
+            console.log('missed')
+          }
+
+          cell.isHit = true
+          getGameStatus(gameStateLink).then((data) => {
+            dispatch(setGameStateData(data))
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
 
-    cell.isHit = true
-
     // update field
-    if (playerToAttack === 'computer') {
-      setComputerField(fieldCopy)
+    if (playerToAttack === gamePlayers.enemy.name) {
+      if (gamePlayers.enemy.id === 2) {
+        setPlayerField2(fieldCopy)
+      } else {
+        setPlayerField1(fieldCopy)
+      }
     } else {
-      setPlayerField(fieldCopy)
+      setPlayerField1(fieldCopy)
     }
   }
 
   const debugGameState = () => {
     getGameStatus(gameStateLink)
       .then((data) => {
-        setGameStatusData(data)
+        console.log(data)
       })
       .catch((error) => {
         console.error('An error occurred:', error)
       })
-
-    setShowInfo(!showInfo)
   }
 
   return (
     <Layout>
       <div className="flex flex-row justify-between">
         <div className="profile font-bold">
-          <h1 className="text-3xl">{players.me}</h1>
+          <h1 className="text-3xl">{gamePlayers.me.name}</h1>
           <div className="time">time</div>
         </div>
 
         <div className="profile font-bold">
-          <h1 className="text-3xl">{players.enemy}</h1>
+          <h1 className="text-3xl">{gamePlayers.enemy.name}</h1>
           <div className="time">time</div>
         </div>
       </div>
 
       <div className="flex flex-row justify-around">
         <div className="flex flex-col gap-3 sm:gap-6">
-          <h2 className="font-bold uppercase text-cyan-300 sm:text-2xl">
-            Friendly waters
-          </h2>
+          <h2 className="font-bold uppercase sm:text-2xl">Friendly waters</h2>
           <div className="flex flex-col">
-            {}
             <Field
               player="person"
               field={
-                players.me === gameStatusData?.player1.id
+                gamePlayers.me.name === gameStatusData?.player1.id
                   ? playerField1
                   : playerField2
               }
               ships={
-                players.me === gameStatusData?.player1.id
+                gamePlayers.me.name === gameStatusData?.player1.id
                   ? playerShips1
                   : playerShips2
               }
@@ -121,19 +171,17 @@ export default function Game(): ReactElement {
           </div>
         </div>
         <div className="flex flex-col gap-3 sm:gap-6">
-          <h2 className="font-bold uppercase text-orange-400 sm:text-2xl">
-            Enemy waters
-          </h2>
+          <h2 className="font-bold uppercase sm:text-2xl">Enemy waters</h2>
           <div className="flex flex-col">
             <Field
               player="computer"
               field={
-                players.enemy === gameStatusData?.player1.id
+                gamePlayers.enemy.name === gameStatusData?.player1.id
                   ? playerField1
                   : playerField2
               }
               ships={
-                players.enemy === gameStatusData?.player1.id
+                gamePlayers.enemy.name === gameStatusData?.player1.id
                   ? playerShips1
                   : playerShips2
               }
@@ -151,19 +199,6 @@ export default function Game(): ReactElement {
         >
           Show game state
         </button>
-
-        {showInfo &&
-          gameStatusData.map((game, index) => (
-            <div key={index}>
-              <p>ID: {game.id}</p>
-              <p>Column Size: {game.columnSize}</p>
-              <p>Row Size: {game.rowSize}</p>
-              <p>Player 1: {game.player1.id}</p>
-              <p>Player 2: {game.player2.id}</p>
-              <p>State: {game.state.value}</p>
-              <p>Next Move: {game.nextMove}</p>
-            </div>
-          ))}
       </div>
     </Layout>
   )

@@ -13,14 +13,14 @@ type Props = {
 const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
   const [shipLength, setShipLength] = useState<number>(ship.size)
 
-  if (ship.headLocation.column === 0 && ship.headLocation.row === 0)
+  if (ship.headLocation.column === null && ship.headLocation.row === null)
     return <></>
 
   const width = `${ship.size * 10}%`
   const height = '10%'
 
   const left = `${ship.headLocation.column * 10}%`
-  const top = `${ship.headLocation.row * 10 - 10}%`
+  const top = `${ship.headLocation.row * 10}%`
   const transform =
     ship.orientation === Orientation.Horizontal || ship.orientation === 0
       ? 'rotate(0deg)'

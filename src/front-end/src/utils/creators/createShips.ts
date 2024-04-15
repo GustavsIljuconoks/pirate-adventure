@@ -11,7 +11,8 @@ export const createShips = (): Ships => {
         column: -1
       },
       orientation: 0,
-      hitCount: 0
+      hitCount: 0,
+      isDestroyed: false
     },
     2: {
       id: 2,
@@ -22,7 +23,8 @@ export const createShips = (): Ships => {
         column: -1
       },
       orientation: 0,
-      hitCount: 0
+      hitCount: 0,
+      isDestroyed: false
     },
 
     3: {
@@ -34,7 +36,8 @@ export const createShips = (): Ships => {
         column: -1
       },
       orientation: 0,
-      hitCount: 0
+      hitCount: 0,
+      isDestroyed: false
     },
     4: {
       id: 4,
@@ -45,7 +48,8 @@ export const createShips = (): Ships => {
         column: -1
       },
       orientation: 0,
-      hitCount: 0
+      hitCount: 0,
+      isDestroyed: false
     },
     5: {
       id: 5,
@@ -56,7 +60,8 @@ export const createShips = (): Ships => {
         column: -1
       },
       orientation: 0,
-      hitCount: 0
+      hitCount: 0,
+      isDestroyed: false
     }
   }
 }
