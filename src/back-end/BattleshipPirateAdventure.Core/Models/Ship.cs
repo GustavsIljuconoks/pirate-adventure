@@ -44,13 +44,13 @@ public class Ship
         if (!IsHit())
         {
             SailStates[0] = true;
-            HitCount = SailStates.Count(s => s);
+            HitCount = SailStates.Length;
         }
         else
         {
-            var hitCount = SailStates.Count(s => s);
-            SailStates[hitCount] = true;
-            HitCount = SailStates.Count(s => s);
+            var count = SailStates.Length;
+            SailStates[count] = true;
+            HitCount = count;
         }
     }
 }
