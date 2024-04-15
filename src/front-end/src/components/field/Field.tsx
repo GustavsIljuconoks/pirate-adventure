@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { CellType } from 'types/Square'
 import { CellDto, GameFieldDto, ShipDto } from 'types/webapi'
 import Cell from './Cell'
@@ -10,14 +9,9 @@ type Props = {
   field: GameFieldDto
   ships: ShipDto[]
   attackPlayer: (player: string, cellColumn: number, cellRow: number) => void
-  movesBlocked: boolean
 }
 
-const Field = ({ player, field, ships, attackPlayer, movesBlocked }: Props) => {
-  useEffect(() => {
-    console.log('Field component re-rendered with props:', field)
-  }, [])
-
+const Field = ({ player, field, ships, attackPlayer }: Props) => {
   const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
 
   const playerCells: { [key: string]: CellType[] } = {}
@@ -50,22 +44,18 @@ const Field = ({ player, field, ships, attackPlayer, movesBlocked }: Props) => {
                 columnIndex={columnIndex}
                 data={cell}
                 attackPlayer={safeAttackPlayer}
-                movesBlocked={movesBlocked}
               />
             ))
           )}
 
         {ships &&
           Object.values(ships).map((ship, id) => {
-            if (
-              player === 'person' ||
-              (player === 'computer' && ship.isDestroyed)
-            )
+            if (player === 'person' || ship.isDestroyed)
               return (
                 <FieldShip
                   key={id}
                   ship={ship}
-                  // belongsTo={player === 'person' ? 'player' : 'enemy'}
+                  belongsTo={player === 'person' ? 'player' : 'enemy'}
                 />
               )
           })}
