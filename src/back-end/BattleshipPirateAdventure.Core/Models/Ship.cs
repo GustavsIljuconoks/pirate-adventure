@@ -26,7 +26,7 @@ public class Ship
     public int Size { get; }
     public Location HeadLocation { get; }
     public Orientation Orientation { get; }
-    public int? HitCount { get; }
+    public int? HitCount { get; set; }
     private bool[] SailStates { get; }
 
     public bool IsDowned()
@@ -44,11 +44,13 @@ public class Ship
         if (!IsHit())
         {
             SailStates[0] = true;
+            HitCount = SailStates.Count(s => s);
         }
         else
         {
-            var hitCount = SailStates.Count(s => s);
-            SailStates[hitCount] = true;
+            var count = SailStates.Count(s => s);
+            SailStates[count] = true;
+            HitCount = SailStates.Count(s => s);
         }
     }
 }

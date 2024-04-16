@@ -1,3 +1,5 @@
+import { ShipDto } from './webapi'
+
 export type Ship = {
   id: number
   name: string
@@ -11,4 +13,4 @@ export type Ship = {
   style?: React.CSSProperties
 }
 
-export type Ships = Record<number, Ship>
+export type Ships = Record<number, ShipDto>

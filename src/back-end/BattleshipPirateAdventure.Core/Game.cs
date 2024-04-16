@@ -60,6 +60,9 @@ public class Game
         {
             var hitShip = Player2.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
+
+            NextMove = PlayerType.Player1;
+            return result;
         }
 
         NextMove = PlayerType.Player2;
@@ -80,6 +83,9 @@ public class Game
         {
             var hitShip = Player1.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
+
+            NextMove = PlayerType.Player2;
+            return result;
         }
 
         NextMove = PlayerType.Player1;

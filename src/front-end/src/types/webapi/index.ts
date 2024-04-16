@@ -24,3 +24,5 @@ export * from './JoinGameResponseDto.generated';
 export * from './LocationDto.generated';
 export * from './ShipDto.generated';
 export * from './Orientation.generated';
+export * from './ShotResultDto.generated';
+export * from './Scoring.generated';

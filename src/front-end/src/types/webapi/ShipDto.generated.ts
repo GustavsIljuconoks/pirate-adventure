@@ -13,4 +13,5 @@ export interface ShipDto {
     headLocation: LocationDto;
     orientation: Orientation;
     hitCount: number;
+    isDestroyed: boolean;
 }

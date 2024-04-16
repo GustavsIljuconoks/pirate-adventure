@@ -1,22 +1,36 @@
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
+import { useSelector } from 'react-redux'
+import { RootState } from 'store'
 import style from 'styles/field/Square.module.css'
 import { CellType } from 'types/Square'
+import { CellState } from 'types/webapi'
 
 type Props = {
-  cellId: number
+  rowIndex: number
+  columnIndex: number
   data: CellType
-  attackPlayer: (player: string, position: number) => void
-  movesBlocked: boolean
+  attackPlayer: (player: string, cellColumn: number, cellRow: number) => void
 }
 
-const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
-  const allowClick = data.isHit || movesBlocked
-  const cellColor = data.shipId ? 'bg-red-500' : 'bg-white'
+const Cell = ({ rowIndex, columnIndex, data, attackPlayer }: Props) => {
+  const gamePlayers = useSelector(
+    (state: RootState) => state.updatePlayers.players
+  )
+
+  const gameStatusData = useSelector(
+    (state: RootState) => state.gameStatusData.data
+  )
+
+  const allowClick =
+    gameStatusData.nextMove === gamePlayers.me.id &&
+    data.state !== CellState.Missed &&
+    data.state !== CellState.Hit
+
+  const cellColor = data.state === CellState.Hit ? 'bg-red-500' : 'bg-white'
 
   const handleClick = () => {
-    if (allowClick) return
-    attackPlayer('computer', cellId)
+    attackPlayer(gamePlayers.enemy.name, columnIndex, rowIndex)
   }
 
   return (
@@ -24,13 +38,12 @@ const Cell = ({ cellId, data, attackPlayer, movesBlocked }: Props) => {
       className={classNames(
         style.square,
         `relative flex aspect-square`,
-        `${allowClick ? '' : 'hover:cursor-crosshair hover:shadow-cell-hover'}`
+        `${allowClick ? 'hover:cursor-crosshair hover:shadow-cell-hover' : ''}`
       )}
-      onClick={handleClick}
+      onClick={allowClick ? handleClick : undefined}
     >
-      {data.isHit && (
+      {(data.state === CellState.Missed || data.state === CellState.Hit) && (
         <>
-          <p>hit</p>
           <motion.div
             className={`${cellColor} absolute h-1/4 w-1/4 rounded-full opacity-40`}
             initial={{ scale: 0 }}

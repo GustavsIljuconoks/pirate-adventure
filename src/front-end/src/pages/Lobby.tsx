@@ -10,8 +10,9 @@ import style from 'styles/lobby/Lobby.module.css'
 
 import axios from 'axios'
 import classNames from 'classnames'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setGameState } from 'reducers/apiDataSlice'
 import { RootState } from 'store'
 import { GameState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
@@ -27,6 +28,7 @@ export default function Lobby(): ReactElement {
   const player1InitializeField = findLinkByRel(apiData, 'player1InitField')
   const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
   const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
@@ -41,17 +43,19 @@ export default function Lobby(): ReactElement {
   const gameState = useSelector((state: RootState) => state.apiData.link)
 
   const initializeField = () => {
-    let interval
     const gameStateLink = replaceGameId(gameState, gameId)
+    dispatch(setGameState(gameStateLink))
+
     if (gamePlayer1) {
       axios
         .post(SERVER_URL + player1InitializeField, {
           ships: shipsPlayer1
         })
         .then(() => {
-          interval = setInterval(() => {
+          let interval = setInterval(() => {
             axios.get(SERVER_URL + gameStateLink, {}).then((response) => {
               if (response.data.state == GameState.Started) {
+                clearInterval(interval)
                 navigate(`/game/${gameId}`)
               }
             })
@@ -65,9 +69,10 @@ export default function Lobby(): ReactElement {
           ships: shipsPlayer2
         })
         .then(() => {
-          interval = setInterval(() => {
+          let interval = setInterval(() => {
             axios.get(SERVER_URL + gameStateLink).then((response) => {
               if (response.data.state == GameState.Started) {
+                clearInterval(interval)
                 navigate(`/game/${gameId}`)
               }
             })
@@ -75,7 +80,6 @@ export default function Lobby(): ReactElement {
         })
     }
     setPlayerReady((prevPlayerReady) => !prevPlayerReady)
-    clearInterval(interval)
   }
 
   return (
@@ -116,9 +120,9 @@ export default function Lobby(): ReactElement {
                 'w-9/12 p-4 rounded-lg font-medium align-middle',
                 {
                   [style.disabled]:
-                    shipsPlayer1.length || shipsPlayer2.length != 5,
+                    shipsPlayer1.length !== 5 || shipsPlayer2.length !== 5,
                   [style.enabled]:
-                    shipsPlayer1.length || shipsPlayer2.length == 5
+                    shipsPlayer1.length === 5 || shipsPlayer2.length === 5
                 }
               )}
               onClick={initializeField}

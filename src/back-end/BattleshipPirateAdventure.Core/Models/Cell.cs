@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace BattleshipPirateAdventure.Core.Models;
 
+[DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public class Cell
 {
     public int? ShipId { get; set; }
@@ -11,4 +14,6 @@ public class Cell
         ShipId = shipId;
         State = newState;
     }
+
+    private string DebuggerDisplay => $"State: {State} / Ship Id: {ShipId}";
 }
