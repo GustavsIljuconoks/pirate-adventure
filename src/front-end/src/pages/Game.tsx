@@ -54,7 +54,7 @@ export default function Game(): ReactElement {
           console.error('An error occurred:', error)
         })
       whoAmI()
-    }, 5000)
+    }, 1000)
     return () => clearInterval(interval)
   }, [])
 
