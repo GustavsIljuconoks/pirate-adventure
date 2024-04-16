@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import Field from 'components/field/Field'
 import ShipList from 'components/field/ShipList'
 import Layout from 'components/layout/Layout'
@@ -80,10 +80,11 @@ export default function Game(): ReactElement {
             column: cellColumn
           }
         )
-        .then((response: AxiosResponse) => {
+        .then((response) => {
           if (response.data.scoring === Scoring.Hit) {
             cell.state = CellState.Hit
-          } else {
+          }
+          if (response.data.scoring === Scoring.Missed) {
             cell.state = CellState.Missed
           }
 
