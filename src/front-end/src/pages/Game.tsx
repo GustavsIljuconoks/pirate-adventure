@@ -3,6 +3,7 @@ import Field from 'components/field/Field'
 import ShipList from 'components/field/ShipList'
 import Layout from 'components/layout/Layout'
 import LoadingOrError from 'components/LoadingOrError'
+import Spinner from 'components/Spinner'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setGameStateData } from 'reducers/gameStatusSlice'
@@ -121,15 +122,27 @@ export default function Game(): ReactElement {
 
   return (
     <Layout>
-      <div className="flex flex-row justify-between">
-        <div className="profile font-bold">
-          <h1 className="text-3xl">{gamePlayers.me.name}</h1>
-          <div className="time">time</div>
+      <div className="flex flex-row justify-between mb-6">
+        <div className="profile flex flex-row-reverse items-end gap-4">
+          <Spinner
+            show={gamePlayers.me.id === gameStatusData?.nextMove ? true : false}
+          />
+          <div className="font-bold">
+            <h1 className="text-3xl">{gamePlayers.me.name}</h1>
+            <div className="time">time</div>
+          </div>
         </div>
 
-        <div className="profile font-bold">
-          <h1 className="text-3xl">{gamePlayers.enemy.name}</h1>
-          <div className="time">time</div>
+        <div className="profile flex flex-row items-end gap-4">
+          <Spinner
+            show={
+              gamePlayers.enemy.id === gameStatusData?.nextMove ? true : false
+            }
+          />
+          <div className="font-bold">
+            <h1 className="text-3xl">{gamePlayers.enemy.name}</h1>
+            <div className="time">time</div>
+          </div>
         </div>
       </div>
 
