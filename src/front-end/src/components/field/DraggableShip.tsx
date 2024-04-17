@@ -2,12 +2,10 @@ import { useDraggable } from '@dnd-kit/core'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import style from 'styles/field/Ship.module.css'
-import { Ships } from 'types/Ship'
 import { ShipDto } from 'types/webapi'
 
 type Props = {
   id: number
-  ships: Ships
   ship: ShipDto
   resetShipPlacement: (id: number) => void
   setShipBeingRemovedId: React.Dispatch<
@@ -16,7 +14,6 @@ type Props = {
 }
 
 const DraggableShip = ({
-  ships,
   id,
   ship,
   resetShipPlacement,

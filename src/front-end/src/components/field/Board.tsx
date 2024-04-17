@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
+import { Orientation } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShipPositions, createShips } from 'utils/creators/createShips'
 import { isPositionValid } from 'utils/validators/isPositionValid'
@@ -45,6 +46,7 @@ export default function GameBoard(): ReactElement {
     const shipLength = playerShips[draggedShipId].size
     const shipName = playerShips[draggedShipId].name
     const shipId = playerShips[draggedShipId].id
+    const shipOrientation = playerShips[draggedShipId].orientation
 
     if (isPositionValid(field, hoveredCell.id, shipLength, axis)) {
       //get dropped ships positions
@@ -59,7 +61,8 @@ export default function GameBoard(): ReactElement {
           headLocation: {
             row: hoveredCell.row,
             column: hoveredCell.column
-          }
+          },
+          dropped: true
         }
       }))
 
@@ -82,7 +85,7 @@ export default function GameBoard(): ReactElement {
           row: hoveredCell.row,
           column: hoveredCell.column
         },
-        orientation: 1
+        orientation: shipOrientation
       }
 
       setPlayerField(fieldClone)
@@ -123,7 +126,8 @@ export default function GameBoard(): ReactElement {
         headLocation: {
           row: -1,
           column: -1
-        }
+        },
+        dropped: false
       }
     }))
   }
@@ -154,53 +158,97 @@ export default function GameBoard(): ReactElement {
     }
   }
 
+  const changeOrientation = (orientation: string) => {
+    setAxis(orientation)
+
+    setPlayerShips((ships) => {
+      const updatedShips = { ...ships }
+      Object.values(updatedShips).forEach((ship) => {
+        if (!ship.dropped) {
+          if (orientation === 'x') {
+            updatedShips[ship.id] = {
+              ...ship,
+              orientation: Orientation.Horizontal
+            }
+          } else if (orientation === 'y') {
+            updatedShips[ship.id] = {
+              ...ship,
+              orientation: Orientation.Vertical
+            }
+          }
+        }
+      })
+      return updatedShips
+    })
+  }
+
   return (
-    <div className="flex flex-col gap-4">
-      <DndContext
-        onDragEnd={handleDragEnd}
-        onDragOver={handleDragOver}
-        onDragCancel={resetDnDState}
-        modifiers={[restrictToWindowEdges]}
-        sensors={sensors}
-      >
-        <FieldWrapper>
-          <div className={style['game-board']}>
-            {field.map((data, id) => (
-              <DroppableSquare
-                field={field}
-                data={data}
-                key={id}
-                cellId={id}
-                hoveredCellId={hoveredCell?.id}
-                draggedShipId={draggedShipId}
-                axis={axis}
-                ships={playerShips}
-              />
-            ))}
+    <div className="flex flex-col justify-center gap-4">
+      <div className="flex items-center justify-center gap-4">
+        <button
+          className={`${
+            axis === 'x' ? 'bg-neutral-100 text-neutral-900' : ''
+          } inline-block rounded-md border border-neutral-100 px-8 py-2.5 text-xs font-medium transition hover:scale-105 sm:text-base md:px-12`}
+          onClick={() => changeOrientation('x')}
+        >
+          X axis
+        </button>
+        <button
+          className={`${
+            axis === 'y' ? 'bg-neutral-100 text-neutral-900' : ''
+          } inline-block rounded-md border border-neutral-100 px-8 py-2.5 text-xs font-medium transition hover:scale-105 sm:text-base md:px-12`}
+          onClick={() => changeOrientation('y')}
+        >
+          Y axis
+        </button>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <DndContext
+          onDragEnd={handleDragEnd}
+          onDragOver={handleDragOver}
+          onDragCancel={resetDnDState}
+          modifiers={[restrictToWindowEdges]}
+          sensors={sensors}
+        >
+          <FieldWrapper>
+            <div className={style['game-board']}>
+              {field.map((data, id) => (
+                <DroppableSquare
+                  field={field}
+                  data={data}
+                  key={id}
+                  cellId={id}
+                  hoveredCellId={hoveredCell?.id}
+                  draggedShipId={draggedShipId}
+                  axis={axis}
+                  ships={playerShips}
+                />
+              ))}
+              {Object.entries(playerShips).map(([id, ship]) => (
+                <FieldShip
+                  key={id}
+                  ship={ship}
+                  removeButtonHovered={Number(id) === shipBeingRemovedId}
+                  belongsTo="player"
+                />
+              ))}
+            </div>
+          </FieldWrapper>
+
+          <div className="flex flex-wrap justify-center gap-1 md:grid md:grid-cols-2">
             {Object.entries(playerShips).map(([id, ship]) => (
-              <FieldShip
+              <DraggableShip
                 key={id}
+                id={Number(id)}
                 ship={ship}
-                removeButtonHovered={Number(id) === shipBeingRemovedId}
-                belongsTo="player"
+                resetShipPlacement={resetShipPlacement}
+                setShipBeingRemovedId={setShipBeingRemovedId}
               />
             ))}
           </div>
-        </FieldWrapper>
-
-        <div className="flex flex-wrap justify-center gap-1 md:grid md:grid-cols-2">
-          {Object.entries(playerShips).map(([id, ship]) => (
-            <DraggableShip
-              key={id}
-              id={Number(id)}
-              ships={playerShips}
-              ship={ship}
-              resetShipPlacement={resetShipPlacement}
-              setShipBeingRemovedId={setShipBeingRemovedId}
-            />
-          ))}
-        </div>
-      </DndContext>
+        </DndContext>
+      </div>
     </div>
   )
 }

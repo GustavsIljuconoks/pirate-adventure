@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
 import style from 'styles/field/Ship.module.css'
 import { Orientation, ShipDto } from 'types/webapi'
 
@@ -11,15 +10,16 @@ type Props = {
 }
 
 const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
-  const [shipLength, setShipLength] = useState<number>(ship.size)
-
   if (ship.headLocation.column === null && ship.headLocation.row === null)
     return <></>
 
   const width = `${ship.size * 10}%`
   const height = '10%'
 
-  const left = `${ship.headLocation.column * 10}%`
+  const left = `${
+    ship.headLocation.column * 10 +
+    (ship.orientation === Orientation.Horizontal ? 0 : 10)
+  }%`
   const top = `${ship.headLocation.row * 10}%`
   const transform =
     ship.orientation === Orientation.Horizontal || ship.orientation === 0
@@ -53,7 +53,7 @@ const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
           animate={{ scale: 1 }}
         >
           <div className={classNames(`flex flex-row`, statusClass)}>
-            {Array.from({ length: shipLength }).map((_, index) => (
+            {Array.from({ length: ship.size }).map((_, index) => (
               <div className={style['ship-field']} key={index}>
                 {index + 1}
               </div>
