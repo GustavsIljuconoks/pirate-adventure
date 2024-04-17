@@ -170,16 +170,12 @@ export default function GameBoard(): ReactElement {
       Object.values(updatedShips).forEach((ship) => {
         const extendedShip = ship as Ship
         if (!extendedShip.dropped) {
-          if (orientation === 'x') {
-            updatedShips[ship.id] = {
-              ...ship,
-              orientation: Orientation.Horizontal
-            }
-          } else if (orientation === 'y') {
-            updatedShips[ship.id] = {
-              ...ship,
-              orientation: Orientation.Vertical
-            }
+          updatedShips[ship.id] = {
+            ...ship,
+            orientation:
+              orientation === 'x'
+                ? Orientation.Horizontal
+                : Orientation.Vertical
           }
         }
       })
