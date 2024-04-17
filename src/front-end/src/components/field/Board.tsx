@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import style from 'styles/field/GameBoard.module.css'
-import { Orientation } from 'types/webapi'
+import { Orientation, ShipDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShipPositions, createShips } from 'utils/creators/createShips'
 import { isPositionValid } from 'utils/validators/isPositionValid'
@@ -25,6 +25,10 @@ interface CellData {
   id: number
   column: number
   row: number
+}
+
+interface Ship extends ShipDto {
+  dropped: boolean
 }
 
 export default function GameBoard(): ReactElement {
@@ -159,12 +163,13 @@ export default function GameBoard(): ReactElement {
   }
 
   const changeOrientation = (orientation: string) => {
-    setAxis(orientation)
+    setAxis(orientation as 'x' | 'y')
 
     setPlayerShips((ships) => {
       const updatedShips = { ...ships }
       Object.values(updatedShips).forEach((ship) => {
-        if (!ship.dropped) {
+        const extendedShip = ship as Ship
+        if (!extendedShip.dropped) {
           if (orientation === 'x') {
             updatedShips[ship.id] = {
               ...ship,
