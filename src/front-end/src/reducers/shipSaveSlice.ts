@@ -36,7 +36,8 @@ export const shipSlice = createSlice({
         state.player1Ships = state.player1Ships.filter(
           (ship) => ship.id !== shipId
         )
-      } else if (playerId === 2) {
+      }
+      if (playerId === 2) {
         state.player2Ships = state.player2Ships.filter(
           (ship) => ship.id !== shipId
         )
