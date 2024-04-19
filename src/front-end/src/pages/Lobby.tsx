@@ -21,7 +21,6 @@ import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
   const [playerReady, setPlayerReady] = useState(false)
-  const [isButtonDisabled, setButtonDisabled] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const gameId = apiData.id
   const joinGameLink = APP_URL + 'join/' + gameId
@@ -95,22 +94,6 @@ export default function Lobby(): ReactElement {
 
           <div className="flex flex-row mb-8 gap-4">
             <GameBoard />
-            <div className={style.instructions}>
-              <div className={style.instruction}>
-                <p>Drag to move</p>
-                <img src="/icons/drag.svg" alt="touch" width={50} height={50} />
-              </div>
-
-              <div className={style.instruction}>
-                <p>Tap to rotate</p>
-                <img
-                  src="/icons/touch.svg"
-                  alt="touch"
-                  width={50}
-                  height={50}
-                />
-              </div>
-            </div>
           </div>
 
           <div className="flex justify-center">

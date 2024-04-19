@@ -6,12 +6,14 @@ import LoadingOrError from 'components/LoadingOrError'
 import Spinner from 'components/Spinner'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
 import { RootState } from 'store'
 import {
   CellState,
   GameDto,
   GameFieldDto,
+  GameState,
   Scoring,
   ShipDto
 } from 'types/webapi'
@@ -30,6 +32,7 @@ export default function Game(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const gameStateLink = useSelector((state: RootState) => state.apiData.link)
   const apiData = useSelector((state: RootState) => state.apiData.data)
@@ -42,6 +45,10 @@ export default function Game(): ReactElement {
     const interval = setInterval(() => {
       getGameStatus(gameStateLink)
         .then((data) => {
+          if (data?.state === GameState.Finished) {
+            clearInterval(interval)
+            navigate(`/game-over/${apiData.id}`)
+          }
           setGameStatusData(data)
           dispatch(setGameStateData(data))
           setPlayerShips1(data.player1.ships)
@@ -56,7 +63,7 @@ export default function Game(): ReactElement {
       whoAmI()
     }, 1000)
     return () => clearInterval(interval)
-  }, [])
+  }, [gameStateLink, apiData.id, navigate])
 
   const attackPlayer = (
     playerToAttack: string,
