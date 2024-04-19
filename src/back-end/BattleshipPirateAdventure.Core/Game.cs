@@ -60,7 +60,7 @@ public class Game
             var hitShip = Player2.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
 
-            var checkIfAllDowned = Player2.Ships.All(x => x.IsDowned() == true) ? true : false;
+            var checkIfAllDowned = Player2.Ships.All(x => x.IsDowned());
             if (checkIfAllDowned)
             {
                 GameEnd(Player1, Player2);
@@ -90,7 +90,7 @@ public class Game
             var hitShip = Player1.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
 
-            var checkIfAllDowned = Player1.Ships.All(x => x.IsDowned() == true) ? true : false;
+            var checkIfAllDowned = Player2.Ships.All(x => x.IsDowned());
             if (checkIfAllDowned)
             {
                 GameEnd(Player2, Player1);
