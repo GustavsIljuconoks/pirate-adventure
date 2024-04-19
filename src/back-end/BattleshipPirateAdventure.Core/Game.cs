@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using BattleshipPirateAdventure.Core.Models;
 
 namespace BattleshipPirateAdventure.Core;
@@ -61,6 +60,13 @@ public class Game
             var hitShip = Player2.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
 
+            var checkIfAllDowned = Player2.Ships.All(x => x.IsDowned());
+            if (checkIfAllDowned)
+            {
+                GameEnd(Player1, Player2);
+                return result;
+            }
+
             NextMove = PlayerType.Player1;
             return result;
         }
@@ -83,6 +89,13 @@ public class Game
         {
             var hitShip = Player1.Ships.GetById(result.TargetShipId!.Value);
             hitShip.Hit();
+
+            var checkIfAllDowned = Player2.Ships.All(x => x.IsDowned());
+            if (checkIfAllDowned)
+            {
+                GameEnd(Player2, Player1);
+                return result;
+            }
 
             NextMove = PlayerType.Player2;
             return result;
@@ -124,5 +137,12 @@ public class Game
         {
             Start();
         }
+    }
+
+    public void GameEnd(GamePlayer playerWinner, GamePlayer playerLoser)
+    {
+        playerWinner.State = PlayerState.Winner;
+        playerLoser.State = PlayerState.Loser;
+        State = GameState.Finished;
     }
 }
