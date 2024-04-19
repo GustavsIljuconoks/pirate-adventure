@@ -22,13 +22,14 @@ export default function JoinGame(): ReactElement {
     const fetchData = async () => {
       try {
         const response = await axios.get(SERVER_URL)
-        const gameStatusLink = findLinkByRel(response.data, 'getGame')
+        const statusLink = findLinkByRel(response.data, 'getGame')
         const joinGameLinkTemplate = findLinkByRel(response.data, 'joinGame')
 
         if (joinGameLinkTemplate) {
           const url = window.location.href
           const gameId = url.split('/join/')[1]
           const joinLink = replaceGameId(joinGameLinkTemplate, gameId)
+          const gameStatusLink = replaceGameId(statusLink, gameId)
 
           axios
             .post(SERVER_URL + joinLink, { player2: 'valdis' })

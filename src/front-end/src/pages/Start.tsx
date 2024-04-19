@@ -7,6 +7,7 @@ import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
 import { persistor, RootState } from 'store'
 import { findLinkByRel } from 'utils/findLinkByRel'
+import { replaceGameId } from 'utils/replaceGameId'
 import { SERVER_URL } from '../constants'
 import '../styles/Start.css'
 
@@ -34,6 +35,7 @@ export default function Main(): ReactElement {
   }, [])
 
   const apiData = useSelector((state: RootState) => state.apiData.data)
+  const gameLink = useSelector((state: RootState) => state.apiData.link)
 
   const createNewGame = (): void => {
     const createGameLink = findLinkByRel(apiData, 'createGame')
@@ -43,8 +45,9 @@ export default function Main(): ReactElement {
         player1: 'gustavs'
       })
       .then((response) => {
-        const responseItems = response.data
-        dispatch(setApiData(responseItems))
+        dispatch(setApiData(response.data))
+        const gameStatusLink = replaceGameId(gameLink, response.data.id)
+        dispatch(setGameState(gameStatusLink))
 
         const gameId = response.data.id
         dispatch(setPlayer1({ player1: 'gustavs', id: gameId }))
