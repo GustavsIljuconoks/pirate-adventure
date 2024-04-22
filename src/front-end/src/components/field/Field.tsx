@@ -1,8 +1,8 @@
+import Cell from '@components/field/Cell'
+import FieldShip from '@components/field/FieldShip'
+import FieldWrapper from '@components/field/FieldWrapper'
 import { CellType } from 'types/Square'
 import { CellDto, GameFieldDto, ShipDto } from 'types/webapi'
-import Cell from './Cell'
-import FieldShip from './FieldShip'
-import FieldWrapper from './FieldWrapper'
 
 type Props = {
   player?: string

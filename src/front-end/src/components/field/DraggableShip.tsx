@@ -1,7 +1,7 @@
 import { useDraggable } from '@dnd-kit/core'
+import style from '@styles/field/Ship.module.css'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import style from 'styles/field/Ship.module.css'
 import { ShipDto } from 'types/webapi'
 
 type Props = {

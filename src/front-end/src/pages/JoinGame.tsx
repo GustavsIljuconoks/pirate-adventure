@@ -1,6 +1,5 @@
+import LoadingOrError from '@components/LoadingOrError'
 import axios from 'axios'
-import LoadingOrError from 'components/LoadingOrError'
-import { SERVER_URL } from '../constants'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +7,7 @@ import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer2 } from 'reducers/gameSlice'
 import { findLinkByRel } from 'utils/findLinkByRel'
 import { replaceGameId } from 'utils/replaceGameId'
+import { SERVER_URL } from '../constants'
 
 export default function JoinGame(): ReactElement {
   const navigate = useNavigate()

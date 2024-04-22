@@ -12,21 +12,6 @@ export default defineConfig(({ mode }) => ({
 			generateScopedName: '[local]_[hash:base64:2]'
 		}
 	},
-	// test: {
-	// 	css: false,
-	// 	include: ['!src/**/__tests__/*'],
-	// 	globals: true,
-	// 	environment: 'jsdom',
-	// 	setupFiles: 'src/setupTests.ts',
-	// 	clearMocks: true,
-	// 	coverage: {
-	// 		provider: 'istanbul',
-	// 		enabled: true,
-	// 		'100': true,
-	// 		reporter: ['text', 'lcov'],
-	// 		reportsDirectory: 'coverage',
-	// 	},
-	// },
 	plugins: [
 		tsconfigPaths(),
 		react(),

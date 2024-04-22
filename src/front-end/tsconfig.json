@@ -1,20 +1,25 @@
 {
-	"compilerOptions": {
-		"allowSyntheticDefaultImports": true,
-		"baseUrl": "src",
-		"forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
-		"jsx": "react-jsx",
-		"lib": ["DOM", "DOM.Iterable", "ESNext"],
-		"module": "ESNext",
-		"moduleResolution": "node",
-		"noEmit": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"strict": true,
-		"target": "ESNext",
-		"types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client"]
-	},
-	"include": ["src/**/*"],
-	"references": [{ "path": "./tsconfig.node.json" }]
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@styles/*": ["styles/*"],
+      "@pages/*": ["pages/*"]
+    },
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client"]
+  },
+  "include": ["src/**/*"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

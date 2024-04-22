@@ -1,16 +1,16 @@
-import LoadingOrError from 'components/LoadingOrError'
+import LoadingOrError from '@components/LoadingOrError'
 import type { ReactElement } from 'react'
 import { Suspense, lazy } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
-const Main = lazy(async () => import('pages/Start'))
-const Leaderboard = lazy(async () => import('pages/Leaderboard'))
-const Settings = lazy(async () => import('pages/LobbySettings'))
-const LobbyCode = lazy(async () => import('pages/LobbyCode'))
-const Lobby = lazy(async () => import('pages/Lobby'))
-const Game = lazy(async () => import('pages/Game'))
-const JoinGame = lazy(async () => import('pages/JoinGame'))
-const GameOver = lazy(async () => import('pages/GameOver'))
+const Main = lazy(async () => import('@pages/Start'))
+const Leaderboard = lazy(async () => import('@pages/Leaderboard'))
+const Settings = lazy(async () => import('@pages/LobbySettings'))
+const LobbyCode = lazy(async () => import('@pages/LobbyCode'))
+const Lobby = lazy(async () => import('@pages/Lobby'))
+const Game = lazy(async () => import('@pages/Game'))
+const JoinGame = lazy(async () => import('@pages/JoinGame'))
+const GameOver = lazy(async () => import('@pages/GameOver'))
 
 export default function App(): ReactElement {
   return (

@@ -1,4 +1,4 @@
-import Layout from '../components/Layout/Layout'
+import Layout from '@components/Layout/Layout'
 import { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
