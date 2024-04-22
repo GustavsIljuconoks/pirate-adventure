@@ -32,4 +32,4 @@ jobs:
           pnpm install
     - run: |
           cd src/front-end
-          pnpm run build --if-present
+          pnpm run build
