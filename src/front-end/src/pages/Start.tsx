@@ -1,5 +1,5 @@
 import axios from 'axios'
-import Layout from 'components/layout/Layout'
+import Layout from '../components/Layout/Layout'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'

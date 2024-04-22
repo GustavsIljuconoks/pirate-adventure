@@ -1,6 +1,6 @@
 import axios from 'axios'
 import LoadingOrError from 'components/LoadingOrError'
-import { SERVER_URL } from 'constants'
+import { SERVER_URL } from '../constants'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'

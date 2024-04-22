@@ -3,7 +3,7 @@ import { useState, type ReactElement } from 'react'
 import LobbyAvatar from 'components/LobbyAvatar'
 import SettingsMenu from 'components/SettingsMenu'
 import CopyToClipboard from 'components/input/CopyToClipboard'
-import Layout from 'components/layout/Layout'
+import Layout from '../components/Layout/Layout'
 
 import GameBoard from 'components/field/Board'
 import style from 'styles/lobby/Lobby.module.css'

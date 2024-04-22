@@ -1,5 +1,5 @@
 import TextField from 'components/input/TextField'
-import Layout from 'components/layout/Layout'
+import Layout from '../components/Layout/Layout'
 import { useState, type ReactElement } from 'react'
 
 export default function LobbyCode(): ReactElement {

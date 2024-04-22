@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Field from 'components/field/Field'
 import ShipList from 'components/field/ShipList'
-import Layout from 'components/layout/Layout'
+import Layout from '../components/Layout/Layout'
 import LoadingOrError from 'components/LoadingOrError'
 import Spinner from 'components/Spinner'
 import { ReactElement, useEffect, useState } from 'react'

@@ -1,5 +1,5 @@
-import Layout from 'components/layout/Layout'
-import Slot from 'components/leaderboard/Slot'
+import Layout from '../components/Layout/Layout'
+import Slot from '../components/Leaderboard/Slot'
 import players from 'mocks/players.json'
 import type { ReactElement } from 'react'
 

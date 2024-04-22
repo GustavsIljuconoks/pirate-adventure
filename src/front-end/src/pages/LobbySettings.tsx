@@ -1,5 +1,5 @@
 import RadioButton from 'components/input/RadioButton'
-import Layout from 'components/layout/Layout'
+import Layout from '../components/Layout/Layout'
 import { useState, type ReactElement } from 'react'
 
 export default function Settings(): ReactElement {
