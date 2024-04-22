@@ -13,6 +13,7 @@ import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
+import { resetShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import { GameState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
@@ -45,6 +46,16 @@ export default function Lobby(): ReactElement {
   const gamePlayers = useSelector(
     (state: RootState) => state.updatePlayers.players
   )
+
+  useEffect(() => {
+    if (gamePlayer1) {
+      dispatch(resetShipsForPlayer({ playerId: 1 }))
+    }
+
+    if (gamePlayer2) {
+      dispatch(resetShipsForPlayer({ playerId: 2 }))
+    }
+  }, [dispatch])
 
   useEffect(() => {
     const interval = setInterval(() => {
