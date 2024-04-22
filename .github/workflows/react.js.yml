@@ -27,5 +27,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Install dependencies
-      run: pnpm install
+      run: |
+          cd src/front-end
+          pnpm install
     - run: pnpm run build --if-present
