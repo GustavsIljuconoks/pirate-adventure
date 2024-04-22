@@ -1,6 +1,6 @@
+import style from '@styles/field/Ship.module.css'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
-import style from 'styles/field/Ship.module.css'
 import { Orientation, ShipDto } from 'types/webapi'
 
 type Props = {

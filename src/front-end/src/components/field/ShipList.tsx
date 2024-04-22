@@ -1,5 +1,5 @@
+import style from '@styles/field/Ship.module.css'
 import classNames from 'classnames'
-import style from 'styles/field/Ship.module.css'
 import { ShipDto } from 'types/webapi'
 
 interface Props {

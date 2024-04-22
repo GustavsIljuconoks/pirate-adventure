@@ -1,5 +1,5 @@
+import style from '@styles/lobby/LobbyAvatar.module.css'
 import type { ReactElement } from 'react'
-import style from 'styles/lobby/LobbyAvatar.module.css'
 
 interface LobbyProperties {
   username?: string

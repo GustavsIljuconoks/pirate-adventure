@@ -1,5 +1,5 @@
 import { useDroppable } from '@dnd-kit/core'
-import style from 'styles/field/Square.module.css'
+import style from '@styles/field/Square.module.css'
 import { Ships } from 'types/Ship'
 import { CellType, FieldType } from 'types/Square'
 import { isPositionValid } from 'utils/validators/isPositionValid'

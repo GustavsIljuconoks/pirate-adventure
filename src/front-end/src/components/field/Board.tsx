@@ -1,3 +1,7 @@
+import DraggableShip from '@components/field/DraggableShip'
+import DroppableSquare from '@components/field/DroppableSquare'
+import FieldShip from '@components/field/FieldShip'
+import FieldWrapper from '@components/field/FieldWrapper'
 import {
   DndContext,
   DragOverEvent,
@@ -7,19 +11,15 @@ import {
   useSensors
 } from '@dnd-kit/core'
 import { restrictToWindowEdges } from '@dnd-kit/modifiers'
+import style from '@styles/field/GameBoard.module.css'
 import { ReactElement, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteShipsForPlayer, setShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
-import style from 'styles/field/GameBoard.module.css'
 import { Orientation, ShipDto } from 'types/webapi'
 import { createField } from 'utils/creators/createGrid'
 import { createShipPositions, createShips } from 'utils/creators/createShips'
 import { isPositionValid } from 'utils/validators/isPositionValid'
-import DraggableShip from './DraggableShip'
-import DroppableSquare from './DroppableSquare'
-import FieldShip from './FieldShip'
-import FieldWrapper from './FieldWrapper'
 
 interface CellData {
   id: number

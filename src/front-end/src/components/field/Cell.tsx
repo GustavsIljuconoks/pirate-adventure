@@ -1,8 +1,8 @@
+import style from '@styles/field/Square.module.css'
 import classNames from 'classnames'
 import { motion } from 'framer-motion'
 import { useSelector } from 'react-redux'
 import { RootState } from 'store'
-import style from 'styles/field/Square.module.css'
 import { CellType } from 'types/Square'
 import { CellState } from 'types/webapi'
 

@@ -1,12 +1,12 @@
 import { useEffect, useState, type ReactElement } from 'react'
 
-import LobbyAvatar from 'components/LobbyAvatar'
-import SettingsMenu from 'components/SettingsMenu'
-import CopyToClipboard from 'components/input/CopyToClipboard'
-import Layout from 'components/layout/Layout'
+import CopyToClipboard from '@components/input/CopyToClipboard'
+import Layout from '@components/Layout/Layout'
+import LobbyAvatar from '@components/LobbyAvatar'
+import SettingsMenu from '@components/SettingsMenu'
 
-import GameBoard from 'components/field/Board'
-import style from 'styles/lobby/Lobby.module.css'
+import GameBoard from '@components/field/Board'
+import style from '@styles/lobby/Lobby.module.css'
 
 import axios from 'axios'
 import classNames from 'classnames'

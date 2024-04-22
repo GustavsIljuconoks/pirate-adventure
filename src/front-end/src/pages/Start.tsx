@@ -1,5 +1,6 @@
+import Layout from '@components/Layout/Layout'
+import '@styles/Start.css'
 import axios from 'axios'
-import Layout from 'components/layout/Layout'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -9,9 +10,8 @@ import { persistor, RootState } from 'store'
 import { findLinkByRel } from 'utils/findLinkByRel'
 import { replaceGameId } from 'utils/replaceGameId'
 import { SERVER_URL } from '../constants'
-import '../styles/Start.css'
 
-export default function Main(): ReactElement {
+export default function Start(): ReactElement {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
