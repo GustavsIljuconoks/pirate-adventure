@@ -1,5 +1,4 @@
-/* eslint-disable react/function-component-definition */
-import layoutCss from '@styles/layout.module.css'
+import layoutCss from '@styles/Layout.module.css'
 import type React from 'react'
 import type { ReactElement, ReactNode } from 'react'
 
