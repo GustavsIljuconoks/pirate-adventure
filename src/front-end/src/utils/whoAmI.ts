@@ -24,13 +24,13 @@ export const useWhoAmI = () => {
             },
             enemy: {
               id: 2,
-              name: data.player2.id,
-              field: data.player2.field
+              name: data.player2?.id,
+              field: data.player2?.field
             }
           }
         }
 
-        if (gamePlayer2?.player2 == data.player2.id) {
+        if (gamePlayer2 && gamePlayer2?.player2 == data.player2.id) {
           players = {
             me: {
               id: 2,

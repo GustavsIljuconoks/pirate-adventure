@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from 'react'
+import { useEffect, useState, type ReactElement } from 'react'
 
 import CopyToClipboard from '@components/input/CopyToClipboard'
 import Layout from '@components/Layout/Layout'
@@ -12,11 +12,13 @@ import axios from 'axios'
 import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setGameState } from 'reducers/apiDataSlice'
+import { setGameStateData } from 'reducers/gameStatusSlice'
+import { resetShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
 import { GameState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
-import { replaceGameId } from 'utils/replaceGameId'
+import { getGameStatus } from 'utils/gameStatusRequest'
+import { useWhoAmI } from 'utils/whoAmI'
 import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
@@ -28,6 +30,7 @@ export default function Lobby(): ReactElement {
   const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const { whoAmI } = useWhoAmI()
 
   const gamePlayer1 = useSelector((state: RootState) => state.game.player1)
   const gamePlayer2 = useSelector((state: RootState) => state.game.player2)
@@ -39,12 +42,37 @@ export default function Lobby(): ReactElement {
     (state: RootState) => state.shipSave.player2Ships
   )
 
-  const gameState = useSelector((state: RootState) => state.apiData.link)
+  const gameStateLink = useSelector((state: RootState) => state.apiData.link)
+  const gamePlayers = useSelector(
+    (state: RootState) => state.updatePlayers.players
+  )
+
+  useEffect(() => {
+    if (gamePlayer1) {
+      dispatch(resetShipsForPlayer({ playerId: 1 }))
+    }
+
+    if (gamePlayer2) {
+      dispatch(resetShipsForPlayer({ playerId: 2 }))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getGameStatus(gameStateLink)
+        .then((data) => {
+          dispatch(setGameStateData(data))
+        })
+        .catch((error) => {
+          console.error('An error occurred:', error)
+        })
+      whoAmI()
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const initializeField = () => {
-    const gameStateLink = replaceGameId(gameState, gameId)
-    dispatch(setGameState(gameStateLink))
-
     if (gamePlayer1) {
       axios
         .post(SERVER_URL + player1InitializeField, {
@@ -120,12 +148,12 @@ export default function Lobby(): ReactElement {
 
         <div className="flex justify-between">
           <LobbyAvatar
-            username={gamePlayer1?.player1}
+            username={gamePlayers?.me.name}
             isReady={playerReady}
             avatarIcon="https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/celebrity-captain-jack-sparrow-pirate-carribean-512.png"
           />
           <LobbyAvatar
-            username={gamePlayer2?.player2}
+            username={gamePlayers?.enemy.name}
             isReady={playerReady}
             avatarIcon="https://img.freepik.com/premium-vector/head-pirate-with-hat-eye-patch-flat-vector-illustration_124715-1485.jpg"
           />
