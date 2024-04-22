@@ -30,4 +30,6 @@ jobs:
       run: |
           cd src/front-end
           pnpm install
-    - run: pnpm run build --if-present
+    - run: |
+          cd src/front-end
+          pnpm run build --if-present
