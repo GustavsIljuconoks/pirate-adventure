@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
+import { setAuth } from 'reducers/userSlice'
 import { persistor, RootState } from 'store'
 import { findLinkByRel } from 'utils/findLinkByRel'
 import { replaceGameId } from 'utils/replaceGameId'
@@ -58,8 +59,19 @@ export default function Start(): ReactElement {
       })
   }
 
+  const signOut = (): void => {
+    dispatch(setAuth({ name: '', isAuthenticated: false }))
+    navigate('/login')
+  }
+
   return (
     <Layout>
+      <button
+        className="text-end md:absolute md:right-20 md:top-16 lg:mt-6"
+        onClick={signOut}
+      >
+        Sign out
+      </button>
       <div className="flex flex-col gap-12 mt-auto">
         <button type="submit" className="menu-item" onClick={createNewGame}>
           New game

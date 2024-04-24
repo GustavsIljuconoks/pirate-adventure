@@ -4,11 +4,14 @@ import { Toast } from '@components/Toast'
 import style from '@styles/auth/Login.module.css'
 import axios from 'axios'
 import { FormEvent, ReactElement, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { setAuth } from 'reducers/userSlice'
 import { SERVER_URL } from '../constants'
 
 export default function Login(): ReactElement {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [inputs, setInputs] = useState<{
     username?: string
     password?: string
@@ -33,6 +36,7 @@ export default function Login(): ReactElement {
     axios
       .post(SERVER_URL + '/auth/login', inputs)
       .then(() => {
+        dispatch(setAuth({ name: inputs.username, isAuthenticated: true }))
         navigate('/')
       })
       .catch((error) => {

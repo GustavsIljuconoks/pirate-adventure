@@ -15,12 +15,14 @@ import gamePlayerReducer from './reducers/gamePlayersSlice'
 import gameReducer from './reducers/gameSlice'
 import gameStateDataReducer from './reducers/gameStatusSlice'
 import shipReducer from './reducers/shipSaveSlice'
+import userSaveReducer from './reducers/userSlice'
 
 export type RootState = ReturnType<typeof store.getState>
 
 const persistConfig = {
   key: 'root',
   storage,
+  blacklist: ['userSave'],
   purge: () => {
     storage.removeItem('persist:root')
   }
@@ -31,7 +33,8 @@ const appReducer = combineReducers({
   apiData: apiDataReducer,
   shipSave: shipReducer,
   updatePlayers: gamePlayerReducer,
-  gameStatusData: gameStateDataReducer
+  gameStatusData: gameStateDataReducer,
+  userSave: userSaveReducer
 })
 
 const rootReducer = (state, action: Action) => {
