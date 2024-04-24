@@ -11,6 +11,7 @@ const Lobby = lazy(async () => import('@pages/Lobby'))
 const Game = lazy(async () => import('@pages/Game'))
 const JoinGame = lazy(async () => import('@pages/JoinGame'))
 const GameOver = lazy(async () => import('@pages/GameOver'))
+const Login = lazy(async () => import('@pages/Login'))
 
 export default function App(): ReactElement {
   return (
@@ -25,6 +26,7 @@ export default function App(): ReactElement {
           <Route path="/game/:guid" element={<Game />} />
           <Route path="/join/:guid" element={<JoinGame />} />
           <Route path="/game-over/:guid" element={<GameOver />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

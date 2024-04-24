@@ -1,0 +1,18 @@
+.toast {
+  border-radius: 8px;
+  border-width: 1px;
+  max-width: 320px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+
+  > div {
+    display: flex;
+    padding: 12px;
+  }
+
+  &.toast-danger {
+    color: #991b1b;
+    border-color: #fecaca;
+    background-color: #fee2e2;
+  }
+}
