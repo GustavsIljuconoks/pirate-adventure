@@ -1,9 +1,26 @@
+using Microsoft.Extensions.Azure;
+using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
+using Microsoft.WindowsAzure.Storage;
+using Azure.Core.Pipeline;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Setup Azurite use
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["admiring_blackburn:blob"]);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["admiring_blackburn:queue"]);
+});
 
+builder.Services.AddScoped(sp =>
+{
+    var storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
+    return storageAccount.CreateCloudTableClient();
+});
+builder.Services.AddScoped<ITableStorageService, TableStorageService>();
+
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -28,6 +45,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors();
