@@ -31,10 +31,10 @@ export default function App(): ReactElement {
             <Route path="/code" element={<LobbyCode />} />
             <Route path="/lobby/:guid" element={<Lobby />} />
             <Route path="/game/:guid" element={<Game />} />
-            <Route path="/join/:guid" element={<JoinGame />} />
             <Route path="/game-over/:guid" element={<GameOver />} />
           </Route>
 
+          <Route path="/join/:guid" element={<JoinGame />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </Suspense>

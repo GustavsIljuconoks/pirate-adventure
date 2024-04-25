@@ -37,13 +37,14 @@ export default function Start(): ReactElement {
 
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const gameLink = useSelector((state: RootState) => state.apiData.link)
+  const userName = useSelector((state: RootState) => state.userSave.name)
 
   const createNewGame = (): void => {
     const createGameLink = findLinkByRel(apiData, 'createGame')
 
     axios
       .post(SERVER_URL + createGameLink, {
-        player1: 'gustavs'
+        player1: userName
       })
       .then((response) => {
         dispatch(setApiData(response.data))
@@ -51,7 +52,7 @@ export default function Start(): ReactElement {
         dispatch(setGameState(gameStatusLink))
 
         const gameId = response.data.id
-        dispatch(setPlayer1({ player1: 'gustavs', id: gameId }))
+        dispatch(setPlayer1({ player1: userName, id: gameId }))
         navigate(`/lobby/${gameId}`)
       })
       .catch((error) => {
@@ -66,12 +67,12 @@ export default function Start(): ReactElement {
 
   return (
     <Layout>
-      <button
-        className="text-end md:absolute md:right-20 md:top-16 lg:mt-6"
-        onClick={signOut}
-      >
-        Sign out
-      </button>
+      <div className="player-info md:absolute md:right-20 md:top-16 lg:mt-6">
+        <p>{userName}</p>
+        <button className="text-end" onClick={signOut}>
+          Sign out
+        </button>
+      </div>
       <div className="flex flex-col gap-12 mt-auto">
         <button type="submit" className="menu-item" onClick={createNewGame}>
           New game

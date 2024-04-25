@@ -22,7 +22,6 @@ export type RootState = ReturnType<typeof store.getState>
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: ['userSave'],
   purge: () => {
     storage.removeItem('persist:root')
   }

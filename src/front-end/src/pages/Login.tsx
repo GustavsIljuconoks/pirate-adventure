@@ -33,11 +33,21 @@ export default function Login(): ReactElement {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
 
+    const intendedDestinationUrl = localStorage.getItem(
+      'intendedDestinationUrl'
+    )
+
     axios
       .post(SERVER_URL + '/auth/login', inputs)
       .then(() => {
         dispatch(setAuth({ name: inputs.username, isAuthenticated: true }))
-        navigate('/')
+
+        if (intendedDestinationUrl) {
+          localStorage.removeItem('intendedDestinationUrl')
+          window.location.replace(intendedDestinationUrl)
+        } else {
+          navigate('/')
+        }
       })
       .catch((error) => {
         setErrorMessage(error.response.data)
