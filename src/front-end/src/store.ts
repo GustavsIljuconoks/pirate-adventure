@@ -39,7 +39,8 @@ const appReducer = combineReducers({
 
 const rootReducer = (state, action: Action) => {
   if (action.type === 'CLEAR') {
-    return appReducer(undefined, action)
+    const { userSave, ...restOfState } = state
+    return appReducer({ userSave }, action)
   }
 
   return appReducer(state, action)
