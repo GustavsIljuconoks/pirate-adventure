@@ -31,6 +31,8 @@ public class Game
 
     public PlayerType NextMove { get; set; }
 
+    public ICollection<PlayerShootEvent> GameLog { get; set; } = new List<PlayerShootEvent>();
+
     public void Start()
     {
         // can start only if both players are ready
@@ -54,6 +56,15 @@ public class Game
         }
 
         var result = Player2!.Field.Shoot(shotLocation);
+
+        GameLog.Add(new PlayerShootEvent
+        {
+            Shooter = PlayerType.Player1,
+            Scoring = result.Scoring,
+            ShotLocation = result.ShotLocation,
+            TargetShipId = result.TargetShipId,
+            ShotAt = DateTime.UtcNow
+        });
 
         if (result.Scoring == Scoring.Hit)
         {
@@ -84,6 +95,15 @@ public class Game
         }
 
         var result = Player1!.Field.Shoot(shotLocation);
+
+        GameLog.Add(new PlayerShootEvent
+        {
+            Shooter = PlayerType.Player2,
+            Scoring = result.Scoring,
+            ShotLocation = result.ShotLocation,
+            TargetShipId = result.TargetShipId,
+            ShotAt = DateTime.UtcNow
+        });
 
         if (result.Scoring == Scoring.Hit)
         {
