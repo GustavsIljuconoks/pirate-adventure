@@ -1,16 +1,7 @@
-using Microsoft.Extensions.Azure;
-using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using Microsoft.WindowsAzure.Storage;
-using Azure.Core.Pipeline;
+using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Setup Azurite use
-builder.Services.AddAzureClients(clientBuilder =>
-{
-    clientBuilder.AddBlobServiceClient(builder.Configuration["admiring_blackburn:blob"]);
-    clientBuilder.AddQueueServiceClient(builder.Configuration["admiring_blackburn:queue"]);
-});
 
 builder.Services.AddScoped(sp =>
 {
