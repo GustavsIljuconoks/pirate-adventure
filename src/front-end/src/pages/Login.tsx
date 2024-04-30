@@ -50,7 +50,7 @@ export default function Login(): ReactElement {
         }
       })
       .catch((error) => {
-        setErrorMessage(error.response.data)
+        setErrorMessage('Unauthorized')
         setShowError(true)
 
         const timer = setTimeout(() => {

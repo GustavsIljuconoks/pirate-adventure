@@ -1,6 +1,7 @@
+using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace BattleshipPirateAdventure.WebApi.Features.Auth.Models;
+namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
 public interface ITableStorageService
 {
@@ -27,8 +28,8 @@ public class TableStorageService : ITableStorageService
         TableContinuationToken token = null;
         do
         {
-            TableQuery<UserItemEntity> query = new TableQuery<UserItemEntity>();
-            TableQuerySegment<UserItemEntity> resultSegment = await _table.ExecuteQuerySegmentedAsync(query, token);
+            var query = new TableQuery<UserItemEntity>();
+            var resultSegment = await _table.ExecuteQuerySegmentedAsync(query, token);
             token = resultSegment.ContinuationToken;
             entities.AddRange(resultSegment.Results);
         } while (token != null);
@@ -43,7 +44,7 @@ public class TableStorageService : ITableStorageService
 
         try
         {
-            TableQuerySegment<UserItemEntity> queryResult = await _table.ExecuteQuerySegmentedAsync(query, null);
+            var queryResult = await _table.ExecuteQuerySegmentedAsync(query, null);
             return queryResult?.Results?.Count > 0 ? queryResult.Results[0] : null;
         }
         catch (Exception ex)

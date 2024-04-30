@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage;
+using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Auth;
 
@@ -18,8 +19,10 @@ public class AuthController : ControllerBase
         _config = configuration;
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
 
+        var connectionString = _config.GetConnectionString("admiring_blackburn");
+
         // Initialize Azure Storage Account pointing to Azurite
-        CloudStorageAccount storageAccount = CloudStorageAccount.Parse("UseDevelopmentStorage=true");
+        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
         CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
 
         // Get a reference to the table
@@ -33,7 +36,7 @@ public class AuthController : ControllerBase
 
         if (user == null)
         {
-            return Unauthorized("User not found");
+            return Unauthorized();
         }
 
         if (user.Password != request.Password)
