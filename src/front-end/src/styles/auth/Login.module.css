@@ -1,0 +1,55 @@
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  border-radius: 5px;
+  padding: 32px;
+  gap: 2rem;
+  color: #14151a;
+  width: 100%;
+  max-width: 450px;
+  margin-left: auto;
+  margin-right: auto;
+
+  a {
+    color: #1863a8;
+  }
+
+  .head-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+
+    h1 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      color: #1863a8;
+      font-weight: 600;
+    }
+  }
+
+  .info-text {
+    text-align: center;
+    color: #14151a;
+    font-weight: 400;
+  }
+
+  .anonymosuly {
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  }
+}
