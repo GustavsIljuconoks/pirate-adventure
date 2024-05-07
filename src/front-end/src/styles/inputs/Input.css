@@ -1,0 +1,16 @@
+.form-control {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+
+  .label-text {
+    font-weight: 500;
+    font-size: 14px;
+    color: #2b2b2e;
+  }
+
+  input {
+    border-color: #1863a8;
+    border-radius: 6px;
+  }
+}

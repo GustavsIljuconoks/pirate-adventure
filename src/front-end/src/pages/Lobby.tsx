@@ -48,6 +48,8 @@ export default function Lobby(): ReactElement {
   )
 
   useEffect(() => {
+    localStorage.removeItem('intendedDestinationUrl')
+
     if (gamePlayer1) {
       dispatch(resetShipsForPlayer({ playerId: 1 }))
     }
