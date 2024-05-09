@@ -3,6 +3,8 @@ using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
+using MediatR;
+using BattleshipPirateAdventure.Core.Queries;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Auth;
 
@@ -10,65 +12,32 @@ namespace BattleshipPirateAdventure.WebApi.Features.Auth;
 [Route("auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration _config;
-    private readonly CloudTable _table;
-    private readonly ITableStorageService _storageService;
+    private readonly IMediator _mediator;
 
-    public AuthController(ITableStorageService storageService, IConfiguration configuration)
+    public AuthController(IMediator mediator)
     {
-        _config = configuration;
-        _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
-
-        var connectionString = _config.GetConnectionString("admiring_blackburn");
-
-        // Initialize Azure Storage Account pointing to Azurite
-        CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
-        CloudTableClient tableClient = storageAccount.CreateCloudTableClient();
-
-        // Get a reference to the table
-        _table = tableClient.GetTableReference("users");
+        _mediator = mediator;
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
-        var user = await _storageService.GetUserByName(request.Username);
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        if (user.Password != request.Password)
-        {
-            return Unauthorized("Invalid username or password");
-        }
-
-        return Ok("Authentication successful");
+        GetUserQuery getUserQuery = Map(request);
+        var user = await _mediator.Send(getUserQuery);
+        return Ok(user);
     }
 
-    [HttpGet]
-    [Route("users", Name = nameof(GetUsers))]
-    public async Task<IActionResult> GetUsers()
+    private GetUserQuery Map(LoginRequestDto dto)
     {
-        var entities = new List<UserItemEntity>();
-
-        TableContinuationToken token = null;
-        do
+        return new GetUserQuery
         {
-            TableQuery<UserItemEntity> query = new TableQuery<UserItemEntity>();
-            TableQuerySegment<UserItemEntity> resultSegment = await _table.ExecuteQuerySegmentedAsync(query, token);
-            token = resultSegment.ContinuationToken;
-
-            entities.AddRange(resultSegment.Results);
-
-        } while (token != null);
-
-        return Ok(entities);
+            Username = dto.Username,
+            Password = dto.Password
+        };
     }
 }
 
-public class LoginRequest
+public class LoginRequestDto
 {
     public string Username { get; set; }
     public string Password { get; set; }

@@ -1,5 +1,8 @@
 using Microsoft.WindowsAzure.Storage;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
+using Microsoft.EntityFrameworkCore;
+using BattleshipPirateAdventure.SQLStorage.Models;
+using BattleshipPirateAdventure.SQLStorage.QueryHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,13 @@ builder.Services.AddScoped(sp =>
     return storageAccount.CreateCloudTableClient();
 });
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
+
+builder.Services.AddDbContext<BattleshipContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("battleship"));
+});
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetUserQueryHandler).Assembly));
 
 // Add services to the container.
 builder.Services.AddControllers();
