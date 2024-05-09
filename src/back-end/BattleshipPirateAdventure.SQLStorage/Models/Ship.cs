@@ -17,7 +17,7 @@ public partial class Ship
 
     public int OrientationId { get; set; }
 
-    public byte? IsDestroyed { get; set; }
+    public bool? IsDestroyed { get; set; }
 
     public virtual Cell HeadLocationNavigation { get; set; } = null!;
 

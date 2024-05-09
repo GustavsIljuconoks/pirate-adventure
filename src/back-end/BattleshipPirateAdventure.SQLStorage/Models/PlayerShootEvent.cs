@@ -17,6 +17,10 @@ public partial class PlayerShootEvent
 
     public DateTime? ShotAt { get; set; }
 
+    public int? GameId { get; set; }
+
+    public virtual Game? Game { get; set; }
+
     public virtual GamePlayer ShooterNavigation { get; set; } = null!;
 
     public virtual Cell ShotLocationNavigation { get; set; } = null!;

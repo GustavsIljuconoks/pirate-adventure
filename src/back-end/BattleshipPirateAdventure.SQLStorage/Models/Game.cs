@@ -7,7 +7,7 @@ public partial class Game
 {
     public int Id { get; set; }
 
-    public string Guid { get; set; } = null!;
+    public Guid Guid { get; set; }
 
     public int ColumnSize { get; set; }
 
@@ -30,4 +30,6 @@ public partial class Game
     public virtual ICollection<GameField> GameFields { get; set; } = new List<GameField>();
 
     public virtual GameState GameState { get; set; } = null!;
+
+    public virtual ICollection<PlayerShootEvent> PlayerShootEvents { get; set; } = new List<PlayerShootEvent>();
 }

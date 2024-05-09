@@ -88,9 +88,7 @@ public partial class BattleshipContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("game_finished");
             entity.Property(e => e.GameStateId).HasColumnName("game_state_id");
-            entity.Property(e => e.Guid)
-                .HasMaxLength(50)
-                .HasColumnName("guid");
+            entity.Property(e => e.Guid).HasColumnName("guid");
             entity.Property(e => e.NextMove).HasColumnName("next_move");
             entity.Property(e => e.Player1).HasColumnName("player_1");
             entity.Property(e => e.Player2).HasColumnName("player_2");
@@ -174,6 +172,7 @@ public partial class BattleshipContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.GameId).HasColumnName("game_id");
             entity.Property(e => e.Scoring).HasColumnName("scoring");
             entity.Property(e => e.Shooter).HasColumnName("shooter");
             entity.Property(e => e.ShotAt)
@@ -181,6 +180,10 @@ public partial class BattleshipContext : DbContext
                 .HasColumnName("shot_at");
             entity.Property(e => e.ShotLocation).HasColumnName("shot_location");
             entity.Property(e => e.TargetShipId).HasColumnName("target_ship_id");
+
+            entity.HasOne(d => d.Game).WithMany(p => p.PlayerShootEvents)
+                .HasForeignKey(d => d.GameId)
+                .HasConstraintName("FK_player_shoot_event_game");
 
             entity.HasOne(d => d.ShooterNavigation).WithMany(p => p.PlayerShootEvents)
                 .HasForeignKey(d => d.Shooter)
