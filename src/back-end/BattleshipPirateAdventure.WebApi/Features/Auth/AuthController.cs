@@ -27,6 +27,25 @@ public class AuthController : ControllerBase
         return Ok(user);
     }
 
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+    {
+        var registerCommand = new CreateUserCommand
+        {
+            Username = request.Username,
+            Email = request.Email,
+            Password = request.Password
+        };
+
+        var result = await _mediator.Send(registerCommand);
+        if (result.Id != null)
+        {
+            return Ok("User created successfully");
+        }
+
+        return Conflict("User already exists");
+    }
+
     private GetUserQuery Map(LoginRequestDto dto)
     {
         return new GetUserQuery
@@ -40,5 +59,12 @@ public class AuthController : ControllerBase
 public class LoginRequestDto
 {
     public string Username { get; set; }
+    public string Password { get; set; }
+}
+
+public class RegisterRequestDto
+{
+    public string Username { get; set; }
+    public string Email { get; set; }
     public string Password { get; set; }
 }

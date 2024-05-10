@@ -3,6 +3,7 @@ using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.EntityFrameworkCore;
 using BattleshipPirateAdventure.SQLStorage.Models;
 using BattleshipPirateAdventure.SQLStorage.QueryHandlers;
+using BattleshipPirateAdventure.SQLStorage.CommandHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<BattleshipContext>(options =>
 });
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetUserQueryHandler).Assembly));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly));
 
 // Add services to the container.
 builder.Services.AddControllers();
