@@ -30,46 +30,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginCommand command)
     {
-        var user = await _storageService.GetUserByName(request.Username);
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        if (user.Password != request.Password)
-        {
-            return Unauthorized("Invalid username or password");
-        }
-
-        return Ok("Authentication successful");
+        var handler = new LoginCommandHandler(_storageService);
+        return await handler.Handle(command);
     }
-
-    [HttpGet]
-    [Route("users", Name = nameof(GetUsers))]
-    public async Task<IActionResult> GetUsers()
-    {
-        var entities = new List<UserItemEntity>();
-
-        TableContinuationToken token = null;
-        do
-        {
-            TableQuery<UserItemEntity> query = new TableQuery<UserItemEntity>();
-            TableQuerySegment<UserItemEntity> resultSegment = await _table.ExecuteQuerySegmentedAsync(query, token);
-            token = resultSegment.ContinuationToken;
-
-            entities.AddRange(resultSegment.Results);
-
-        } while (token != null);
-
-        return Ok(entities);
-    }
-}
-
-public class LoginRequest
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
 }
