@@ -1,5 +1,7 @@
+using Azure;
+using Azure.Data.Tables;
+using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
@@ -7,50 +9,68 @@ public interface ITableStorageService
 {
     Task<IEnumerable<UserItemEntity>> GetAllUsers();
     Task<UserItemEntity> GetUserByName(string username);
+    Task AddGameAsync(Game game);
 }
-
 
 public class TableStorageService : ITableStorageService
 {
-    private const string TableName = "users";
-    private readonly IConfiguration _configuration;
-    private readonly CloudTable _table;
+    private const string UsersTableName = "users";
+    private const string GamesTableName = "games";
+    private readonly TableClient _usersTable;
+    private readonly TableClient _gamesTable;
 
-    public TableStorageService(IConfiguration configuration, CloudTableClient tableClient)
+    public TableStorageService(string connectionString)
     {
-        _configuration = configuration;
-        _table = tableClient.GetTableReference(TableName);
+        _usersTable = new TableClient(connectionString, UsersTableName);
+        _gamesTable = new TableClient(connectionString, GamesTableName);
     }
 
     public async Task<IEnumerable<UserItemEntity>> GetAllUsers()
     {
         var entities = new List<UserItemEntity>();
-        TableContinuationToken token = null;
-        do
+        await foreach (var entity in _usersTable.QueryAsync<UserItemEntity>())
         {
-            var query = new TableQuery<UserItemEntity>();
-            var resultSegment = await _table.ExecuteQuerySegmentedAsync(query, token);
-            token = resultSegment.ContinuationToken;
-            entities.AddRange(resultSegment.Results);
-        } while (token != null);
+            entities.Add(entity);
+        }
         return entities;
     }
 
     public async Task<UserItemEntity> GetUserByName(string username)
     {
-        // Create a TableQuery to retrieve the user by username
-        var query = new TableQuery<UserItemEntity>()
-            .Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, username));
-
         try
         {
-            var queryResult = await _table.ExecuteQuerySegmentedAsync(query, null);
-            return queryResult?.Results?.Count > 0 ? queryResult.Results[0] : null;
+            var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
+            var user = query.First();
+            return user;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error while getting user by name: {ex.Message}");
             return null;
+        }
+    }
+
+    public async Task AddGameAsync(Game game)
+    {
+        var gameEntity = new TableEntity(game.Player1.Id.ToString(), game.Id.ToString())
+        {
+            { "player1", game.Player1.Id },
+            { "player2", game.Player2?.Id }
+        };
+
+        try
+        {
+            var existingGameEntity = await _gamesTable.GetEntityAsync<TableEntity>(game.Player1.Id.ToString(), game.Id.ToString());
+
+            if (existingGameEntity.Value != null && game.Player2 != null)
+            {
+                existingGameEntity.Value["player2"] = game.Player2.Id;
+                await _gamesTable.UpdateEntityAsync(existingGameEntity.Value, ETag.All);
+            }
+        }
+        catch (RequestFailedException ex) when (ex.Status == 404)
+        {
+            await _gamesTable.AddEntityAsync(gameEntity);
         }
     }
 }
