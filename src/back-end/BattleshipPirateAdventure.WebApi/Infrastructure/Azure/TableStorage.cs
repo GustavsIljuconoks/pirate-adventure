@@ -2,14 +2,16 @@ using Azure;
 using Azure.Data.Tables;
 using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
+using BattleshipPirateAdventure.WebApi.Features.Root.Models;
 
 namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
 public interface ITableStorageService
 {
-    Task<IEnumerable<UserItemEntity>> GetAllUsers();
+    Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard();
     Task<UserItemEntity> GetUserByName(string username);
     Task AddGameAsync(Game game);
+    Task UpdateGameAsync(Game game, GamePlayer winner);
 }
 
 public class TableStorageService : ITableStorageService
@@ -25,14 +27,16 @@ public class TableStorageService : ITableStorageService
         _gamesTable = new TableClient(connectionString, GamesTableName);
     }
 
-    public async Task<IEnumerable<UserItemEntity>> GetAllUsers()
+    public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
-        var entities = new List<UserItemEntity>();
-        await foreach (var entity in _usersTable.QueryAsync<UserItemEntity>())
-        {
-            entities.Add(entity);
-        }
-        return entities;
+        return _usersTable.Query<UserItemEntity>()
+            .Select(entity => new LeaderboardResponseDto
+            {
+                name = entity.RowKey,
+                wins = entity.Wins
+            })
+            .Take(10)
+            .ToList();
     }
 
     public async Task<UserItemEntity> GetUserByName(string username)
@@ -71,6 +75,39 @@ public class TableStorageService : ITableStorageService
         catch (RequestFailedException ex) when (ex.Status == 404)
         {
             await _gamesTable.AddEntityAsync(gameEntity);
+        }
+
+        if (game.State == GameState.Finished)
+        {
+            await UpdateGameAsync(game, game.Player1.State == PlayerState.Winner ? game.Player1 : game.Player2);
+        }
+    }
+
+    public async Task UpdateGameAsync(Game game, GamePlayer winner)
+    {
+        try
+        {
+            var existingGameEntity = await _gamesTable.GetEntityAsync<TableEntity>(game.Player1.Id.ToString(), game.Id.ToString());
+            var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == winner.Id.ToString());
+            var userEntity = query.First();
+
+
+            if (existingGameEntity.Value != null)
+            {
+                existingGameEntity.Value["winner"] = winner.Id;
+                await _gamesTable.UpdateEntityAsync(existingGameEntity.Value, ETag.All);
+            }
+
+            if (userEntity != null)
+            {
+                userEntity.Wins += 1;
+                userEntity.Cups += 2;
+                await _usersTable.UpdateEntityAsync(userEntity, ETag.All);
+            }
+        }
+        catch (RequestFailedException ex) when (ex.Status == 404)
+        {
+            Console.WriteLine($"Game with ID {game.Id} not found");
         }
     }
 }

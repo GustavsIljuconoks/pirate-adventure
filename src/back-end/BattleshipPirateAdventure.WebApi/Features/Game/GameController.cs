@@ -67,7 +67,6 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
     [Produces("application/json")]
     public async Task<ActionResult<GameDto>> GetGame(Guid gameId)
     {
-        var engine = new GameEngine();
         var game = await blobStorageService.LoadGameAsync(gameId);
 
         return game.MapFromDomain();
