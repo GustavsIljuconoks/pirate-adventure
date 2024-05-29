@@ -60,6 +60,10 @@ export default function Start(): ReactElement {
       })
   }
 
+  const navigateLeaderboard = (): void => {
+    navigate(`/leaderboard`)
+  }
+
   const signOut = (): void => {
     dispatch(setAuth({ name: '', isAuthenticated: false }))
     navigate('/login')
@@ -86,7 +90,11 @@ export default function Start(): ReactElement {
           Tutorial
         </button>
 
-        <button type="submit" className="menu-item">
+        <button
+          type="submit"
+          className="menu-item"
+          onClick={navigateLeaderboard}
+        >
           Leaderboard
         </button>
       </div>

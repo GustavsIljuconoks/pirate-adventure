@@ -5,6 +5,7 @@
 
 export * from './Resource.generated';
 export * from './Link.generated';
+export * from './LeaderboardResponseDto.generated';
 export * from './RootResponseDto.generated';
 export * from './CellDto.generated';
 export * from './CellState.generated';
