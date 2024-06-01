@@ -8,7 +8,7 @@ namespace BattleshipPirateAdventure.WebApi.Features.Root;
 
 [ApiController]
 [Route("")]
-public class RootController(ILogger<RootController> logger, ITableStorageService tableStorageService ) : ControllerBase
+public class RootController(ILogger<RootController> logger, ITableStorageService tableStorageService, IBlobStorageService blobStorageService) : ControllerBase
 {
     [HttpGet]
     [Route("", Name = nameof(Root))]
@@ -33,6 +33,17 @@ public class RootController(ILogger<RootController> logger, ITableStorageService
     public async Task<ActionResult<LeaderboardResponseDto>> GetPlayers()
     {
         var result = await tableStorageService.GetLeaderboard();
+
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("history", Name = nameof(GetPlayerHistory))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<PlayerGamesResponseDto>> GetPlayerHistory(string playerName)
+    {
+        var result = await tableStorageService.GetPlayerGames(playerName, blobStorageService);
 
         return Ok(result);
     }

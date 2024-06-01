@@ -3,7 +3,7 @@ import '@styles/Start.css'
 import axios from 'axios'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
 import { setAuth } from 'reducers/userSlice'
@@ -86,17 +86,13 @@ export default function Start(): ReactElement {
           Join
         </button>
 
-        <button type="submit" className="menu-item">
-          Tutorial
-        </button>
+        <Link to="history" className="menu-item">
+          History
+        </Link>
 
-        <button
-          type="submit"
-          className="menu-item"
-          onClick={navigateLeaderboard}
-        >
+        <Link to="leaderboard" className="menu-item">
           Leaderboard
-        </button>
+        </Link>
       </div>
     </Layout>
   )

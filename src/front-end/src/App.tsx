@@ -15,6 +15,7 @@ const Game = lazy(async () => import('@pages/Game'))
 const JoinGame = lazy(async () => import('@pages/JoinGame'))
 const GameOver = lazy(async () => import('@pages/GameOver'))
 const Login = lazy(async () => import('@pages/Login'))
+const History = lazy(async () => import('@pages/History'))
 
 export default function App(): ReactElement {
   const isAuthenticated = useSelector((state: RootState) => state.userSave.name)
@@ -27,6 +28,7 @@ export default function App(): ReactElement {
           <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
             <Route path="/" element={<Main />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/history" element={<History />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/code" element={<LobbyCode />} />
             <Route path="/lobby/:guid" element={<Lobby />} />

@@ -2,6 +2,7 @@ using Azure;
 using Azure.Data.Tables;
 using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
+using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Root.Models;
 
 namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
@@ -9,6 +10,7 @@ namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 public interface ITableStorageService
 {
     Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard();
+    Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService);
     Task<UserItemEntity> GetUserByName(string username);
     Task AddGameAsync(Game game);
     Task UpdateGameAsync(Game game, GamePlayer winner);
@@ -110,5 +112,42 @@ public class TableStorageService : ITableStorageService
             Console.WriteLine($"Game with ID {game.Id} not found");
         }
     }
-}
 
+    public async Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService)
+    {
+        var games = _gamesTable.Query<GameItemEntity>()
+            .Where(g => g.player1 == playerName || g.player2 == playerName)
+            .ToList();
+
+        var playerGames = new List<PlayerGamesResponseDto>();
+
+        foreach (var gameEntity in games)
+        {
+            var test = Guid.Parse(gameEntity.RowKey);
+            var game = await blobStorageService.LoadGameAsync(Guid.Parse(gameEntity.RowKey));
+
+            if (game.State != GameState.Finished)
+            {
+                playerGames.Add(new PlayerGamesResponseDto
+                {
+                    gameId = Guid.Parse(gameEntity.RowKey),
+                    status = gameEntity.winner == playerName ? Status.Winner : Status.Loser,
+                    player1 = gameEntity.player1,
+                    player2 = gameEntity.player2,
+                });
+            }
+            else
+            {
+                playerGames.Add(new PlayerGamesResponseDto
+                {
+                    gameId = Guid.Parse(gameEntity.RowKey),
+                    status = Status.Ongoing,
+                    player1 = gameEntity.player1,
+                    player2 = gameEntity.player2,
+                });
+            }
+        }
+
+        return playerGames;
+    }
+}
