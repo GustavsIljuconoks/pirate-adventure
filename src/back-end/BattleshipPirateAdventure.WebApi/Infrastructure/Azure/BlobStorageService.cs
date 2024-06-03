@@ -56,7 +56,16 @@ public class BlobStorageService : IBlobStorageService
     {
         var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_blobContainer);
         var blobClient = blobContainerClient.GetBlobClient($"{gameId}.json");
-        var response = await blobClient.DownloadContentAsync();
-        return response.Value.Content.ToString();
+
+        if (await blobClient.ExistsAsync())
+        {
+            var response = await blobClient.DownloadContentAsync();
+            return response.Value.Content.ToString();
+        }
+        else
+        {
+            throw new Exception($"Blob with game ID {gameId} does not exist.");
+        }
     }
+
 }

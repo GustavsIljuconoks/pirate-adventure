@@ -82,9 +82,9 @@ export default function Start(): ReactElement {
           New game
         </button>
 
-        <button type="submit" className="menu-item">
+        <Link to="code" className="menu-item">
           Join
-        </button>
+        </Link>
 
         <Link to="history" className="menu-item">
           History

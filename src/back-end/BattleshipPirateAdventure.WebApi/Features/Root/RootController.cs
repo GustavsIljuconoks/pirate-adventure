@@ -22,6 +22,7 @@ public class RootController(ILogger<RootController> logger, ITableStorageService
         result.AddPostLink(this, nameof(GameController.CreateGame));
         result.AddPostLink(this, nameof(GameController.JoinGame), new { gameId = Guid.Empty });
         result.AddPostLink(this, nameof(GameController.GetGame), new { gameId = Guid.Empty });
+        result.AddPostLink(this, nameof(GameController.ResumeGame), new { gameId = Guid.Empty });
 
         return Ok(result);
     }

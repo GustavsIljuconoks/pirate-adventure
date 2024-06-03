@@ -25,6 +25,7 @@ export * from './InitFieldResponseDto.generated';
 export * from './JoinGameRequestDto.generated';
 export * from './JoinGameResponseDto.generated';
 export * from './LocationDto.generated';
+export * from './ResumeGameResponseDto.generated';
 export * from './ShipDto.generated';
 export * from './Orientation.generated';
 export * from './ShotResultDto.generated';

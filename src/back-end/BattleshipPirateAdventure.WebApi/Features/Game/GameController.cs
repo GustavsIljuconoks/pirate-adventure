@@ -71,4 +71,15 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
 
         return game.MapFromDomain();
     }
+
+    [HttpPost]
+    [Route("resume/{gameId:guid}", Name = nameof(ResumeGame))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<GameDto>> ResumeGame(Guid gameId)
+    {
+        var game = await blobStorageService.LoadGameAsync(gameId);
+
+        return game.MapFromDomain();
+    }
 }
