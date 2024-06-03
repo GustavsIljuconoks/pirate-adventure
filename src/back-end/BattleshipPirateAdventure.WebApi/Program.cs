@@ -1,14 +1,10 @@
-using Microsoft.WindowsAzure.Storage;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
+using Microsoft.Extensions.Azure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddScoped(sp =>
-{
-    var storageAccount = CloudStorageAccount.DevelopmentStorageAccount;
-    return storageAccount.CreateCloudTableClient();
-});
+builder.Services.AddSingleton(x => builder.Configuration.GetConnectionString("admiring_blackburn"));
 builder.Services.AddScoped<ITableStorageService, TableStorageService>();
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -23,6 +19,12 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
+});
+
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["admiring_blackburn:blob"]!, preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["admiring_blackburn:queue"]!, preferMsi: true);
 });
 
 var app = builder.Build();
@@ -44,5 +46,3 @@ app.UseCors();
 app.MapControllers();
 
 app.Run();
-
-

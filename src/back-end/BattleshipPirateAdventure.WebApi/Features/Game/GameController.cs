@@ -1,13 +1,14 @@
 using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Shared;
+using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
 
 [ApiController]
 [Route("game")]
-public class GameController(ILogger<GameController> logger) : ControllerBase
+public class GameController(ILogger<GameController> logger, IBlobStorageService blobStorageService) : ControllerBase
 {
     [HttpPost]
     [Route("create", Name = nameof(CreateGame))]
@@ -20,7 +21,7 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
 
         game.SetPlayer1(request.Player1);
 
-        await engine.SaveGameAsync(game);
+        await blobStorageService.SaveGameAsync(game);
 
         logger.LogInformation($"Game `{game.Id}` created, Player 1: `{request.Player1}`");
 
@@ -38,12 +39,10 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<JoinGameResponseDto>> JoinGame(JoinGameRequestDto request, Guid gameId)
     {
-        var engine = new GameEngine();
-        var game = await engine.LoadGameAsync(gameId);
+        var game = await blobStorageService.LoadGameAsync(gameId);
 
         game.SetPlayer2(request.Player2);
-
-        await engine.SaveGameAsync(game);
+        await blobStorageService.SaveGameAsync(game);
 
         logger.LogInformation($"Player 2 `{request.Player2}` joined the game `{game.Id}`");
 
@@ -68,8 +67,18 @@ public class GameController(ILogger<GameController> logger) : ControllerBase
     [Produces("application/json")]
     public async Task<ActionResult<GameDto>> GetGame(Guid gameId)
     {
-        var engine = new GameEngine();
-        var game = await engine.LoadGameAsync(gameId);
+        var game = await blobStorageService.LoadGameAsync(gameId);
+
+        return game.MapFromDomain();
+    }
+
+    [HttpPost]
+    [Route("resume/{gameId:guid}", Name = nameof(ResumeGame))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<GameDto>> ResumeGame(Guid gameId)
+    {
+        var game = await blobStorageService.LoadGameAsync(gameId);
 
         return game.MapFromDomain();
     }

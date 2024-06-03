@@ -3,7 +3,7 @@ import '@styles/Start.css'
 import axios from 'axios'
 import { ReactElement, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1 } from 'reducers/gameSlice'
 import { setAuth } from 'reducers/userSlice'
@@ -60,6 +60,10 @@ export default function Start(): ReactElement {
       })
   }
 
+  const navigateLeaderboard = (): void => {
+    navigate(`/leaderboard`)
+  }
+
   const signOut = (): void => {
     dispatch(setAuth({ name: '', isAuthenticated: false }))
     navigate('/login')
@@ -78,17 +82,17 @@ export default function Start(): ReactElement {
           New game
         </button>
 
-        <button type="submit" className="menu-item">
+        <Link to="code" className="menu-item">
           Join
-        </button>
+        </Link>
 
-        <button type="submit" className="menu-item">
-          Tutorial
-        </button>
+        <Link to="history" className="menu-item">
+          History
+        </Link>
 
-        <button type="submit" className="menu-item">
+        <Link to="leaderboard" className="menu-item">
           Leaderboard
-        </button>
+        </Link>
       </div>
     </Layout>
   )

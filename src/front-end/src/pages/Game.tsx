@@ -33,6 +33,7 @@ export default function Game(): ReactElement {
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  whoAmI()
 
   const gameStateLink = useSelector((state: RootState) => state.apiData.link)
   const apiData = useSelector((state: RootState) => state.apiData.data)

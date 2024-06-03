@@ -5,6 +5,9 @@
 
 export * from './Resource.generated';
 export * from './Link.generated';
+export * from './LeaderboardResponseDto.generated';
+export * from './PlayerGamesResponseDto.generated';
+export * from './Status.generated';
 export * from './RootResponseDto.generated';
 export * from './CellDto.generated';
 export * from './CellState.generated';
@@ -22,6 +25,7 @@ export * from './InitFieldResponseDto.generated';
 export * from './JoinGameRequestDto.generated';
 export * from './JoinGameResponseDto.generated';
 export * from './LocationDto.generated';
+export * from './ResumeGameResponseDto.generated';
 export * from './ShipDto.generated';
 export * from './Orientation.generated';
 export * from './ShotResultDto.generated';
