@@ -26,8 +26,18 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddBlobServiceClient(builder.Configuration["admiring_blackburn:blob"]!, preferMsi: true);
     clientBuilder.AddQueueServiceClient(builder.Configuration["admiring_blackburn:queue"]!, preferMsi: true);
 });
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var storageService = scope.ServiceProvider.GetRequiredService<ITableStorageService>();
+    await storageService.CreateTables();
+
+    var blobService = scope.ServiceProvider.GetRequiredService<IBlobStorageService>();
+    await blobService.CreateBlobContainer();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

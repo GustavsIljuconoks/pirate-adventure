@@ -1,15 +1,15 @@
 {
   "dependencies": {
+    "storage1": {
+      "secretStore": "LocalSecretsFile",
+      "type": "storage.emulator",
+      "connectionId": "admiring_blackburn"
+    },
     "secrets1": {
       "secretStore": null,
       "resourceId": null,
       "type": "secrets.user",
       "connectionId": null
-    },
-    "storage1": {
-      "secretStore": "LocalSecretsFile",
-      "type": "storage.emulator",
-      "connectionId": "admiring_blackburn"
     }
   }
 }

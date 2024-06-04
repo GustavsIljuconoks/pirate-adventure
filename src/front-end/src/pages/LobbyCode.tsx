@@ -34,7 +34,7 @@ export default function LobbyCode(): ReactElement {
     axios
       .post(SERVER_URL + resumeLink)
       .then((response) => {
-        const game: GameDto = response.data.game
+        const game: GameDto = response.data
         const gameStatusLink = replaceGameId(gameLink, game.id)
         dispatch(setGameState(gameStatusLink))
 

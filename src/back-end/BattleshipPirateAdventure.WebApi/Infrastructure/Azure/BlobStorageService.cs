@@ -1,7 +1,5 @@
 using Azure.Storage.Blobs;
 using BattleshipPirateAdventure.Core;
-using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -12,6 +10,7 @@ public interface IBlobStorageService
 {
     Task SaveGameAsync(Game game);
     Task<Game> LoadGameAsync(Guid gameId);
+    Task CreateBlobContainer();
 }
 
 public class BlobStorageService : IBlobStorageService
@@ -20,18 +19,19 @@ public class BlobStorageService : IBlobStorageService
     private readonly BlobServiceClient _blobServiceClient;
     private readonly ITableStorageService _storageService;
     private readonly string _blobContainer = "games";
+    private readonly BlobContainerClient _blobContainerClient;
 
     public BlobStorageService(BlobServiceClient blobServiceClient, IConfiguration configuration, ITableStorageService storageService)
     {
         _config = configuration;
         _blobServiceClient = blobServiceClient;
         _storageService = storageService ?? throw new ArgumentNullException(nameof(storageService));
+        _blobContainerClient = _blobServiceClient.GetBlobContainerClient(_blobContainer);
     }
 
     public async Task SaveGameAsync(Game game)
     {
-        var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_blobContainer);
-        var blobClient = blobContainerClient.GetBlobClient($"{game.Id}.json");
+        var blobClient = _blobContainerClient.GetBlobClient($"{game.Id}.json");
 
         var gameJson = JsonConvert.SerializeObject(game);
 
@@ -50,6 +50,11 @@ public class BlobStorageService : IBlobStorageService
         var game = JsonConvert.DeserializeObject<Game>(gameJson) ?? throw new IOException("Failed to deserialize game");
 
         return game;
+    }
+
+    public async Task CreateBlobContainer()
+    {
+        await _blobContainerClient.CreateIfNotExistsAsync();
     }
 
     private async Task<string> GetBlobAsync(Guid gameId)
