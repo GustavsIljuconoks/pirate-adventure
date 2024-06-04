@@ -118,16 +118,6 @@ export default function Game(): ReactElement {
     }
   }
 
-  const debugGameState = () => {
-    getGameStatus(gameStateLink)
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
-  }
-
   return (
     <Layout>
       <div className="flex flex-row justify-between mb-6">

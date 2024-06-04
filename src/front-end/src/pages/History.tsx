@@ -51,6 +51,7 @@ export default function History(): ReactElement {
               </div>
 
               <p className="flex items-center text-xl font-bold">
+                {game.status}
                 {(() => {
                   switch (game.status) {
                     case Status.Ongoing:
