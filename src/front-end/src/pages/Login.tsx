@@ -76,7 +76,7 @@ export default function Login(): ReactElement {
           <form className={style['form-body']} onSubmit={handleSubmit}>
             <div className={style['input-container']}>
               <Input
-                label="User id"
+                label="User name"
                 name="username"
                 value={inputs.username || ''}
                 type="text"
