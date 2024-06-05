@@ -55,8 +55,6 @@ export default function LobbyCode(): ReactElement {
         }
       })
       .catch((error) => {
-        console.log(error.response.data)
-
         setErrorMessage('Could not find game with this code')
         setShowError(true)
 

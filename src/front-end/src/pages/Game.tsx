@@ -211,15 +211,6 @@ export default function Game(): ReactElement {
           </div>
         </div>
       </div>
-
-      <div className="game-state">
-        <button
-          className="mt-5 border-gray-700 rounded"
-          onClick={debugGameState}
-        >
-          Show game state
-        </button>
-      </div>
     </Layout>
   )
 }

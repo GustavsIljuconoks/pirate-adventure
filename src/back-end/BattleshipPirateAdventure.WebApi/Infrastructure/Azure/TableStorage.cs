@@ -126,7 +126,7 @@ public class TableStorageService : ITableStorageService
             var test = Guid.Parse(gameEntity.RowKey);
             var game = await blobStorageService.LoadGameAsync(Guid.Parse(gameEntity.RowKey));
 
-            if (game.State != GameState.Finished)
+            if (game.State == GameState.Finished)
             {
                 playerGames.Add(new PlayerGamesResponseDto
                 {
