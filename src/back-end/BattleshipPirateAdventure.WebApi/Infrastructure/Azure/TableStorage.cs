@@ -17,18 +17,13 @@ public interface ITableStorageService
     Task CreateTables();
 }
 
-public class TableStorageService : ITableStorageService
+public class TableStorageService(string connectionString, ILogger<TableStorageService> logger) : ITableStorageService
 {
     private const string UsersTableName = "users";
     private const string GamesTableName = "games";
-    private readonly TableClient _usersTable;
-    private readonly TableClient _gamesTable;
 
-    public TableStorageService(string connectionString)
-    {
-        _usersTable = new TableClient(connectionString, UsersTableName);
-        _gamesTable = new TableClient(connectionString, GamesTableName);
-    }
+    private readonly TableClient _usersTable = new(connectionString, UsersTableName);
+    private readonly TableClient _gamesTable = new(connectionString, GamesTableName);
 
     public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
@@ -46,6 +41,7 @@ public class TableStorageService : ITableStorageService
     {
         try
         {
+            logger.LogInformation($"Getting user by login name '{username}' using '{_usersTable.AccountName}' storage");
             var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
             var user = query.First();
             return user;
@@ -53,6 +49,7 @@ public class TableStorageService : ITableStorageService
         catch (Exception ex)
         {
             Console.WriteLine($"Error while getting user by name: {ex.Message}");
+            logger.LogError(ex, $"Failed to retrieve user by name '{username}'");
             return null;
         }
     }

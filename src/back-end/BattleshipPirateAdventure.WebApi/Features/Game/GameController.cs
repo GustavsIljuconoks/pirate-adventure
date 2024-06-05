@@ -23,6 +23,7 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
         game.SetPlayer1(request.Player1);
 
         await blobStorageService.SaveGameAsync(game);
+        cache.Set(game.Id, game);
 
         logger.LogInformation($"Game `{game.Id}` created, Player 1: `{request.Player1}`");
 
@@ -43,7 +44,9 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
         var game = await blobStorageService.LoadGameAsync(gameId);
 
         game.SetPlayer2(request.Player2);
+
         await blobStorageService.SaveGameAsync(game);
+        cache.Set(gameId, game);
 
         logger.LogInformation($"Player 2 `{request.Player2}` joined the game `{game.Id}`");
 
