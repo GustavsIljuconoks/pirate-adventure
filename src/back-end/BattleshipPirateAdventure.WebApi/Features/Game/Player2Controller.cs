@@ -2,12 +2,13 @@ using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
 
 [ApiController]
 [Route("game/{gameId:guid}/player2")]
-public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageService blobStorageService) : ControllerBase
+public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageService blobStorageService, IMemoryCache cache) : ControllerBase
 {
     [HttpPost]
     [Route("init-field", Name = nameof(Player2InitField))]
@@ -27,6 +28,8 @@ public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageSe
 
         await blobStorageService.SaveGameAsync(game);
 
+        cache.Set(gameId, game);
+
         return Ok();
     }
 
@@ -40,6 +43,8 @@ public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageSe
 
         var result = game.Player2Shoot(game.Player1!.Field.GetLocation(targetCell.Row, targetCell.Column));
         await blobStorageService.SaveGameAsync(game);
+
+        cache.Set(gameId, game);
 
         return Ok(result.MapFromDomain());
     }

@@ -14,6 +14,7 @@ public interface ITableStorageService
     Task<UserItemEntity> GetUserByName(string username);
     Task AddGameAsync(Game game);
     Task UpdateGameAsync(Game game, GamePlayer winner);
+    Task CreateTables();
 }
 
 public class TableStorageService : ITableStorageService
@@ -111,6 +112,12 @@ public class TableStorageService : ITableStorageService
         {
             Console.WriteLine($"Game with ID {game.Id} not found");
         }
+    }
+
+    public async Task CreateTables()
+    {
+        await _usersTable.CreateIfNotExistsAsync();
+        await _gamesTable.CreateIfNotExistsAsync();
     }
 
     public async Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService)

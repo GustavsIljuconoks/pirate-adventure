@@ -1,8 +1,8 @@
-import Field from '@components/field/Field'
-import ShipList from '@components/field/ShipList'
 import Layout from '@components/Layout/Layout'
 import LoadingOrError from '@components/LoadingOrError'
 import Spinner from '@components/Spinner'
+import Field from '@components/field/Field'
+import ShipList from '@components/field/ShipList'
 import axios from 'axios'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,7 +33,6 @@ export default function Game(): ReactElement {
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  whoAmI()
 
   const gameStateLink = useSelector((state: RootState) => state.apiData.link)
   const apiData = useSelector((state: RootState) => state.apiData.data)
@@ -43,28 +42,26 @@ export default function Game(): ReactElement {
   const gameData = useSelector((state: RootState) => state.gameStatusData.data)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      getGameStatus(gameStateLink)
-        .then((data) => {
-          if (data?.state === GameState.Finished) {
-            clearInterval(interval)
-            navigate(`/game-over/${apiData.id}`)
-          }
-          setGameStatusData(data)
-          dispatch(setGameStateData(data))
-          setPlayerShips1(data.player1.ships)
-          setPlayerShips2(data.player2.ships)
-          setPlayerField1(data.player1.field)
-          setPlayerField2(data.player2.field)
-          setIsLoading(false)
-        })
-        .catch((error) => {
-          console.error('An error occurred:', error)
-        })
+    const interval = setInterval(async () => {
+      const response = await getGameStatus(gameStateLink)
+      const data = response
+
+      if (data?.state === GameState.Finished) {
+        clearInterval(interval)
+        navigate(`/game-over/${apiData.id}`)
+      }
+      setGameStatusData(data)
+      dispatch(setGameStateData(data))
+      setPlayerShips1(data.player1.ships)
+      setPlayerShips2(data.player2.ships)
+      setPlayerField1(data.player1.field)
+      setPlayerField2(data.player2.field)
+      setIsLoading(false)
+
       whoAmI()
     }, 1000)
     return () => clearInterval(interval)
-  }, [gameStateLink, apiData.id, navigate])
+  }, []) // gameStateLink, apiData.id, navigate
 
   const attackPlayer = (
     playerToAttack: string,

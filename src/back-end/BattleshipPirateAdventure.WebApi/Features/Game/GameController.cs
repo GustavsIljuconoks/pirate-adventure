@@ -3,12 +3,13 @@ using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Shared;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Game;
 
 [ApiController]
 [Route("game")]
-public class GameController(ILogger<GameController> logger, IBlobStorageService blobStorageService) : ControllerBase
+public class GameController(ILogger<GameController> logger, IBlobStorageService blobStorageService, IMemoryCache cache) : ControllerBase
 {
     [HttpPost]
     [Route("create", Name = nameof(CreateGame))]
@@ -67,7 +68,12 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
     [Produces("application/json")]
     public async Task<ActionResult<GameDto>> GetGame(Guid gameId)
     {
-        var game = await blobStorageService.LoadGameAsync(gameId);
+        var game = await cache.GetOrCreateAsync(gameId, async _ => await blobStorageService.LoadGameAsync(gameId));
+
+        if (game == null)
+        {
+            return NotFound();
+        }
 
         return game.MapFromDomain();
     }
