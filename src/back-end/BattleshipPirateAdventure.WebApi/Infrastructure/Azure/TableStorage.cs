@@ -32,6 +32,7 @@ public class TableStorageService : ITableStorageService
     public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
         return _usersTable.Query<UserItemEntity>()
+            .OrderByDescending(entity => entity.Wins)
             .Select(entity => new LeaderboardResponseDto
             {
                 name = entity.RowKey,
