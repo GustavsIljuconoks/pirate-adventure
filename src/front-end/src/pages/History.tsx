@@ -37,7 +37,21 @@ export default function History(): ReactElement {
         }
       })
       .then((response) => {
-        setGames(response.data)
+        const gamesWithFormattedDate = response.data.map(
+          (game: PlayerGamesResponseDto) => {
+            const date = new Date(game.date)
+            const formattedDate = `${date
+              .getDate()
+              .toString()
+              .padStart(2, '0')}-${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, '0')}-${date.getFullYear().toString().slice(-2)}`
+
+            return { ...game, date: formattedDate }
+          }
+        )
+
+        setGames(gamesWithFormattedDate)
       })
       .catch((error) => {
         console.error('Failed to fetch data:', error)
@@ -47,6 +61,9 @@ export default function History(): ReactElement {
   const handleJoinGame = (gameId: string): void => {
     const resumeGameLink = findLinkByRel(apiData, 'resumeGame')
     const resumeLink = replaceGameId(resumeGameLink, gameId)
+
+    console.log(resumeGameLink)
+    console.log(resumeLink)
 
     axios
       .post(SERVER_URL + resumeLink, {
@@ -95,52 +112,53 @@ export default function History(): ReactElement {
           </Link>
         </div>
 
-        {games?.length === 0 ? (
-          <div className="flex flex-col justify-center items-center h-screen font-bold text-5xl">
-            <p>No games</p>
-          </div>
-        ) : (
-          games?.map((game, index) => (
-            <div
-              key={index}
-              className="flex flex-row justify-between border-2 border-sky-100 rounded-lg p-8"
-            >
-              <div className="flex flex-col">
-                <h2>
-                  Game "<span>{game.gameId}</span>"
-                </h2>
+        <div className="grid grid-cols-2 gap-4">
+          {games?.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-screen font-bold text-5xl">
+              <p>No games</p>
+            </div>
+          ) : (
+            games?.map((game, index) => (
+              <div
+                key={index}
+                className="flex flex-row justify-between border-2 border-sky-100 rounded-lg p-8 gap-24"
+              >
+                <div className="flex flex-col">
+                  <div className="flex flex-row w-full text-xl items-center">
+                    <span className="pr-2 text-2xl">{game.player1}</span>
+                    <span className="p-2">-</span>
+                    <span className="p-2 text-2xl">{game.player2}</span>
+                  </div>
 
-                <div className="flex flex-row justify-between">
-                  <p>Player 1: {game.player1}</p>
-                  <p>Player 2: {game.player2}</p>
+                  <p>{game.date.toString()}</p>
+                </div>
+
+                <div className="flex items-center text-xl font-bold">
+                  {(() => {
+                    switch (game.status) {
+                      case Status.Ongoing:
+                        return (
+                          <div className="flex flex-col items-end">
+                            <p>Ongoing</p>
+                            <button
+                              onClick={() => handleJoinGame(game.gameId)}
+                              className="text-xl hover:text-deep-blue"
+                            >
+                              Join
+                            </button>
+                          </div>
+                        )
+                      case Status.Winner:
+                        return 'W'
+                      case Status.Loser:
+                        return 'L'
+                    }
+                  })()}
                 </div>
               </div>
-
-              <div className="flex items-center text-xl font-bold">
-                {(() => {
-                  switch (game.status) {
-                    case Status.Ongoing:
-                      return (
-                        <div className="flex flex-col items-end">
-                          <p>Ongoing</p>
-                          <button
-                            onClick={() => handleJoinGame(game.gameId)}
-                            className="text-xl hover:text-deep-blue"
-                          >
-                            Join
-                          </button>
-                        </div>
-                      )
-                    case Status.Winner:
-                      return 'W'
-                    case Status.Loser:
-                      return 'L'
-                  }
-                })()}
-              </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </Layout>
   )
