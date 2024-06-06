@@ -1,4 +1,6 @@
+using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 public class LoginCommand
@@ -25,7 +27,8 @@ public class LoginCommandHandler
             return new UnauthorizedResult();
         }
 
-        if (user.Password != command.Password)
+        var passwordHasher = new PasswordHasher<UserItemEntity>();
+        if (passwordHasher.VerifyHashedPassword(user, user.Password, command.Password) == PasswordVerificationResult.Failed)
         {
             return new UnauthorizedObjectResult("Invalid username or password");
         }

@@ -1,9 +1,11 @@
+using System.Collections.Concurrent;
 using Azure;
 using Azure.Data.Tables;
 using BattleshipPirateAdventure.Core;
 using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 using BattleshipPirateAdventure.WebApi.Features.Game.Models;
 using BattleshipPirateAdventure.WebApi.Features.Root.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 
@@ -12,6 +14,7 @@ public interface ITableStorageService
     Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard();
     Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService);
     Task<UserItemEntity> GetUserByName(string username);
+    Task<UserItemEntity> RegisterUser(string username, string password, string email);
     Task AddGameAsync(Game game);
     Task UpdateGameAsync(Game game, GamePlayer winner);
     Task CreateTables();
@@ -44,17 +47,42 @@ public class TableStorageService : ITableStorageService
 
     public async Task<UserItemEntity> GetUserByName(string username)
     {
-        try
+        var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
+        var user = query.FirstOrDefault();
+        return user;
+    }
+
+    public async Task<UserItemEntity> RegisterUser(string username, string password, string email)
+    {
+        // Validate the input
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
         {
-            var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
-            var user = query.First();
-            return user;
+            throw new ArgumentException("Username and password are required.");
         }
-        catch (Exception ex)
+
+        // Check if a user with the same username already exists
+        var existingUser = await GetUserByName(username);
+        if (existingUser != null)
         {
-            Console.WriteLine($"Error while getting user by name: {ex.Message}");
-            return null;
+            throw new ArgumentException("A user with this username already exists.");
         }
+
+        var passwordHasher = new PasswordHasher<UserItemEntity>();
+        var passwordHash = passwordHasher.HashPassword(null, password);
+
+        // Create a new user
+        var user = new UserItemEntity
+        {
+            PartitionKey = "users",
+            RowKey = username,
+            Password = passwordHash,
+            Email = email
+        };
+
+        // Save the user to the database
+        await _usersTable.AddEntityAsync(user);
+
+        return user;
     }
 
     public async Task AddGameAsync(Game game)

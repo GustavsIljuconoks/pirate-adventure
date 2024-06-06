@@ -1,5 +1,7 @@
+using BattleshipPirateAdventure.WebApi.Features.CQ;
 using Microsoft.AspNetCore.Mvc;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
+using BattleshipPirateAdventure.WebApi.Features.Auth.Models;
 
 namespace BattleshipPirateAdventure.WebApi.Features.Auth;
 
@@ -20,6 +22,13 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginCommand command)
     {
         var handler = new LoginCommandHandler(_storageService);
+        return await handler.Handle(command);
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+    {
+        var handler = new RegisterCommandHandler(_storageService);
         return await handler.Handle(command);
     }
 }
