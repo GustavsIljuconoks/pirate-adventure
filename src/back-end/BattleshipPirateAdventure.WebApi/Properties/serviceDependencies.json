@@ -1,12 +1,13 @@
 {
   "dependencies": {
-    "storage1": {
-      "type": "storage",
-      "connectionId": "admiring_blackburn"
-    },
     "secrets1": {
       "type": "secrets",
       "connectionId": null
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "admiring_blackburn",
+      "dynamicId": null
     }
   }
 }

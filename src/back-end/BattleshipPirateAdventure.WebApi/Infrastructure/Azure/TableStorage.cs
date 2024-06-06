@@ -20,22 +20,18 @@ public interface ITableStorageService
     Task CreateTables();
 }
 
-public class TableStorageService : ITableStorageService
+public class TableStorageService(string connectionString, ILogger<TableStorageService> logger) : ITableStorageService
 {
     private const string UsersTableName = "users";
     private const string GamesTableName = "games";
-    private readonly TableClient _usersTable;
-    private readonly TableClient _gamesTable;
 
-    public TableStorageService(string connectionString)
-    {
-        _usersTable = new TableClient(connectionString, UsersTableName);
-        _gamesTable = new TableClient(connectionString, GamesTableName);
-    }
+    private readonly TableClient _usersTable = new(connectionString, UsersTableName);
+    private readonly TableClient _gamesTable = new(connectionString, GamesTableName);
 
     public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
         return _usersTable.Query<UserItemEntity>()
+            .OrderByDescending(entity => entity.Wins)
             .Select(entity => new LeaderboardResponseDto
             {
                 name = entity.RowKey,
@@ -47,9 +43,19 @@ public class TableStorageService : ITableStorageService
 
     public async Task<UserItemEntity> GetUserByName(string username)
     {
-        var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
-        var user = query.FirstOrDefault();
-        return user;
+        try
+        {
+            logger.LogInformation($"Getting user by login name '{username}' using '{_usersTable.AccountName}' storage");
+            var query = _usersTable.Query<UserItemEntity>().Where(e => e.RowKey == username);
+            var user = query.First();
+            return user;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error while getting user by name: {ex.Message}");
+            logger.LogError(ex, $"Failed to retrieve user by name '{username}'");
+            return null;
+        }
     }
 
     public async Task<UserItemEntity> RegisterUser(string username, string password, string email)
@@ -151,6 +157,7 @@ public class TableStorageService : ITableStorageService
     public async Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService)
     {
         var games = _gamesTable.Query<GameItemEntity>()
+            .OrderByDescending(entity => entity.Timestamp)
             .Where(g => g.player1 == playerName || g.player2 == playerName)
             .ToList();
 
@@ -161,7 +168,7 @@ public class TableStorageService : ITableStorageService
             var test = Guid.Parse(gameEntity.RowKey);
             var game = await blobStorageService.LoadGameAsync(Guid.Parse(gameEntity.RowKey));
 
-            if (game.State != GameState.Finished)
+            if (game.State == GameState.Finished)
             {
                 playerGames.Add(new PlayerGamesResponseDto
                 {
@@ -169,6 +176,7 @@ public class TableStorageService : ITableStorageService
                     status = gameEntity.winner == playerName ? Status.Winner : Status.Loser,
                     player1 = gameEntity.player1,
                     player2 = gameEntity.player2,
+                    date = gameEntity.Timestamp.Value.DateTime
                 });
             }
             else
@@ -179,6 +187,7 @@ public class TableStorageService : ITableStorageService
                     status = Status.Ongoing,
                     player1 = gameEntity.player1,
                     player2 = gameEntity.player2,
+                    date = gameEntity.Timestamp.Value.DateTime
                 });
             }
         }

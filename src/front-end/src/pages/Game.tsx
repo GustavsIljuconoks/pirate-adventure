@@ -6,7 +6,7 @@ import ShipList from '@components/field/ShipList'
 import axios from 'axios'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
 import { RootState } from 'store'
 import {
@@ -115,18 +115,16 @@ export default function Game(): ReactElement {
     }
   }
 
-  const debugGameState = () => {
-    getGameStatus(gameStateLink)
-      .then((data) => {
-        console.log(data)
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
-  }
-
   return (
     <Layout>
+      <Link to="/" className="font-medium text-2xl mb-12">
+        <div className="flex flex-row gap-4 items-center">
+          <div className="w-[40px] h-[40px]">
+            <img src="/icons/arrow-left.svg" alt="arrow" />
+          </div>
+          Back to home
+        </div>
+      </Link>
       <div className="flex flex-row justify-between mb-6">
         <div className="profile flex flex-row-reverse items-end gap-4">
           <Spinner
@@ -217,15 +215,6 @@ export default function Game(): ReactElement {
             )}
           </div>
         </div>
-      </div>
-
-      <div className="game-state">
-        <button
-          className="mt-5 border-gray-700 rounded"
-          onClick={debugGameState}
-        >
-          Show game state
-        </button>
       </div>
     </Layout>
   )
