@@ -11,7 +11,7 @@ import style from '@styles/lobby/Lobby.module.css'
 import axios from 'axios'
 import classNames from 'classnames'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
 import { resetShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
@@ -115,6 +115,14 @@ export default function Lobby(): ReactElement {
     <Layout>
       <div className="mx-auto">
         <div className={style['lobby-code']}>
+          <Link to="/" className="absolute left-8 top-10 font-medium text-2xl">
+            <div className="flex flex-row gap-4 items-center">
+              <div className="w-[40px] h-[40px]">
+                <img src="/icons/arrow-left.svg" alt="arrow" />
+              </div>
+              Back to home
+            </div>
+          </Link>
           <CopyToClipboard joinLink={joinGameLink} />
           <SettingsMenu />
         </div>

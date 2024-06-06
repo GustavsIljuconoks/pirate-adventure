@@ -60,10 +60,6 @@ export default function Start(): ReactElement {
       })
   }
 
-  const navigateLeaderboard = (): void => {
-    navigate(`/leaderboard`)
-  }
-
   const signOut = (): void => {
     dispatch(setAuth({ name: '', isAuthenticated: false }))
     navigate('/login')

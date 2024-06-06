@@ -10,6 +10,7 @@ public class PlayerGamesResponseDto : Resource
     public Status status { get; set; }
     public string player1 { get; set; }
     public string player2 { get; set; }
+    public DateTime date { get; set; }
 }
 
 public enum Status

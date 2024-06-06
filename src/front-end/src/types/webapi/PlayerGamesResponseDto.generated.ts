@@ -11,4 +11,5 @@ export interface PlayerGamesResponseDto extends Resource {
     status: Status;
     player1: string;
     player2: string;
+    date: Date;
 }

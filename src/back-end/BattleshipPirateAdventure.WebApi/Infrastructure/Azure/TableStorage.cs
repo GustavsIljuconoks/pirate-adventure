@@ -28,6 +28,7 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
     public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
         return _usersTable.Query<UserItemEntity>()
+            .OrderByDescending(entity => entity.Wins)
             .Select(entity => new LeaderboardResponseDto
             {
                 name = entity.RowKey,
@@ -120,6 +121,7 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
     public async Task<IEnumerable<PlayerGamesResponseDto>> GetPlayerGames(string playerName, IBlobStorageService blobStorageService)
     {
         var games = _gamesTable.Query<GameItemEntity>()
+            .OrderByDescending(entity => entity.Timestamp)
             .Where(g => g.player1 == playerName || g.player2 == playerName)
             .ToList();
 
@@ -130,7 +132,7 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
             var test = Guid.Parse(gameEntity.RowKey);
             var game = await blobStorageService.LoadGameAsync(Guid.Parse(gameEntity.RowKey));
 
-            if (game.State != GameState.Finished)
+            if (game.State == GameState.Finished)
             {
                 playerGames.Add(new PlayerGamesResponseDto
                 {
@@ -138,6 +140,7 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
                     status = gameEntity.winner == playerName ? Status.Winner : Status.Loser,
                     player1 = gameEntity.player1,
                     player2 = gameEntity.player2,
+                    date = gameEntity.Timestamp.Value.DateTime
                 });
             }
             else
@@ -148,6 +151,7 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
                     status = Status.Ongoing,
                     player1 = gameEntity.player1,
                     player2 = gameEntity.player2,
+                    date = gameEntity.Timestamp.Value.DateTime
                 });
             }
         }
