@@ -27,7 +27,6 @@ public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageSe
         }
 
         await blobStorageService.SaveGameAsync(game);
-
         cache.Set(gameId, game);
 
         return Ok();
@@ -42,8 +41,8 @@ public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageSe
         var game = await blobStorageService.LoadGameAsync(gameId);
 
         var result = game.Player2Shoot(game.Player1!.Field.GetLocation(targetCell.Row, targetCell.Column));
-        await blobStorageService.SaveGameAsync(game);
 
+        await blobStorageService.SaveGameAsync(game);
         cache.Set(gameId, game);
 
         return Ok(result.MapFromDomain());

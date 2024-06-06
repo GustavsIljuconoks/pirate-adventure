@@ -1,5 +1,6 @@
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.Extensions.Azure;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton(x => builder.Configuration.GetConnectionString("admiring_blackburn"));
@@ -27,6 +28,14 @@ builder.Services.AddAzureClients(clientBuilder =>
     clientBuilder.AddQueueServiceClient(builder.Configuration["admiring_blackburn:queue"]!, preferMsi: true);
 });
 builder.Services.AddMemoryCache();
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSimpleConsole();
+builder.Logging.AddSerilog(logger);
+
 
 var app = builder.Build();
 
