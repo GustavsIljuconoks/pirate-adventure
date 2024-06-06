@@ -16,6 +16,7 @@ const JoinGame = lazy(async () => import('@pages/JoinGame'))
 const GameOver = lazy(async () => import('@pages/GameOver'))
 const Login = lazy(async () => import('@pages/Login'))
 const History = lazy(async () => import('@pages/History'))
+const Register = lazy(async () => import('@pages/Register'))
 
 export default function App(): ReactElement {
   const isAuthenticated = useSelector((state: RootState) => state.userSave.name)
@@ -38,6 +39,7 @@ export default function App(): ReactElement {
 
           <Route path="/join/:guid" element={<JoinGame />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
