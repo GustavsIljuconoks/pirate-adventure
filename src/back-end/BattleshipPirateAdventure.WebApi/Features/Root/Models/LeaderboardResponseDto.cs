@@ -7,5 +7,5 @@ namespace BattleshipPirateAdventure.WebApi.Features.Root.Models;
 public class LeaderboardResponseDto : Resource
 {
     public string name { get; set; }
-    public int wins { get; set; }
+    public int cups { get; set; }
 }

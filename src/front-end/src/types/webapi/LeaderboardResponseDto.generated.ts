@@ -7,5 +7,5 @@ import { Resource } from './Resource.generated';
 
 export interface LeaderboardResponseDto extends Resource {
     name: string;
-    wins: number;
+    cups: number;
 }

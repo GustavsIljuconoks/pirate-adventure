@@ -13,7 +13,10 @@ export default function Slot({ player, ranking }: IProps): ReactElement {
         <span>#{ranking} </span>
         {player.name}
       </h1>
-      <h1 data-testid="PlayerWins">{player.wins}</h1>
+      <div className="cups flex items-center">
+        <h1 data-testid="PlayerWins">{player.cups}</h1>
+        <img src="/icons/trophy-cup.png" alt="trophy cup" width={50} />
+      </div>
     </div>
   )
 }

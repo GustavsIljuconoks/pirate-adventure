@@ -86,6 +86,13 @@ export default function GameOver(): ReactElement {
           </div>
         </div>
 
+        {gamePlayers.me.name === winnerPlayerId ? (
+          <div className="flex items-center justify-center text-xl font-semibold">
+            <img src="/icons/trophy-cup.png" alt="trophy cup" width={100} />
+            <p>+2 cups</p>
+          </div>
+        ) : null}
+
         <Link to="/" className="text-3xl font-medium text-center">
           Back to start
         </Link>
