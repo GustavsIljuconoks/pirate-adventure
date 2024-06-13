@@ -4,7 +4,7 @@ import Spinner from '@components/Spinner'
 import Field from '@components/field/Field'
 import ShipList from '@components/field/ShipList'
 import axios from 'axios'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
@@ -20,6 +20,7 @@ import {
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { getCell } from 'utils/getCell'
 import { useWhoAmI } from 'utils/whoAmI'
+import gameMusic from '../../public/sounds/sea.mp3?url'
 import { SERVER_URL } from '../constants'
 
 export default function Game(): ReactElement {
@@ -30,6 +31,7 @@ export default function Game(): ReactElement {
 
   const [gameStatusData, setGameStatusData] = useState<GameDto>()
   const [isLoading, setIsLoading] = useState(true)
+  const musicRef = useRef(new Audio(gameMusic))
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -40,6 +42,18 @@ export default function Game(): ReactElement {
     (state: RootState) => state.updatePlayers.players
   )
   const gameData = useSelector((state: RootState) => state.gameStatusData.data)
+  const userMusic = useSelector((state: RootState) => state.soundSave.music)
+
+  useEffect(() => {
+    if (userMusic) {
+      musicRef.current.volume = 0.1
+      musicRef.current.play()
+    }
+
+    return () => {
+      musicRef.current.pause()
+    }
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(async () => {

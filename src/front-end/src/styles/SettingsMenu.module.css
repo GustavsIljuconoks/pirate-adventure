@@ -1,39 +1,63 @@
 .settings {
-	position: fixed;
-	top: 5%;
-	right: 5%;
-	text-align: center;
-	width: max-content;
-	border-radius: 9999px;
-	background-color: #1863a8;
-
+  position: fixed;
+  top: 5%;
+  right: 5%;
+  text-align: center;
+  width: max-content;
+  border-radius: 9999px;
+  background-color: #1863a8;
 }
 
 .dropdown {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .dropdown {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	border-radius: 9999px;
-	background-color: #1863a8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: #1863a8;
 }
 
 .open {
-	display: block;
-	transition: 300ms ease;
+  display: block;
+  transition: 300ms ease;
 }
 
 .closed {
-	display: none;
-	transition: display 0.3s ease;
+  display: none;
+  transition: display 0.3s ease;
 }
 
 .menu-item {
-	padding: 1rem;
-	align-items: center;
+  padding: 1rem;
+  align-items: center;
+}
+
+.cross {
+  position: absolute;
+  width: 50px;
+  height: 24px;
+  display: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 70%;
+    right: 10%;
+    width: 100%;
+    height: 3.5px;
+    background-color: #fff;
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
+
+.off {
+  display: block;
 }

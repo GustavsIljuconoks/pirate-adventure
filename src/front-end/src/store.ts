@@ -15,6 +15,7 @@ import gamePlayerReducer from './reducers/gamePlayersSlice'
 import gameReducer from './reducers/gameSlice'
 import gameStateDataReducer from './reducers/gameStatusSlice'
 import shipReducer from './reducers/shipSaveSlice'
+import soundSaveReducer from './reducers/soundSaveSlice'
 import userSaveReducer from './reducers/userSlice'
 
 export type RootState = ReturnType<typeof store.getState>
@@ -33,7 +34,8 @@ const appReducer = combineReducers({
   shipSave: shipReducer,
   updatePlayers: gamePlayerReducer,
   gameStatusData: gameStateDataReducer,
-  userSave: userSaveReducer
+  userSave: userSaveReducer,
+  soundSave: soundSaveReducer
 })
 
 const rootReducer = (state, action: Action) => {
