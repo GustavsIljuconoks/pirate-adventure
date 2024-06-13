@@ -2,12 +2,13 @@ import style from '@styles/SettingsMenu.module.css'
 import classNames from 'classnames'
 import { useEffect, useRef, useState, type ReactElement } from 'react'
 import { useDispatch } from 'react-redux'
-import { setMusic } from 'reducers/soundSaveSlice'
+import { setMusic, setSound } from 'reducers/soundSaveSlice'
 import lobbyMusic from '../../public/sounds/lobby-music.mp3?url'
 
 export default function SettingsMenu(): ReactElement {
   const [isOpen, setIsOpen] = useState(false)
   const [isPlaying, setIsPlaying] = useState(true)
+  const [isSoundOn, setSoundOn] = useState(true)
   const musicRef = useRef(new Audio(lobbyMusic))
   const dispatch = useDispatch()
 
@@ -41,6 +42,11 @@ export default function SettingsMenu(): ReactElement {
     })
   }
 
+  const handleSound = () => {
+    setSoundOn(!isSoundOn)
+    dispatch(setSound({ sound: !isSoundOn }))
+  }
+
   return (
     <div className={style.settings}>
       <div className={style['menu-header']}>
@@ -60,9 +66,18 @@ export default function SettingsMenu(): ReactElement {
           isOpen ? `${style.open}` : `${style.closed}`
         }`}
       >
-        <div className={style['menu-item']}>
+        <div className={style['menu-item']} onClick={handleSound}>
           <button type="button">
-            <img src="/icons/sound.svg" alt="sound" />
+            {isSoundOn ? (
+              <img src="/icons/volume.svg" alt="sound" width={40} height={40} />
+            ) : (
+              <img
+                src="/icons/volume-off.svg"
+                alt="sound off"
+                width={40}
+                height={40}
+              />
+            )}
           </button>
         </div>
 

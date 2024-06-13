@@ -20,6 +20,8 @@ import {
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { getCell } from 'utils/getCell'
 import { useWhoAmI } from 'utils/whoAmI'
+import hitSound from '../../public/sounds/hit.mp3?url'
+import missedSound from '../../public/sounds/missed.mp3?url'
 import gameMusic from '../../public/sounds/sea.mp3?url'
 import { SERVER_URL } from '../constants'
 
@@ -31,7 +33,11 @@ export default function Game(): ReactElement {
 
   const [gameStatusData, setGameStatusData] = useState<GameDto>()
   const [isLoading, setIsLoading] = useState(true)
+
   const musicRef = useRef(new Audio(gameMusic))
+  const soundHitRef = useRef(new Audio(hitSound))
+  const soundMissedRef = useRef(new Audio(missedSound))
+
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -43,6 +49,7 @@ export default function Game(): ReactElement {
   )
   const gameData = useSelector((state: RootState) => state.gameStatusData.data)
   const userMusic = useSelector((state: RootState) => state.soundSave.music)
+  const userSound = useSelector((state: RootState) => state.soundSave.sound)
 
   useEffect(() => {
     if (userMusic) {
@@ -103,9 +110,17 @@ export default function Game(): ReactElement {
         .then((response) => {
           if (response.data.scoring === Scoring.Hit) {
             cell.state = CellState.Hit
+
+            if (userSound) {
+              soundHitRef.current.play()
+            }
           }
           if (response.data.scoring === Scoring.Missed) {
             cell.state = CellState.Missed
+
+            if (userSound) {
+              soundMissedRef.current.play()
+            }
           }
 
           getGameStatus(gameStateLink).then((data) => {
