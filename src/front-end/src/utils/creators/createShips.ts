@@ -12,7 +12,8 @@ export const createShips = (): Ships => {
       },
       orientation: 1,
       hitCount: 0,
-      isDestroyed: false
+      isDestroyed: false,
+      image: 'patrol_boat.png'
     },
     2: {
       id: 2,
@@ -24,9 +25,9 @@ export const createShips = (): Ships => {
       },
       orientation: 1,
       hitCount: 0,
-      isDestroyed: false
+      isDestroyed: false,
+      image: 'destroyer.png'
     },
-
     3: {
       id: 3,
       name: 'Hurricane',
@@ -37,7 +38,8 @@ export const createShips = (): Ships => {
       },
       orientation: 1,
       hitCount: 0,
-      isDestroyed: false
+      isDestroyed: false,
+      image: 'battleship.png'
     },
     4: {
       id: 4,
@@ -49,7 +51,8 @@ export const createShips = (): Ships => {
       },
       orientation: 1,
       hitCount: 0,
-      isDestroyed: false
+      isDestroyed: false,
+      image: 'carrier.png'
     },
     5: {
       id: 5,
@@ -61,7 +64,8 @@ export const createShips = (): Ships => {
       },
       orientation: 1,
       hitCount: 0,
-      isDestroyed: false
+      isDestroyed: false,
+      image: 'carrier.png'
     }
   }
 }

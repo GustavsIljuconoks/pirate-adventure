@@ -19,6 +19,7 @@ import {
 } from 'types/webapi'
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { getCell } from 'utils/getCell'
+import { assignImagesToShips } from 'utils/imageToShips'
 import { useWhoAmI } from 'utils/whoAmI'
 import hitSound from '../../public/sounds/hit.mp3?url'
 import missedSound from '../../public/sounds/missed.mp3?url'
@@ -73,8 +74,12 @@ export default function Game(): ReactElement {
       }
       setGameStatusData(data)
       dispatch(setGameStateData(data))
-      setPlayerShips1(data.player1.ships)
-      setPlayerShips2(data.player2.ships)
+
+      const shipsWithImagesPlayer1 = assignImagesToShips(data.player1.ships)
+      const shipsWithImagesPlayer2 = assignImagesToShips(data.player2.ships)
+      setPlayerShips1(shipsWithImagesPlayer1)
+      setPlayerShips2(shipsWithImagesPlayer2)
+
       setPlayerField1(data.player1.field)
       setPlayerField2(data.player2.field)
       setIsLoading(false)

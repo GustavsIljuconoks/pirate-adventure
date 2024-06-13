@@ -2,11 +2,11 @@ import { useDraggable } from '@dnd-kit/core'
 import style from '@styles/field/Ship.module.css'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import { ShipDto } from 'types/webapi'
+import { Ship } from 'types/Ship'
 
 type Props = {
   id: number
-  ship: ShipDto
+  ship: Ship
   resetShipPlacement: (id: number) => void
   setShipBeingRemovedId: React.Dispatch<
     React.SetStateAction<number | undefined>
@@ -75,17 +75,15 @@ const DraggableShip = ({
         {...listeners}
         {...attributes}
       >
+        <img
+          src={`/icons/ships/${ship.image}`}
+          alt={ship.name}
+          className="w-16 select-none sm:w-24"
+          draggable="false"
+        />
         <p className="text-xs capitalize sm:text-base">
           {ship.name} ({ship.size})
         </p>
-
-        <div className="flex flex-row">
-          {Array.from({ length: shipLength }).map((_, index) => (
-            <div className={style.ship} key={index}>
-              {index + 1}
-            </div>
-          ))}
-        </div>
       </div>
     </motion.button>
   )
