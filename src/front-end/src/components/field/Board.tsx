@@ -62,6 +62,7 @@ export default function GameBoard(): ReactElement {
         [draggedShipId]: {
           ...ships[draggedShipId],
           axis,
+          orientation: shipOrientation,
           headLocation: {
             row: hoveredCell.row,
             column: hoveredCell.column
@@ -127,6 +128,8 @@ export default function GameBoard(): ReactElement {
       ...ships,
       [id]: {
         ...ships[id],
+        orientation:
+          axis === 'x' ? Orientation.Horizontal : Orientation.Vertical,
         headLocation: {
           row: -1,
           column: -1
