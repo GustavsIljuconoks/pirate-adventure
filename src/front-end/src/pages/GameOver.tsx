@@ -37,9 +37,16 @@ export default function GameOver(): ReactElement {
   return (
     <Layout>
       <div className="flex flex-col justify-center gap-20">
-        <div className="info">
-          <h1 className="font-bold text-4xl text-center">Game over!</h1>
-          <h1 className="font-bold text-3xl text-center">{gameOverText}</h1>
+        <div className="flex justify-center items-center">
+          {gamePlayers.me.name === winnerPlayerId ? (
+            <img src="/icons/win-screen.png" alt="game over icon" width={350} />
+          ) : (
+            <img
+              src="/icons/lose-screen.png"
+              alt="game over icon"
+              width={350}
+            />
+          )}
         </div>
 
         <div className="flex flex-row justify-around mb-6">
@@ -85,6 +92,13 @@ export default function GameOver(): ReactElement {
             </div>
           </div>
         </div>
+
+        {gamePlayers.me.name === winnerPlayerId ? (
+          <div className="flex items-center justify-center text-xl font-semibold">
+            <img src="/icons/trophy-cup.png" alt="trophy cup" width={100} />
+            <p>+2 cups</p>
+          </div>
+        ) : null}
 
         <Link to="/" className="text-3xl font-medium text-center">
           Back to start

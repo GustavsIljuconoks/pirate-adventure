@@ -4,7 +4,7 @@ import Spinner from '@components/Spinner'
 import Field from '@components/field/Field'
 import ShipList from '@components/field/ShipList'
 import axios from 'axios'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
@@ -19,7 +19,11 @@ import {
 } from 'types/webapi'
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { getCell } from 'utils/getCell'
+import { assignImagesToShips } from 'utils/imageToShips'
 import { useWhoAmI } from 'utils/whoAmI'
+import hitSound from '../../public/sounds/hit.mp3?url'
+import missedSound from '../../public/sounds/missed.mp3?url'
+import gameMusic from '../../public/sounds/sea.mp3?url'
 import { SERVER_URL } from '../constants'
 
 export default function Game(): ReactElement {
@@ -30,6 +34,11 @@ export default function Game(): ReactElement {
 
   const [gameStatusData, setGameStatusData] = useState<GameDto>()
   const [isLoading, setIsLoading] = useState(true)
+
+  const musicRef = useRef(new Audio(gameMusic))
+  const soundHitRef = useRef(new Audio(hitSound))
+  const soundMissedRef = useRef(new Audio(missedSound))
+
   const { whoAmI } = useWhoAmI()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -40,6 +49,19 @@ export default function Game(): ReactElement {
     (state: RootState) => state.updatePlayers.players
   )
   const gameData = useSelector((state: RootState) => state.gameStatusData.data)
+  const userMusic = useSelector((state: RootState) => state.soundSave.music)
+  const userSound = useSelector((state: RootState) => state.soundSave.sound)
+
+  useEffect(() => {
+    if (userMusic) {
+      musicRef.current.volume = 0.1
+      musicRef.current.play()
+    }
+
+    return () => {
+      musicRef.current.pause()
+    }
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -52,8 +74,12 @@ export default function Game(): ReactElement {
       }
       setGameStatusData(data)
       dispatch(setGameStateData(data))
-      setPlayerShips1(data.player1.ships)
-      setPlayerShips2(data.player2.ships)
+
+      const shipsWithImagesPlayer1 = assignImagesToShips(data.player1.ships)
+      const shipsWithImagesPlayer2 = assignImagesToShips(data.player2.ships)
+      setPlayerShips1(shipsWithImagesPlayer1)
+      setPlayerShips2(shipsWithImagesPlayer2)
+
       setPlayerField1(data.player1.field)
       setPlayerField2(data.player2.field)
       setIsLoading(false)
@@ -89,9 +115,17 @@ export default function Game(): ReactElement {
         .then((response) => {
           if (response.data.scoring === Scoring.Hit) {
             cell.state = CellState.Hit
+
+            if (userSound) {
+              soundHitRef.current.play()
+            }
           }
           if (response.data.scoring === Scoring.Missed) {
             cell.state = CellState.Missed
+
+            if (userSound) {
+              soundMissedRef.current.play()
+            }
           }
 
           getGameStatus(gameStateLink).then((data) => {

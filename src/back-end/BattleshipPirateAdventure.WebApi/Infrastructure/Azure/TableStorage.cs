@@ -31,11 +31,11 @@ public class TableStorageService(string connectionString, ILogger<TableStorageSe
     public async Task<IEnumerable<LeaderboardResponseDto>> GetLeaderboard()
     {
         return _usersTable.Query<UserItemEntity>()
-            .OrderByDescending(entity => entity.Wins)
+            .OrderByDescending(entity => entity.Cups)
             .Select(entity => new LeaderboardResponseDto
             {
                 name = entity.RowKey,
-                wins = entity.Wins
+                cups = entity.Cups
             })
             .Take(10)
             .ToList();

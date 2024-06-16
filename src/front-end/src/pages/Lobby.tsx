@@ -15,14 +15,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import { setGameStateData } from 'reducers/gameStatusSlice'
 import { resetShipsForPlayer } from 'reducers/shipSaveSlice'
 import { RootState } from 'store'
-import { GameState } from 'types/webapi'
+import { GameState, PlayerState } from 'types/webapi'
 import { findLinkByRel } from 'utils/findLinkByRel'
 import { getGameStatus } from 'utils/gameStatusRequest'
 import { useWhoAmI } from 'utils/whoAmI'
 import { APP_URL, SERVER_URL } from '../constants'
 
 export default function Lobby(): ReactElement {
-  const [playerReady, setPlayerReady] = useState(false)
+  const [player1Ready, setPlayer1Ready] = useState(false)
+  const [player2Ready, setPlayer2Ready] = useState(false)
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const gameId = apiData.id
   const joinGameLink = APP_URL + 'join/' + gameId
@@ -64,6 +65,14 @@ export default function Lobby(): ReactElement {
       getGameStatus(gameStateLink)
         .then((data) => {
           dispatch(setGameStateData(data))
+
+          // Set player ready status
+          if (data.player1.state == PlayerState.Ready) {
+            setPlayer1Ready(true)
+          }
+          if (data.player2.state == PlayerState.Ready) {
+            setPlayer2Ready(true)
+          }
         })
         .catch((error) => {
           console.error('An error occurred:', error)
@@ -108,8 +117,9 @@ export default function Lobby(): ReactElement {
           }, 1000)
         })
     }
-    setPlayerReady((prevPlayerReady) => !prevPlayerReady)
   }
+
+  const playerReady = gamePlayer1 ? player1Ready : player2Ready
 
   return (
     <Layout>
@@ -151,7 +161,7 @@ export default function Lobby(): ReactElement {
                 shipsPlayer1.length || shipsPlayer2.length == 5 ? false : true
               }
             >
-              {!playerReady ? 'Ready to fight' : 'loading...'}
+              {!playerReady ? 'Ready to fight' : 'loading... '}
             </button>
           </div>
         </div>
@@ -159,12 +169,12 @@ export default function Lobby(): ReactElement {
         <div className="flex justify-between">
           <LobbyAvatar
             username={gamePlayers?.me.name}
-            isReady={playerReady}
+            isReady={gamePlayer1 ? player1Ready : player2Ready}
             avatarIcon="https://cdn4.iconfinder.com/data/icons/diversity-v2-0-volume-03/64/celebrity-captain-jack-sparrow-pirate-carribean-512.png"
           />
           <LobbyAvatar
             username={gamePlayers?.enemy.name}
-            isReady={playerReady}
+            isReady={gamePlayer1 ? player2Ready : player1Ready}
             avatarIcon="https://img.freepik.com/premium-vector/head-pirate-with-hat-eye-patch-flat-vector-illustration_124715-1485.jpg"
           />
         </div>

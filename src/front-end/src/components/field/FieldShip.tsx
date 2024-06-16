@@ -1,10 +1,9 @@
-import style from '@styles/field/Ship.module.css'
-import classNames from 'classnames'
 import { motion } from 'framer-motion'
-import { Orientation, ShipDto } from 'types/webapi'
+import { Ship } from 'types/Ship'
+import { Orientation } from 'types/webapi'
 
 type Props = {
-  ship: ShipDto
+  ship: Ship
   removeButtonHovered?: boolean
   belongsTo?: 'player' | 'enemy'
 }
@@ -52,13 +51,13 @@ const FieldShip = ({ ship, removeButtonHovered, belongsTo }: Props) => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
         >
-          <div className={classNames(`flex flex-row`, statusClass)}>
-            {Array.from({ length: ship.size }).map((_, index) => (
-              <div className={style['ship-field']} key={index}>
-                {index + 1}
-              </div>
-            ))}
-          </div>
+          <img
+            src={`/icons/ships/${ship.image}`}
+            alt={ship.name}
+            className={`${ship.size === 1 ? 'h-[40%]' : 'h-[80%]'}
+          ${statusClass} w-[80%]`}
+            draggable="false"
+          />
         </motion.div>
       </div>
     )

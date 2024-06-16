@@ -23,9 +23,9 @@ export default function Leaderboard(): ReactElement {
     <Layout>
       <div className="my-auto">
         <div className="leaderbord mb-10">
-          <div className="flex flex-row justify-between mb-8 font-bold text-5xl">
+          <div className="flex flex-row justify-between mb-8 font-bold text-5xl items-center">
             <p>Player</p>
-            <p>Score</p>
+            <p>Cups</p>
           </div>
 
           <div className="flex flex-col gap-4">
