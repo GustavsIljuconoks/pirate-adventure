@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useState, type ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { setGameState } from 'reducers/apiDataSlice'
+import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1, setPlayer2 } from 'reducers/gameSlice'
 import { RootState } from 'store'
 import { GameDto, GameState } from 'types/webapi'
@@ -36,7 +36,9 @@ export default function LobbyCode(): ReactElement {
       .then((response) => {
         const game: GameDto = response.data
         const gameStatusLink = replaceGameId(gameLink, game.id)
+
         dispatch(setGameState(gameStatusLink))
+        dispatch(setApiData(response.data))
 
         if (userName === game.player1.id) {
           dispatch(setPlayer1({ player1: userName, id: game.id }))
