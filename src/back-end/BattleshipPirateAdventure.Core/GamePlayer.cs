@@ -36,6 +36,13 @@ public class GamePlayer
     {
         State = PlayerState.Ready;
     }
+
+    public void NotReady()
+    {
+        State = PlayerState.NotReady;
+        Field.ResetAllCellStates();
+        Ships = [];
+    }
 }
 
 public static class ListOfShipsExtensions

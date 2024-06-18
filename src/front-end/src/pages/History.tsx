@@ -3,7 +3,7 @@ import axios from 'axios'
 import { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { setGameState } from 'reducers/apiDataSlice'
+import { setApiData, setGameState } from 'reducers/apiDataSlice'
 import { setPlayer1, setPlayer2 } from 'reducers/gameSlice'
 import { RootState } from 'store'
 import {
@@ -62,9 +62,6 @@ export default function History(): ReactElement {
     const resumeGameLink = findLinkByRel(apiData, 'resumeGame')
     const resumeLink = replaceGameId(resumeGameLink, gameId)
 
-    console.log(resumeGameLink)
-    console.log(resumeLink)
-
     axios
       .post(SERVER_URL + resumeLink, {
         player1: userName
@@ -72,7 +69,9 @@ export default function History(): ReactElement {
       .then((response) => {
         const game: GameDto = response.data
         const gameStatusLink = replaceGameId(gameLink, game.id)
+
         dispatch(setGameState(gameStatusLink))
+        dispatch(setApiData(response.data))
 
         if (userName === game.player1.id) {
           dispatch(setPlayer1({ player1: userName, id: game.id }))

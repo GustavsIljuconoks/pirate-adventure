@@ -166,7 +166,6 @@ export default function Game(): ReactElement {
           />
           <div className="font-bold">
             <h1 className="text-3xl">{gamePlayers.me.name}</h1>
-            <div className="time">time</div>
           </div>
         </div>
 
@@ -178,7 +177,6 @@ export default function Game(): ReactElement {
           />
           <div className="font-bold">
             <h1 className="text-3xl">{gamePlayers.enemy.name}</h1>
-            <div className="time">time</div>
           </div>
         </div>
       </div>
