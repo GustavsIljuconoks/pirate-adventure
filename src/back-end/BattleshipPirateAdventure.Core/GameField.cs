@@ -67,6 +67,17 @@ public class GameField
         }
     }
 
+    public void ResetAllCellStates()
+    {
+        foreach (var row in Cells.Values)
+        {
+            foreach (var cell in row)
+            {
+                cell.SetState(CellState.None, -1);
+            }
+        }
+    }
+
     public Location GetLocation(string cellId)
     {
         if (cellId == null || cellId.Length < 2 || cellId.Length > 3)

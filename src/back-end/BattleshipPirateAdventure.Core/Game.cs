@@ -159,6 +159,19 @@ public class Game
         }
     }
 
+    public void SetNotReady(PlayerType playerType)
+    {
+        if (playerType == PlayerType.Player1 && HasPlayer1Joined)
+        {
+            Player1!.NotReady();
+        }
+
+        if (playerType == PlayerType.Player2 && HasPlayer2Joined)
+        {
+            Player2!.NotReady();
+        }
+    }
+
     public void GameEnd(GamePlayer playerWinner, GamePlayer playerLoser)
     {
         playerWinner.State = PlayerState.Winner;

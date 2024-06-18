@@ -27,8 +27,12 @@ export default function Lobby(): ReactElement {
   const apiData = useSelector((state: RootState) => state.apiData.data)
   const gameId = apiData.id
   const joinGameLink = APP_URL + 'join/' + gameId
+
   const player1InitializeField = findLinkByRel(apiData, 'player1InitField')
   const player2InitializeField = findLinkByRel(apiData, 'player2InitField')
+  const player1NotReady = findLinkByRel(apiData, 'player1Unready')
+  const player2NotReady = findLinkByRel(apiData, 'player2Unready')
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { whoAmI } = useWhoAmI()
@@ -47,6 +51,9 @@ export default function Lobby(): ReactElement {
   const gamePlayers = useSelector(
     (state: RootState) => state.updatePlayers.players
   )
+
+  const playerReady = gamePlayer1 ? player1Ready : player2Ready
+  const setPlayerReady = gamePlayer1 ? setPlayer1Ready : setPlayer2Ready
 
   useEffect(() => {
     localStorage.removeItem('intendedDestinationUrl')
@@ -73,6 +80,10 @@ export default function Lobby(): ReactElement {
           if (data.player2.state == PlayerState.Ready) {
             setPlayer2Ready(true)
           }
+
+          if (data.state == GameState.Started) {
+            navigate(`/game/${gameId}`)
+          }
         })
         .catch((error) => {
           console.error('An error occurred:', error)
@@ -85,41 +96,37 @@ export default function Lobby(): ReactElement {
 
   const initializeField = () => {
     if (gamePlayer1) {
-      axios
-        .post(SERVER_URL + player1InitializeField, {
-          ships: shipsPlayer1
-        })
-        .then(() => {
-          let interval = setInterval(() => {
-            axios.get(SERVER_URL + gameStateLink, {}).then((response) => {
-              if (response.data.state == GameState.Started) {
-                clearInterval(interval)
-                navigate(`/game/${gameId}`)
-              }
-            })
-          }, 1000)
-        })
+      axios.post(SERVER_URL + player1InitializeField, {
+        ships: shipsPlayer1
+      })
     }
 
     if (gamePlayer2) {
-      axios
-        .post(SERVER_URL + player2InitializeField, {
-          ships: shipsPlayer2
-        })
-        .then(() => {
-          let interval = setInterval(() => {
-            axios.get(SERVER_URL + gameStateLink).then((response) => {
-              if (response.data.state == GameState.Started) {
-                clearInterval(interval)
-                navigate(`/game/${gameId}`)
-              }
-            })
-          }, 1000)
-        })
+      axios.post(SERVER_URL + player2InitializeField, {
+        ships: shipsPlayer2
+      })
     }
   }
 
-  const playerReady = gamePlayer1 ? player1Ready : player2Ready
+  const playerNotReady = () => {
+    if (gamePlayer1) {
+      axios.post(SERVER_URL + player1NotReady)
+    }
+
+    if (gamePlayer2) {
+      axios.post(SERVER_URL + player2NotReady)
+    }
+  }
+
+  const handleButtonClick = () => {
+    setPlayerReady(!playerReady)
+
+    if (playerReady) {
+      playerNotReady()
+    } else {
+      initializeField()
+    }
+  }
 
   return (
     <Layout>
@@ -156,12 +163,12 @@ export default function Lobby(): ReactElement {
                     shipsPlayer1.length === 5 || shipsPlayer2.length === 5
                 }
               )}
-              onClick={initializeField}
+              onClick={handleButtonClick}
               disabled={
                 shipsPlayer1.length || shipsPlayer2.length == 5 ? false : true
               }
             >
-              {!playerReady ? 'Ready to fight' : 'loading... '}
+              {!playerReady ? 'Ready to fight' : 'Loading... '}
             </button>
           </div>
         </div>

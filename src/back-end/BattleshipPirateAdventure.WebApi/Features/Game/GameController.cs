@@ -30,6 +30,7 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
         var result = new CreateGameResponseDto { Id = game.Id.ToString(), Size = new FieldSizeDto(10, 10), State = game.State };
 
         result.AddPostLink(this, nameof(Player1Controller.Player1InitField), new { gameId = game.Id });
+        result.AddPostLink(this, nameof(Player1Controller.Player1Unready), new { gameId = game.Id });
         result.AddPostLink(this, nameof(JoinGame), new { gameId = game.Id });
 
         return Ok(result);
@@ -52,6 +53,7 @@ public class GameController(ILogger<GameController> logger, IBlobStorageService 
 
         var result = new JoinGameResponseDto(gameId);
         result.AddPostLink(this, nameof(Player2Controller.Player2InitField), new { gameId = game.Id });
+        result.AddPostLink(this, nameof(Player2Controller.Player2Unready), new { gameId = game.Id });
 
         return Ok(result);
     }

@@ -33,6 +33,27 @@ public class Player2Controller(ILogger<Player2Controller> logger, IBlobStorageSe
     }
 
     [HttpPost]
+    [Route("unready", Name = nameof(Player2Unready))]
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    public async Task<ActionResult<InitFieldResponseDto>> Player2Unready(Guid gameId)
+    {
+        var game = await blobStorageService.LoadGameAsync(gameId);
+
+        if (game.HasPlayer1Joined)
+        {
+            game.SetNotReady(PlayerType.Player2);
+
+            logger.LogInformation($"Player 1 is not ready for game `{gameId}`");
+        }
+
+        await blobStorageService.SaveGameAsync(game);
+        cache.Set(gameId, game);
+
+        return Ok();
+    }
+
+    [HttpPost]
     [Route("shoot", Name = nameof(Player2Shoot))]
     [Consumes("application/json")]
     [Produces("application/json")]
