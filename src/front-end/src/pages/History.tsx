@@ -56,7 +56,7 @@ export default function History(): ReactElement {
       .catch((error) => {
         console.error('Failed to fetch data:', error)
       })
-  }, [])
+  }, [games])
 
   const handleJoinGame = (gameId: string): void => {
     const resumeGameLink = findLinkByRel(apiData, 'resumeGame')

@@ -17,7 +17,7 @@ export default function Leaderboard(): ReactElement {
       .catch((error) => {
         console.error('Failed to fetch data:', error)
       })
-  }, [])
+  }, [players])
 
   return (
     <Layout>
