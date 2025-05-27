@@ -11,6 +11,7 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import apiDataReducer from './reducers/apiDataSlice'
+import chatReducer from './reducers/chatSlice'
 import gamePlayerReducer from './reducers/gamePlayersSlice'
 import gameReducer from './reducers/gameSlice'
 import gameStateDataReducer from './reducers/gameStatusSlice'
@@ -35,7 +36,8 @@ const appReducer = combineReducers({
   updatePlayers: gamePlayerReducer,
   gameStatusData: gameStateDataReducer,
   userSave: userSaveReducer,
-  soundSave: soundSaveReducer
+  soundSave: soundSaveReducer,
+  chat: chatReducer
 })
 
 const rootReducer = (state, action: Action) => {

@@ -17,3 +17,9 @@ export type GamePlayers = {
     field?: GameFieldDto
   }
 }
+
+export interface ChatMessages {
+  user: string
+  message: string
+  timestamp: string
+}

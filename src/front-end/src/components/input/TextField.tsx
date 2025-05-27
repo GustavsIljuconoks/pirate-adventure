@@ -6,23 +6,23 @@ interface TextFieldProperties {
   value: string
   type: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  className?: string
 }
 
 const TextField: FC<TextFieldProperties> = ({
   placeholder,
   value,
   type,
-  onChange
+  onChange,
+  className
 }) => (
-  <div>
-    <input
-      className="input-field"
-      placeholder={placeholder}
-      value={value}
-      type={type}
-      onChange={onChange}
-    />
-  </div>
+  <input
+    className={`input-field ${className || ''}`}
+    placeholder={placeholder}
+    value={value}
+    type={type}
+    onChange={onChange}
+  />
 )
 
 export default TextField
