@@ -56,9 +56,26 @@ export default function Chat() {
     }
   }
 
+  const cleanupConnection = async () => {
+    if (connection) {
+      try {
+        await connection.stop()
+        dispatch(setConnectionStatus(false))
+        setConnection(null)
+      } catch (error) {
+        console.error('Error stopping connection:', error)
+      }
+    }
+  }
+
   // For creating chat only once
   useEffect(() => {
     createChat()
+
+    // Cleanup on unmount
+    return () => {
+      cleanupConnection()
+    }
   }, [])
 
   useEffect(() => {
@@ -97,6 +114,7 @@ export default function Chat() {
     // Clean up
     return () => {
       connection.off('ReceiveMessage', handleMessage)
+      connection.off('RoomJoined', handleMessage)
     }
   }, [connection, dispatch, gameId, userName])
 
