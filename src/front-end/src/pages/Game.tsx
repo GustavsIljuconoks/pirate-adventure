@@ -1,3 +1,4 @@
+import Chat from '@components/Chat/Chat'
 import Layout from '@components/Layout/Layout'
 import LoadingOrError from '@components/LoadingOrError'
 import Spinner from '@components/Spinner'
@@ -248,6 +249,8 @@ export default function Game(): ReactElement {
           </div>
         </div>
       </div>
+
+      <Chat />
     </Layout>
   )
 }

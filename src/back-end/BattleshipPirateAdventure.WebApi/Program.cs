@@ -1,5 +1,7 @@
+using BattleshipPirateAdventure.WebApi.Features.Chat;
 using BattleshipPirateAdventure.WebApi.Infrastructure.Azure;
 using Microsoft.Extensions.Azure;
+using Microsoft.Extensions.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,14 +13,18 @@ builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSignalR(e => {
+    e.EnableDetailedErrors = true;
+});
 
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -55,13 +61,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+//app.UseHttpsRedirection();
 
-app.UseCors();
-
+app.MapHub<ChatHub>("/chat");
 app.MapControllers();
 
 app.Run();
